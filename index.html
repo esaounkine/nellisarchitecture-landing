@@ -3,6 +3,19 @@
 
 <head>
   <script src="/js/static-backend.js"></script>
+  <!-- Netlify Identity: handles /#invite_token and /#recovery_token links, then sends editors to the CMS -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", function (user) {
+        if (!user) {
+          window.netlifyIdentity.on("login", function () {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <!-- <title></title> -->
