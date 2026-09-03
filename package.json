@@ -1,0 +1,10 @@
+{
+  "name": "nellis-architecture-static",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static build of nellisarchitecture.com with Decap CMS for news",
+  "scripts": {
+    "build": "node build-news.js",
+    "serve": "python3 -m http.server 8000"
+  }
+}

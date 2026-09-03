@@ -1,0 +1,40 @@
+# Decap CMS configuration — Nellis Architecture news
+# Auth: Netlify Identity + Git Gateway (enable both in the Netlify dashboard,
+# then invite the SEO team under Identity > Invite users).
+
+backend:
+  name: git-gateway
+  branch: main
+
+publish_mode: editorial_workflow
+
+media_folder: "wp-content/uploads/news"
+public_folder: "/wp-content/uploads/news"
+
+site_url: https://nellisarchitecture.com
+logo_url: https://nellisarchitecture.com/wp-content/uploads/2025/02/logo.png
+
+collections:
+  - name: "news"
+    label: "News"
+    label_singular: "News article"
+    folder: "content/news"
+    create: true
+    slug: "{{slug}}"
+    sortable_fields: ["date", "title"]
+    summary: "{{title}} — {{date}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - label: "Publication date"
+        name: "date"
+        widget: "datetime"
+        format: "MMMM D, YYYY"
+        date_format: "MMMM D, YYYY"
+        time_format: false
+      - { label: "URL slug", name: "slug", widget: "string", hint: "Lowercase words separated by dashes. Auto-filled from the title — only change it before first publish." }
+      - { label: "SEO title", name: "seo_title", widget: "string", required: false, hint: "Browser tab / Google result title. Leave empty to use the article title." }
+      - { label: "Meta description", name: "description", widget: "text", required: false, hint: "150–160 characters shown under the title in Google." }
+      - { label: "Hero image", name: "hero", widget: "image", required: false }
+      - { label: "Hero image alt text", name: "hero_alt", widget: "string", required: false }
+      - { label: "External link (optional)", name: "link", widget: "string", required: false, hint: "If set, a MORE INFO button appears under the article pointing here." }
+      - { label: "Body", name: "body", widget: "markdown" }
