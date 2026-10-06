@@ -27,7 +27,7 @@ The operator (human stakeholder) signs off the design at **Architect BR**. If th
 Always plan before implementing. Describe what will be done. Then do.
 Be brief when describing. No need to explain unless asked.
 Do not jump to conclusions or actions. Always ask.
-Before planning a big feature or phase, create a file in the `.concealed` directory. Decompose the task in this file. We use this file as a kanban board. There will be multiple planning files. Keep track of which file is currently active.
+Before planning a big feature or phase, decompose it into cards on the Trello board (see [docs/workflow/grooming.md](docs/workflow/grooming.md)).
 
 **How we work — workflows** (tool-neutral specs; each spec names its own tool bindings):
 
@@ -35,7 +35,7 @@ Before planning a big feature or phase, create a file in the `.concealed` direct
 - **Grooming** — [docs/workflow/grooming.md](docs/workflow/grooming.md), driven by `/groom <card-url>` (make an under-specified backlog ticket *ready* → To do).
 - **Incident response** — [docs/workflow/incident.md](docs/workflow/incident.md), driven by `/incident <alert>` (outage/error → remediation → blameless post-mortem).
 
-Task status lives on the Trello board. The `.concealed/*` decomposition boards still plan a big feature before building.
+Task status lives on the Trello board.
 
 When driving a card via `/ticket`, read the card's current list. Follow the state machine in [docs/workflow/development.md](docs/workflow/development.md). Invoke the hat for that state only. Move the card (with the required comment) when the state's exit gate is met. An implemented task must never be left in **To do** or **In Progress** after a green checkpoint commit.
 
