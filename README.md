@@ -5,6 +5,15 @@ nothing for attackers to exploit. All original functionality (project overlays,
 category filters, live search, news switching) is reproduced client-side from
 static JSON snapshots.
 
+## Process & docs
+
+How this project is run — start here:
+
+- **Conventions and working agreements:** [AGENTS.md](AGENTS.md) — principles, code style, content and SEO rules, testing.
+- **How we work (workflows):** [development](docs/workflow/development.md) · [grooming](docs/workflow/grooming.md) · [incident response](docs/workflow/incident.md). Driven by `/ticket`, `/groom` and `/incident` in [Claude Code](https://code.claude.com/docs). Tool bindings (Trello, Netlify, commands) are in [development.md → Bindings](docs/workflow/development.md#bindings).
+- **Tasks, requirements, decisions and status:** the **Website** board on Trello — <https://trello.com/b/9x8aKhpS/website>.
+- **Hosting:** Netlify — <https://app.netlify.com/projects/nellis-arch/overview>. Preview: <https://nellis-arch.netlify.app>.
+
 ## Structure
 
 ```
