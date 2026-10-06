@@ -54,6 +54,7 @@ The site replaces a live WordPress site. Search ranking must survive the migrati
 - Keep every public URL of the old site. If a URL must change, add a 301 redirect in `netlify.toml`.
 - Keep titles, meta descriptions, canonical URLs, Open Graph tags and schema.org data correct. Absolute URLs use the production domain `https://nellisarchitecture.com`.
 - Never delete or rename files in `wp-content/uploads/`. Pages and external sites link to them.
+- Netlify publishes the repo root. Each new root file or folder needs a 404 deny rule in `netlify.toml`. If the file or folder is public, add it to the `SITE` allow-list in `test/netlify-deny.test.js`.
 - Decap CMS commits to `master` on the remote. Pull before you work. Rebase local commits before a push.
 
 ## Code style

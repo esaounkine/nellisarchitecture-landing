@@ -26,7 +26,7 @@ content/news/*.md     # news source of truth (edited via the CMS)
 build/news-template.html
 build-news.js         # regenerates news pages + sitemap from markdown
 admin/                # Decap CMS (news editing UI)
-netlify.toml          # build + headers + caching config
+netlify.toml          # build + headers + caching + 404 deny rules
 eslint.config.mjs     # lint rules (npm run lint)
 test/                 # unit tests (npm test)
 ```
