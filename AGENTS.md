@@ -68,8 +68,12 @@ Scope: our own code (`build-news.js`, `js/static-backend.js`, future scripts). D
 // List the individual new code style rules below - this is good for better visibility than eslint
 
 - Plain JavaScript. No TypeScript. No framework.
-- Build scripts run on Node with zero runtime dependencies. Add a dependency only when a card needs it.
+- Build scripts run on Node with zero runtime dependencies. Add a dependency only when a card needs it. Dev tools go in `devDependencies`.
 - Browser code runs without a bundler. Keep the existing theme scripts working.
+- Base: Airbnb via `eslint-config-airbnb-extended` (`eslint.config.mjs`). Linted files: `build-news.js`, `js/static-backend.js`, `test/`, `eslint.config.mjs`. Add new own files to the config.
+- Build scripts: synchronous `fs` calls and `console` output are allowed (`n/no-sync`, `no-console` off).
+- Browser scripts: `'use strict'` inside the IIFE (`strict: function`). Underscore fields are allowed for shim internals (`no-underscore-dangle` off).
+- Build scripts export their pure functions and run only when called directly (`require.main === module`), so tests can import them.
 
 ### Generic rules
 

@@ -27,6 +27,8 @@ build/news-template.html
 build-news.js         # regenerates news pages + sitemap from markdown
 admin/                # Decap CMS (news editing UI)
 netlify.toml          # build + headers + caching config
+eslint.config.mjs     # lint rules (npm run lint)
+test/                 # unit tests (npm test)
 ```
 
 ## Deploy (Netlify, free tier)

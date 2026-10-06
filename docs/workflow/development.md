@@ -92,11 +92,13 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 
 ### Commands
 
-- Runtime: [Node.js](https://nodejs.org/) 18+ (the build) and Python 3 (the local server). Package manager: npm.
+- Runtime: [Node.js](https://nodejs.org/) 20+ (pinned in `.nvmrc`) and Python 3 (the local server). Package manager: npm.
+- Install: `npm ci`.
 - Build: `npm run build` (runs `node build-news.js`). It regenerates `news/*/index.html`, `data/news.json`, `sitemap.xml` and the News link.
 - Local preview: `npm run serve`, then open <http://localhost:8000>.
-- Checks (Test state and push): `npm run build`, then `git status`. Only the expected files may change.
-- Lint and unit tests: not set up yet. When they exist, add `npm run lint` and `npm test` here and to the checks.
+- Lint: `npm run lint` ([ESLint](https://eslint.org/) with [eslint-config-airbnb-extended](https://www.npmjs.com/package/eslint-config-airbnb-extended), config in `eslint.config.mjs`). Fix style: `npm run format`.
+- Unit tests: `npm test` ([node:test](https://nodejs.org/api/test.html), files in `test/`).
+- **Checks** (Test state and before a push): `npm run lint && npm test && npm run build`, then `git status`. Only the expected files may change.
 
 ### Hosting — Netlify
 
