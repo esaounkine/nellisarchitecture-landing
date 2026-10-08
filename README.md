@@ -17,15 +17,18 @@ How this project is run — start here:
 ## Structure
 
 ```
-index.html, studio.html, people.html, privacy.html, pravicy.html   # pages
+index.html, privacy.html, pravicy.html                             # pages (generated)
+studio.html, people.html                                           # pages (static; News link generated)
 news/<slug>/index.html                                             # 58 articles (generated)
 wp-content/                                                        # theme assets + images
 data/                 # static "backend": projects, search index, filters, news JSON
 js/static-backend.js  # intercepts the theme's old AJAX calls, serves data/ instead
 content/news/*.md     # news source of truth (edited via the CMS)
+content/pages/*.json  # page content source of truth (edited via the CMS)
 build/news-template.html
-build-news.js         # regenerates news pages + sitemap from markdown
-admin/                # Decap CMS (news editing UI)
+build/lib/            # page generator: helpers, page modules, partials/*.html
+build-news.js         # regenerates news pages, generated pages + sitemap
+admin/                # Decap CMS (news and page editing UI)
 netlify.toml          # build + headers + caching + 404 deny rules
 eslint.config.mjs     # lint rules (npm run lint)
 test/                 # unit tests (npm test)
@@ -51,6 +54,8 @@ test/                 # unit tests (npm test)
 3. Publish → the site rebuilds automatically in ~1 minute:
    new article page, refreshed sidebar on all 58 articles, homepage News link,
    sitemap.xml, and the in-page switcher data.
+
+To edit page texts (Home, Privacy, shared affiliations and forms), open **Pages** in `/admin`.
 
 ### Manual alternative (no CMS)
 

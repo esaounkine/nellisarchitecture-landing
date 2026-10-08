@@ -1,0 +1,171 @@
+
+<body id="body">
+  <h1 class="visually-hidden">{{H1}}</h1>
+  <input type="hidden" id="nonce" value="2c68b977e4">
+  <div class="modalBG">
+    <div class="modalWindow">
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M1 1L13 13M13 1L1 13"
+          stroke="#00372A"
+          stroke-linecap="round" />
+      </svg>
+
+      <h2 class="formName">{{CONTACT_TITLE}}</h2>
+      <div class="formDescr">{{CONTACT_DESCRIPTION}}</div>
+      <form class="projectForm" id="yourFormId" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        
+        <input
+          type="text"
+          name="name"
+          class="name"
+          placeholder="Name"
+          required />
+        <input
+          type="email"
+          name="email"
+          class="email"
+          placeholder="E-mail *"
+          required />
+        <input
+          type="tel"
+          name="phone"
+          class="phoneNumber"
+          placeholder="Phone number"
+          required />
+        <textarea
+          name="massage"
+          id="massage"
+          class="massage"
+          placeholder="Your message *"></textarea>
+
+
+        <div class="policyLink">
+          By submitting this form, I consent to the
+          <a href="pravicy.html" target="_blank">Privacy Policy.</a>
+        </div>
+        <button type="submit">{{CONTACT_BUTTON}}</button>
+      </form>
+      <div class="underForm">
+        or send us an email to:
+        <a href="mailto:{{CONTACT_EMAIL_HREF}}">{{CONTACT_EMAIL}}</a>
+      </div>
+    </div>
+  </div>
+  <div class="modalBG2">
+    <div class="modalWindow2">
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M1 1L13 13M13 1L1 13"
+          stroke="#00372A"
+          stroke-linecap="round" />
+      </svg>
+
+      <h2 class="formName">{{SKILLS_TITLE}}</h2>
+      <div class="formDescr">{{SKILLS_DESCRIPTION}}</div>
+      <form id="yourFormId2" class="projectForm" name="brief" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        
+        <input
+          type="text"
+          name="name"
+          class="name"
+          placeholder="Name"
+          required />
+        <input
+          type="email"
+          name="email"
+          class="email"
+          placeholder="E-mail *"
+          required />
+        <input
+          type="tel"
+          name="phone"
+          class="phoneNumber"
+          placeholder="Phone number"
+          required />
+        <textarea
+          name="massage"
+          id="massage2"
+          class="massage"
+          placeholder="Your message *"
+          required></textarea>
+
+        <div class="dragWindow">
+          <input id="file-input" type="file" accept=".gif,.jpg,.jpeg,.png,.doc,.docx,.pdf" name="files[]" multiple />
+
+          <div class="loadingFile">
+            <div class="loadingFile__img"></div>
+            <div class="loadingFile__scrollContainer">
+              <div class="loadingFile__scrollBar"></div>
+            </div>
+            <p class="loadingFile__name">Имя файла</p>
+            <div class="loadingFile__close"></div>
+          </div>
+          <div class="loadingFile">
+            <div class="loadingFile__img"></div>
+            <div class="loadingFile__scrollContainer">
+              <div class="loadingFile__scrollBar"></div>
+            </div>
+            <p class="loadingFile__name">Имя файла</p>
+            <div class="loadingFile__close"></div>
+          </div>
+          <div class="loadingFile">
+            <div class="loadingFile__img"></div>
+            <div class="loadingFile__scrollContainer">
+              <div class="loadingFile__scrollBar"></div>
+            </div>
+            <p class="loadingFile__name">Имя файла</p>
+            <div class="loadingFile__close"></div>
+          </div>
+          <div class="loadingFile">
+            <div class="loadingFile__img"></div>
+            <div class="loadingFile__scrollContainer">
+              <div class="loadingFile__scrollBar"></div>
+            </div>
+            <p class="loadingFile__name">Имя файла</p>
+            <div class="loadingFile__close"></div>
+          </div>
+          <div class="loadingFile">
+            <div class="loadingFile__img"></div>
+            <div class="loadingFile__scrollContainer">
+              <div class="loadingFile__scrollBar"></div>
+            </div>
+            <p class="loadingFile__name">Имя файла</p>
+            <div class="loadingFile__close"></div>
+          </div>
+
+          <label for="file-input">
+            <svg
+              class="screp"
+              width="16"
+              height="20"
+              viewBox="0 0 16 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M11 9V4H13V9H11ZM6 15.9C5.41667 15.7333 4.93767 15.4083 4.563 14.925C4.18833 14.4417 4.00067 13.8833 4 13.25V4H6V15.9ZM6.75 20C5.01667 20 3.54167 19.3917 2.325 18.175C1.10833 16.9583 0.5 15.4833 0.5 13.75V4.5C0.5 3.25 0.937667 2.18767 1.813 1.313C2.68833 0.438334 3.75067 0.000667427 5 7.60456e-07C6.24933 -0.000665906 7.312 0.437001 8.188 1.313C9.064 2.189 9.50133 3.25133 9.5 4.5V12H7.5V4.5C7.48333 3.8 7.23767 3.20833 6.763 2.725C6.28833 2.24167 5.70067 2 5 2C4.29933 2 3.70767 2.24167 3.225 2.725C2.74233 3.20833 2.50067 3.8 2.5 4.5V13.75C2.48333 14.9333 2.89167 15.9377 3.725 16.763C4.55833 17.5883 5.56667 18.0007 6.75 18C7.16667 18 7.56267 17.946 7.938 17.838C8.31333 17.73 8.66733 17.5673 9 17.35V19.575C8.65 19.7083 8.28733 19.8127 7.912 19.888C7.53667 19.9633 7.14933 20.0007 6.75 20ZM11 19V16H8V14H11V11H13V14H16V16H13V19H11Z"
+                fill="#002E20" />
+            </svg>
+            Add a file (no more than 50 MB)</label>
+        </div>
+        <p id="idMassage"></p>
+        <div class="policyLink">
+          By submitting this form, I consent to the <a href="pravicy.html" target="_blank">Privacy Policy.</a>.
+        </div>
+        <button type="submit">{{SKILLS_BUTTON}}</button>
+      </form>
+      <div class="underForm">
+        or send us an email to:
+        <a href="mailto:{{SKILLS_EMAIL_HREF}}">{{SKILLS_EMAIL}}</a>
+      </div>
+    </div>

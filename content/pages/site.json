@@ -1,0 +1,36 @@
+{
+  "affiliations": [
+    {
+      "src": "/wp-content/uploads/2025/02/partner1.png",
+      "alt": "",
+      "width": 52,
+      "height": 52
+    },
+    {
+      "src": "/wp-content/uploads/2025/02/partner2.png",
+      "alt": "",
+      "width": 52,
+      "height": 52
+    },
+    {
+      "src": "/wp-content/uploads/2026/04/riba_resized_7x_smaller.jpg",
+      "alt": "",
+      "width": 123,
+      "height": 54
+    }
+  ],
+  "forms": {
+    "contact": {
+      "title": "Have a project?",
+      "description": "Please take a moment to complete the form below.",
+      "button": "Send message",
+      "email": "hello@nellisarchitecture.com"
+    },
+    "skills": {
+      "title": "Got skills?",
+      "description": "Please take a moment to complete the form below.",
+      "button": "Send message",
+      "email": "people@nellisarchitecture.com"
+    }
+  }
+}

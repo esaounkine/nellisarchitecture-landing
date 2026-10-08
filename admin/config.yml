@@ -38,3 +38,53 @@ collections:
       - { label: "Hero image alt text", name: "hero_alt", widget: "string", required: false }
       - { label: "External link (optional)", name: "link", widget: "string", required: false, hint: "If set, a MORE INFO button appears under the article pointing here." }
       - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "pages"
+    label: "Pages"
+    format: "json"
+    delete: false
+    files:
+      - name: "site"
+        label: "Shared (affiliations, forms)"
+        file: "content/pages/site.json"
+        fields:
+          - label: "Affiliations"
+            name: "affiliations"
+            widget: "list"
+            hint: &site_hint "Changes show on Home and Privacy only, until the Studio and People cards are done."
+            fields:
+              - { label: "Logo", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages", hint: *site_hint }
+              - { label: "Alt text", name: "alt", widget: "string", required: false, hint: *site_hint }
+              - { label: "Width (px)", name: "width", widget: "number", value_type: "int", hint: *site_hint }
+              - { label: "Height (px)", name: "height", widget: "number", value_type: "int", hint: *site_hint }
+          - label: "Forms"
+            name: "forms"
+            widget: "object"
+            hint: *site_hint
+            fields:
+              - label: "Contact form (Have a project?)"
+                name: "contact"
+                widget: "object"
+                hint: *site_hint
+                fields: &form_fields
+                  - { label: "Title", name: "title", widget: "string", hint: *site_hint }
+                  - { label: "Description", name: "description", widget: "string", hint: *site_hint }
+                  - { label: "Button", name: "button", widget: "string", hint: *site_hint }
+                  - { label: "E-mail", name: "email", widget: "string", hint: *site_hint }
+              - label: "Skills form (Got skills?)"
+                name: "skills"
+                widget: "object"
+                hint: *site_hint
+                fields: *form_fields
+      - name: "index"
+        label: "Home"
+        file: "content/pages/index.json"
+        fields:
+          - { label: "H1 (hidden heading)", name: "h1", widget: "string" }
+      - name: "privacy"
+        label: "Privacy"
+        file: "content/pages/privacy.json"
+        fields:
+          - { label: "H1 (hidden heading)", name: "h1", widget: "string" }
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Body", name: "body", widget: "text", hint: "Plain text, no HTML. Each line shows as a separate paragraph." }

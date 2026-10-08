@@ -94,7 +94,7 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 
 - Runtime: [Node.js](https://nodejs.org/) 20+ (pinned in `.nvmrc`) and Python 3 (the local server). Package manager: npm.
 - Install: `npm ci`.
-- Build: `npm run build` (runs `node build-news.js`). It regenerates `news/*/index.html`, `data/news.json`, `sitemap.xml` and the News link.
+- Build: `npm run build` (runs `node build-news.js`). It regenerates `news/*/index.html`, `data/news.json`, `sitemap.xml`, `index.html`, `privacy.html`, `pravicy.html` and the News link.
 - Local preview: `npm run serve`, then open <http://localhost:8000>.
 - Lint: `npm run lint` ([ESLint](https://eslint.org/) with [eslint-config-airbnb-extended](https://www.npmjs.com/package/eslint-config-airbnb-extended), config in `eslint.config.mjs`). Fix style: `npm run format`.
 - Unit tests: `npm test` ([node:test](https://nodejs.org/api/test.html), files in `test/`).

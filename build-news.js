@@ -9,12 +9,14 @@
  *   1. Reads every markdown file in content/news/
  *   2. Renders news/<slug>/index.html from build/news-template.html
  *   3. Rebuilds the NewsList sidebar on every news page (newest first)
- *   4. Points the main-nav "News" link at the newest post
- *   5. Updates data/news.json (used by the in-page news switcher)
- *   6. Regenerates sitemap.xml
+ *   4. Builds index.html, privacy.html and pravicy.html from content/pages/*.json (build/lib/)
+ *   5. Points the main-nav "News" link at the newest post (static studio.html, people.html)
+ *   6. Updates data/news.json (used by the in-page news switcher)
+ *   7. Regenerates sitemap.xml
  */
 const fs = require('node:fs');
 const path = require('node:path');
+const { writePages } = require('./build/lib/pages');
 
 const ROOT = __dirname;
 const DOMAIN = 'https://nellisarchitecture.com';
@@ -245,12 +247,17 @@ function build() {
 
   /* ---------- nav "News" link -> newest post ---------- */
   const newest = posts[0];
-  const indexFile = path.join(ROOT, 'index.html');
-  const idx = fs.readFileSync(indexFile, 'utf8').replace(
-    /(<a[^>]*href=")news\/[^"]*\/index\.html("[^>]*>\s*News\s*<\/a>)/,
-    `$1news/${newest.slug}/index.html$2`,
-  );
-  fs.writeFileSync(indexFile, idx);
+  const newsHref = `news/${newest.slug}/index.html`;
+  writePages(ROOT, newsHref);
+  // Studio and People are static until cards n4NJ0pMG and qo7fIwG1 generate them.
+  ['studio.html', 'people.html'].forEach((name) => {
+    const file = path.join(ROOT, name);
+    const src = fs.readFileSync(file, 'utf8').replace(
+      /(<a[^>]*href=")news\/[^"]*\/index\.html("[^>]*>\s*News\s*<\/a>)/,
+      `$1${newsHref}$2`,
+    );
+    fs.writeFileSync(file, src);
+  });
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson));
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts));

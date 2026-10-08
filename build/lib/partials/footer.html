@@ -1,0 +1,183 @@
+        <div class="footer__container">
+
+          <div class="ofices">
+            <span class="name">Offices:</span>
+            <span class="discription"
+              >Ground Floor, Building 4, Mangrove Avenue A, Sustainability District, Expo City, Dubai, UAE</span
+            >
+            <a href="tel:" class="discription" style ="width: fit-content;"> </a>
+          </div>
+          <div class="new-wrapper">
+          <div class="project">
+            <div class="projectUp"
+              >Have a project?
+              <div class="popup"><span>Let’s talk:</span>               
+                <svg style="margin-left: 10px;"
+                width="15"
+                height="8"
+                viewBox="0 0 15 8"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M14.3536 4.35355C14.5488 4.15829 14.5488 3.84171 14.3536 3.64645L11.1716 0.464466C10.9763 0.269204 10.6597 0.269204 10.4645 0.464466C10.2692 0.659728 10.2692 0.976311 10.4645 1.17157L13.2929 4L10.4645 6.82843C10.2692 7.02369 10.2692 7.34027 10.4645 7.53553C10.6597 7.7308 10.9763 7.7308 11.1716 7.53553L14.3536 4.35355ZM0 4.5H14V3.5H0V4.5Z"
+                  fill="#E3C78D"
+                />
+              </svg></div></div
+            >
+            <span class="projectDown"
+              >or
+              <a href="mailto:hello@nellisarchitecture.com" class="email"
+                >hello@nellisarchitecture.com</a
+              ></span
+            >
+          </div>
+
+          <div class="GotSkills">
+            <span>Got skills?</span>
+            <div class="popup2">
+              <span>Join us:</span>
+              <svg
+                width="15"
+                height="8"
+                viewBox="0 0 15 8"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M14.3536 4.35355C14.5488 4.15829 14.5488 3.84171 14.3536 3.64645L11.1716 0.464466C10.9763 0.269204 10.6597 0.269204 10.4645 0.464466C10.2692 0.659728 10.2692 0.976311 10.4645 1.17157L13.2929 4L10.4645 6.82843C10.2692 7.02369 10.2692 7.34027 10.4645 7.53553C10.6597 7.7308 10.9763 7.7308 11.1716 7.53553L14.3536 4.35355ZM0 4.5H14V3.5H0V4.5Z"
+                  fill="#E3C78D"
+                />
+              </svg>
+            </div>
+            <span class="footer__email"
+              >or
+              <a href="mailto:people@nellisarchitecture.com" class="email"
+                >people@nellisarchitecture.com</a
+              ></span
+            >
+          </div>
+          </div>
+
+          <div class="follow">
+            <span class="name">Follow:</span>
+            <a target="_blank" href="https://www.instagram.com/nellis.architecture/">Instagram</a>
+            <a target="_blank" href="https://www.linkedin.com/company/nellis-architecture/">LinkedIn</a>
+            <a target="_blank" href="https://www.youtube.com/@NellisArchitecture">YouTube</a>
+          </div>
+
+          <div class="copyright">© Nellis Architecture 2026</div>
+
+          <div class="polit">
+            <a href="privacy.html" target="_blank">Privacy policy</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/nellis/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script id="fancyboxScript-js" src="wp-content/themes/nellis/assets/JS/fancybox.umd.js"></script>
+<script id="swiperScriptLib-js" src="wp-content/themes/nellis/assets/JS/swiper/swiperLib.js"></script>
+<script id="burger-js" src="wp-content/themes/nellis/assets/JS/burger.js"></script>
+<script id="swiperScript-js" src="wp-content/themes/nellis/assets/JS/swiper.js"></script>
+<script id="modal-js" src="wp-content/themes/nellis/assets/JS/modal.js"></script>
+<script id="imgProtect-js" src="wp-content/themes/nellis/assets/JS/img-protect.js"></script>
+<script id="smush-lazy-load-js-before">
+var smushLazyLoadOptions = {"autoResizingEnabled":false,"autoResizeOptions":{"precision":5,"skipAutoWidth":true}};
+//# sourceURL=smush-lazy-load-js-before
+</script>
+<script id="smush-lazy-load-js" src="wp-content/plugins/wp-smush-pro/app/assets/js/smush-lazy-load.min.js"></script>
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('yourFormId');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        var formData = new FormData(form);
+        formData.append('action', 'callback_form1'); 
+        // formData.append('security', document.getElementById('nonce').value);
+        console.log('formData:', formData);
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'https://nellisarchitecture.com/wp-admin/admin-ajax.php', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        alert(response.data);
+                    } else {
+                        alert(response.data);
+                    }
+                } else {
+                    alert('Error.');
+                }
+            }
+        };
+        xhr.send(formData);
+    });
+});
+</script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('yourFormId2');
+    const loadingFileLabels = document.querySelectorAll(".loadingFile");
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        var formData = new FormData(form);
+        formData.append('action', 'callback_form2');
+      
+        formData.append('security', document.getElementById('nonce').value);
+        
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'https://nellisarchitecture.com/wp-admin/admin-ajax.php', true);
+        
+        xhr.upload.onprogress = function(event) {
+            if (event.lengthComputable) {
+                var percentComplete = (event.loaded / event.total) * 100;
+                console.log('loading: ' + Math.round(percentComplete) + '%');
+            }
+        };
+        
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        alert(response.data);
+                        loadingFileLabels.forEach(element => {
+                          element.style.display = 'none';
+                        });
+                    } else {
+                        alert(response.data);
+                    }
+                } else {
+                    alert('Error when submitting the form.');
+                }
+            }
+        };
+        
+        xhr.send(formData);
+    });
+});
+</script>
+
+    <script>
+Fancybox.bind("[data-fancybox]", {
+    hash: false
+});
+    </script>
+
+</body>
+</html>

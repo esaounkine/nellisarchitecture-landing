@@ -1,7 +1,7 @@
 import globals from 'globals';
 import { configs, plugins } from 'eslint-config-airbnb-extended';
 
-const nodeFiles = ['build-news.js', 'test/**/*.js', 'eslint.config.mjs'];
+const nodeFiles = ['build-news.js', 'build/lib/**/*.js', 'test/**/*.js', 'eslint.config.mjs'];
 const browserFiles = ['js/**/*.js'];
 
 export default [
@@ -9,6 +9,9 @@ export default [
     ignores: [
       '**/*',
       '!build-news.js',
+      '!build/',
+      '!build/lib/',
+      '!build/lib/**',
       '!eslint.config.mjs',
       '!js/',
       '!js/static-backend.js',
@@ -35,7 +38,7 @@ export default [
     rules: { 'import-x/no-extraneous-dependencies': ['error', { devDependencies: true }] },
   },
   {
-    files: ['build-news.js', 'test/**/*.js'],
+    files: ['build-news.js', 'build/lib/**/*.js', 'test/**/*.js'],
     languageOptions: { sourceType: 'commonjs' },
   },
   {

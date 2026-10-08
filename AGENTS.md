@@ -49,8 +49,9 @@ When driving a card via `/ticket`, read the card's current list. Follow the stat
 
 The site replaces a live WordPress site. Search ranking must survive the migration.
 
-- `content/news/*.md` is the source of truth for news. The CMS and people edit only these files (and uploads).
-- Never edit generated files by hand: `news/<slug>/index.html`, `data/news.json`, `sitemap.xml`, and the News link in the page navigation. Change `build-news.js` or `build/news-template.html`, then run the build.
+- `content/news/*.md` is the source of truth for news. `content/pages/*.json` is the source of truth for the generated pages. The CMS and people edit only these files (and uploads).
+- Never edit generated files by hand: `news/<slug>/index.html`, `data/news.json`, `sitemap.xml`, `index.html`, `privacy.html`, `pravicy.html`, and the News link in `studio.html` and `people.html`. Change `build-news.js`, `build/news-template.html` or `build/lib/`, then run the build.
+- To change the project grid or the overlays on Home, edit `build/lib/partials/index-projects.html`.
 - Keep every public URL of the old site. If a URL must change, add a 301 redirect in `netlify.toml`.
 - Keep titles, meta descriptions, canonical URLs, Open Graph tags and schema.org data correct. Absolute URLs use the production domain `https://nellisarchitecture.com`.
 - Never delete or rename files in `wp-content/uploads/`. Pages and external sites link to them.
@@ -62,7 +63,7 @@ The site replaces a live WordPress site. Search ranking must survive the migrati
 The code style is important for this project. We decide what style to use, then we stick to the style. Create eslint rules to enforce the style.
 Let's use a solid base (for example Airbnb) and adjust the base to our needs.
 
-Scope: our own code (`build-news.js`, `js/static-backend.js`, future scripts). Do not lint or reformat the original WordPress theme files in `wp-content/` or the page HTML.
+Scope: our own code (`build-news.js`, `build/lib/`, `js/static-backend.js`, future scripts). Do not lint or reformat the original WordPress theme files in `wp-content/` or the page HTML.
 
 ### Individual rules
 
@@ -71,10 +72,11 @@ Scope: our own code (`build-news.js`, `js/static-backend.js`, future scripts). D
 - Plain JavaScript. No TypeScript. No framework.
 - Build scripts run on Node with zero runtime dependencies. Add a dependency only when a card needs it. Dev tools go in `devDependencies`.
 - Browser code runs without a bundler. Keep the existing theme scripts working.
-- Base: Airbnb via `eslint-config-airbnb-extended` (`eslint.config.mjs`). Linted files: `build-news.js`, `js/static-backend.js`, `test/`, `eslint.config.mjs`. Add new own files to the config.
+- Base: Airbnb via `eslint-config-airbnb-extended` (`eslint.config.mjs`). Linted files: `build-news.js`, `build/lib/**/*.js`, `js/static-backend.js`, `test/`, `eslint.config.mjs`. Add new own files to the config.
 - Build scripts: synchronous `fs` calls and `console` output are allowed (`n/no-sync`, `no-console` off).
 - Browser scripts: `'use strict'` inside the IIFE (`strict: function`). Underscore fields are allowed for shim internals (`no-underscore-dangle` off).
 - Build scripts export their pure functions and run only when called directly (`require.main === module`), so tests can import them.
+- Page generator: static markup (with the WordPress tabs and spaces) stays in `build/lib/partials/*.html` with `{{TOKEN}}`s. JS fills the tokens with `fill()`. Escape CMS text with `escText` (text) or `escAttr` (attributes).
 
 ### Generic rules
 
