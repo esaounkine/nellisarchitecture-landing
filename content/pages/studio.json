@@ -1,0 +1,86 @@
+{
+  "h1": "Architecture Studio Dubai",
+  "intro": {
+    "title": "SPACES WITH MEANING",
+    "subtitle": "Artisanal Craft. Authentic Passion. Abiding Purpose.",
+    "photo": {
+      "src": "/wp-content/uploads/2025/02/Untitled-design-6.png",
+      "alt": "",
+      "width": 1366,
+      "height": 2048
+    },
+    "quote": "“We create high-end residential villas,\nsome the size of mini-hotels.”",
+    "quote_author": "Lee Nellis",
+    "paragraphs": [
+      "We’re not what you expect. But we are the go-to architecture studio of choice for ultra-luxurious villas and exceptional investment projects. We create spaces with passion and purpose for discerning, prominent individuals, hospitality and developers..",
+      "Genuinely down to earth, because that’s in our DNA, we are a refreshingly different, diverse, talented and multi-national team of architecture professionals with global experience, and we always get things done"
+    ],
+    "big_image": {
+      "src": "/wp-content/uploads/2025/02/Untitled-design-4.png",
+      "alt": "",
+      "width": 2048,
+      "height": 1366
+    }
+  },
+  "services": {
+    "title": "OUR SERVICES",
+    "button": "View projects",
+    "items": [
+      {
+        "title": "Architecture",
+        "link": "index.html#architecture"
+      },
+      {
+        "title": "Master Planning",
+        "link": "index.html#master planning"
+      },
+      {
+        "title": "Interior Design",
+        "link": "index.html#interior design"
+      },
+      {
+        "title": "Landscape",
+        "link": "index.html#landscape"
+      }
+    ]
+  },
+  "values": {
+    "title": "OUR VALUES",
+    "items": [
+      {
+        "title": "PASSION",
+        "text": "We love what we do and believe in going above and beyond to create spaces that make the spirit soar and the soul sing"
+      },
+      {
+        "title": "CRAFT",
+        "text": "We believe in time-honoured skills honed over generations of master craftsmen (and women)"
+      },
+      {
+        "title": "CREATIVITY",
+        "text": "We believe we are limited only by our imaginations and celebrate the possibilities of original thought and personal expression"
+      },
+      {
+        "title": "COLLABORATION",
+        "text": "We work as a team and believe in long-term relationships founded on authenticity, respect & trust"
+      },
+      {
+        "title": "SUSTAINABILITY",
+        "text": "We believe in building things of lasting value and enduring purpose"
+      }
+    ]
+  },
+  "founder": {
+    "title": "OUR FOUNDER",
+    "quote": "\"A lot of what drives me professionally can be traced back to the values I grew up with in Scotland.\"",
+    "photo": {
+      "src": "/wp-content/uploads/2025/02/Untitled-design-7.png",
+      "alt": "",
+      "width": 1366,
+      "height": 2048
+    },
+    "label": "Founder",
+    "name": "Lee Nellis",
+    "bio": "Scottish and United Kingdom registered Master Architect, RIBA Chartered Architect (since 2009),RIAS Chartered Architect (since 2009),and UK Registered Architect (ARB) (since 2009) is theowner and founder of Nellis Architecture.",
+    "text": "After spending 16 years in Dubai acquiring deep regional knowledge and a total of 21 years of international experience, Lee Nellis founded Nellis Architecture in 2023. A strong reputation precedes Lee,and he is very well-known, connected and highly respected in the market. Lee’s referrals and recommendations from clients and colleagues alike are frequently received via word-of-mouth. True to his Scottish heritage, Lee Nellis stands at the helm of this global company, steering its path, with a keen focus on creating bespoke, ultra-luxurious uber-villas, exclusive hospitality developments and valuable investment residences worldwide."
+  }
+}

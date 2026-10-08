@@ -51,7 +51,7 @@ collections:
           - label: "Affiliations"
             name: "affiliations"
             widget: "list"
-            hint: &site_hint "Changes show on Home and Privacy only, until the Studio and People cards are done."
+            hint: &site_hint "Changes show on Home, Privacy and Studio only, until the People card is done."
             fields:
               - { label: "Logo", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages", hint: *site_hint }
               - { label: "Alt text", name: "alt", widget: "string", required: false, hint: *site_hint }
@@ -88,3 +88,61 @@ collections:
           - { label: "H1 (hidden heading)", name: "h1", widget: "string" }
           - { label: "Title", name: "title", widget: "string" }
           - { label: "Body", name: "body", widget: "text", hint: "Plain text, no HTML. Each line shows as a separate paragraph." }
+      - name: "studio"
+        label: "Studio"
+        file: "content/pages/studio.json"
+        fields:
+          - { label: "H1 (hidden heading)", name: "h1", widget: "string" }
+          - label: "Intro"
+            name: "intro"
+            widget: "object"
+            fields:
+              - { label: "Title", name: "title", widget: "string", hint: "Shows as the page heading and in the Studio menu." }
+              - { label: "Subtitle", name: "subtitle", widget: "string" }
+              - label: "Photo"
+                name: "photo"
+                widget: "object"
+                fields: &studio_image
+                  - { label: "Image", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages" }
+                  - { label: "Alt text", name: "alt", widget: "string", required: false }
+                  - { label: "Width (px)", name: "width", widget: "number", value_type: "int" }
+                  - { label: "Height (px)", name: "height", widget: "number", value_type: "int" }
+              - { label: "Quote", name: "quote", widget: "text", hint: "Plain text, no HTML. Each line shows as a separate line." }
+              - { label: "Quote author", name: "quote_author", widget: "string", hint: "The page adds the dash before the name." }
+              - { label: "Paragraphs", name: "paragraphs", widget: "list", min: 2, max: 2, field: { label: "Paragraph", name: "paragraph", widget: "text" }, hint: "Two paragraphs. Each shows on mobile and on desktop." }
+              - { label: "Big image", name: "big_image", widget: "object", fields: *studio_image }
+          - label: "Services"
+            name: "services"
+            widget: "object"
+            fields:
+              - { label: "Title", name: "title", widget: "string", hint: "Shows as the section heading and in the Studio menu." }
+              - { label: "Button", name: "button", widget: "string", hint: "Text on each service button." }
+              - label: "Items"
+                name: "items"
+                widget: "list"
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Link", name: "link", widget: "string", hint: "For example index.html#architecture." }
+          - label: "Values"
+            name: "values"
+            widget: "object"
+            fields:
+              - { label: "Title", name: "title", widget: "string", hint: "Shows as the section heading and in the Studio menu." }
+              - label: "Items"
+                name: "items"
+                widget: "list"
+                hint: "Each value shows twice in the moving line."
+                fields:
+                  - { label: "Title", name: "title", widget: "string", hint: "Do not type a colon. The page adds the colon after the title." }
+                  - { label: "Text", name: "text", widget: "text" }
+          - label: "Founder"
+            name: "founder"
+            widget: "object"
+            fields:
+              - { label: "Title", name: "title", widget: "string", hint: "Shows as the section heading and in the Studio menu." }
+              - { label: "Quote", name: "quote", widget: "text" }
+              - { label: "Photo", name: "photo", widget: "object", fields: *studio_image }
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Bio", name: "bio", widget: "text" }
+              - { label: "Text", name: "text", widget: "text" }

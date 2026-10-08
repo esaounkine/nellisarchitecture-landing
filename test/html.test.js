@@ -57,3 +57,14 @@ test('affiliations indents with the page indent level', () => {
   assert.equal(four[0], `${' '.repeat(28)}<div class="partner">`);
   assert.equal(affiliations([], '  '), '');
 });
+
+test('affiliations level defaults to 7 and moves the partner div', () => {
+  const img = {
+    src: '/a.png', alt: '', width: 1, height: 1,
+  };
+  assert.equal(affiliations([img], '  ', 7), affiliations([img], '  '));
+  const eight = affiliations([img], '  ', 8).split('\n');
+  assert.equal(eight[0], `${' '.repeat(16)}<div class="partner">`);
+  assert.ok(eight[1].startsWith(`${' '.repeat(18)}<img data-src="a.png"`));
+  assert.equal(eight[2], `${' '.repeat(16)}</div>`);
+});

@@ -24,12 +24,13 @@ function top(h1, site) {
   });
 }
 
-/* indent: one indent level of the host page (index uses 2 spaces, privacy 4). */
-function affiliations(items, indent) {
+/* indent: one indent level of the host page (index uses 2 spaces, privacy 4).
+   level: nesting depth of the partner div (Studio nests one level deeper). */
+function affiliations(items, indent, level = 7) {
   const pad = (n) => indent.repeat(n);
-  return items.map((img) => `${pad(7)}<div class="partner">\n`
-    + `${pad(8)}${lazyImg(img)}\n`
-    + `${pad(7)}</div>`).join('\n');
+  return items.map((img) => `${pad(level)}<div class="partner">\n`
+    + `${pad(level + 1)}${lazyImg(img)}\n`
+    + `${pad(level)}</div>`).join('\n');
 }
 
 function footer() {

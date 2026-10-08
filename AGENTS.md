@@ -50,7 +50,7 @@ When driving a card via `/ticket`, read the card's current list. Follow the stat
 The site replaces a live WordPress site. Search ranking must survive the migration.
 
 - `content/news/*.md` is the source of truth for news. `content/pages/*.json` is the source of truth for the generated pages. The CMS and people edit only these files (and uploads).
-- Never edit generated files by hand: `news/<slug>/index.html`, `data/news.json`, `sitemap.xml`, `index.html`, `privacy.html`, `pravicy.html`, and the News link in `studio.html` and `people.html`. Change `build-news.js`, `build/news-template.html` or `build/lib/`, then run the build.
+- Never edit generated files by hand: `news/<slug>/index.html`, `data/news.json`, `sitemap.xml`, `index.html`, `privacy.html`, `pravicy.html`, `studio.html`, and the News link in `people.html`. Change `build-news.js`, `build/news-template.html` or `build/lib/`, then run the build.
 - To change the project grid or the overlays on Home, edit `build/lib/partials/index-projects.html`.
 - Keep every public URL of the old site. If a URL must change, add a 301 redirect in `netlify.toml`.
 - Keep titles, meta descriptions, canonical URLs, Open Graph tags and schema.org data correct. Absolute URLs use the production domain `https://nellisarchitecture.com`.

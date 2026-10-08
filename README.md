@@ -17,8 +17,8 @@ How this project is run — start here:
 ## Structure
 
 ```
-index.html, privacy.html, pravicy.html                             # pages (generated)
-studio.html, people.html                                           # pages (static; News link generated)
+index.html, privacy.html, pravicy.html, studio.html                # pages (generated)
+people.html                                                        # page (static; News link generated)
 news/<slug>/index.html                                             # 58 articles (generated)
 wp-content/                                                        # theme assets + images
 data/                 # static "backend": projects, search index, filters, news JSON
