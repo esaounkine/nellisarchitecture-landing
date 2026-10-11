@@ -21,8 +21,8 @@ You are the **orchestrator** of the development pipeline. Read the spec first: t
    - **In Progress** → Delegate to `dev`. The dev implements the signed-off plan with tests. Run the checks. Commit a checkpoint. Do not push. Write the commit hash as a comment. Move the card to **Test**. A committed implementation with passing checks must never stay in **To do** or **In Progress**.
    - **Test** → Run the checks (see the Bindings). If they pass, move the card to **Dev BR**. If anything fails, move the card back to **In Progress** with the failures.
    - **Dev BR** → Delegate to `bar-raiser` for a code and test review. Write the verdict as a comment. PASS → move the card to **Review**. BLOCK → move the card back to **In Progress** with the findings.
-   - **Review** → Delegate to `qa`. On PASS, **HALT for the person to review, sign off, and push.** On BLOCK, move the card back to **In Progress** with the list.
-   - **Shipping** → The person has pushed. Run the deploy check (see the Bindings). Report. **HALT for the person to confirm complete → Done.**
+   - **Review** → Delegate to `qa`. QA writes and runs the review scenario (docs/workflow/development.md → "Review scenario"). Write the scenario and the results to the card. Attach the screenshots. On PASS, **HALT for the person to review, sign off, and push.** On BLOCK, move the card back to **In Progress** with the list.
+   - **Shipping** → The person has pushed. Run the deploy check and the pending scenario tests (see the Bindings). Write the results to the card. Report. **HALT for the person to confirm complete → Done.**
    - **Done** → Nothing to do. Report. Follow-ups go to Backlog.
    - **Blocked** → Report the blocker comment. Ask the person how to proceed.
    - **Closed** → Nothing to do. Report.

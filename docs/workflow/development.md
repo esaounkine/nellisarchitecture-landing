@@ -32,8 +32,8 @@ Backlog → To do → Architect BR → In Progress → Test → Dev BR → Revie
 | In Progress | dev | Implement. Run checks. Local commit. | Green checkpoint commit. | Test |
 | Test | orchestrator | Run checks. | Checks pass. Fail → In Progress. | Dev BR |
 | Dev BR | bar-raiser | Code and test review. | PASS. BLOCK → In Progress. | Review |
-| Review | qa | Acceptance criteria, content and SEO checks. | PASS **and operator review**. BLOCK → In Progress. | Shipping |
-| Shipping | orchestrator | Operator pushes. Verify the deploy. | Deploy verified. | Done (operator) |
+| Review | qa | Acceptance criteria, content and SEO checks. [Review scenario](#review-scenario): write it, run it, attach the evidence. | PASS **and operator review**. BLOCK → In Progress. | Shipping |
+| Shipping | orchestrator | Operator pushes. Verify the deploy. Run the pending scenario tests. | Deploy verified. | Done (operator) |
 | Done | — | Terminal. Follow-ups go to Backlog. | — | — |
 | Blocked | — | Report the blocker. Ask the operator. | — | previous state |
 | Closed | — | Not done, not needed. Terminal. | — | — |
@@ -46,6 +46,20 @@ Human gates: Architect BR sign-off, Review sign-off, push, Done, Closed. Agents 
 - A design or a decision goes on the card (description or comment). No separate decision files.
 - A BLOCK comment lists each finding on one line: `location · what to change · why`.
 - One card, one change. Split big cards in grooming.
+
+## Review scenario
+
+At Review, write a review scenario on the card. The operator uses it to review the change.
+
+1. Write a table. Each row is one test: what to do, where to check, and the expected result.
+   - Where: local preview, the Netlify preview URL, the CMS, or the live site for comparison.
+   - Cover each acceptance criterion. Include the failing and edge cases, not only the happy path.
+2. Run each test that you can run before the push. Write the result for each test on the card.
+3. Attach evidence:
+   - A visual change: a screenshot. Show the new page next to the live page.
+   - A change you cannot see: the command output, for example head tags, status codes or sitemap lines.
+   - CMS behaviour: test on a temporary copy of the repo. Never change the real content.
+4. Mark each test that needs the deploy or a CMS login as **pending**. Run the deploy tests in Shipping. The operator runs the CMS login tests.
 
 ## Bindings
 
@@ -99,6 +113,8 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 - Lint: `npm run lint` ([ESLint](https://eslint.org/) with [eslint-config-airbnb-extended](https://www.npmjs.com/package/eslint-config-airbnb-extended), config in `eslint.config.mjs`). Fix style: `npm run format`.
 - Unit tests: `npm test` ([node:test](https://nodejs.org/api/test.html), files in `test/`).
 - **Checks** (Test state and before a push): `npm run lint && npm test && npm run build`, then `git status`. Only the expected files may change.
+- Screenshots (review scenario): a headless Chromium browser, for example [Brave](https://brave.com/) or Chrome: `"<browser>" --headless=new --hide-scrollbars --window-size=1440,900 --virtual-time-budget=8000 --screenshot=<file>.png <url>`. Make the file small before you attach it: `sips -s format jpeg -s formatOptions 40 -Z 1000 <file>.png --out <file>.jpg` (macOS).
+- Attach a file to a card: `POST /1/cards/<shortLink>/attachments` with `-F file=@<path>` ([Trello REST API](https://developer.atlassian.com/cloud/trello/rest/api-group-cards/#api-cards-id-attachments-post)).
 
 ### Hosting — Netlify
 
@@ -114,3 +130,4 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 - Netlify deploy for the pushed commit is **Published**.
 - Changed pages, `/`, `/news/<newest-slug>/` and `/sitemap.xml` return 200 on the preview URL (or production after cutover).
 - `/admin/` loads.
+- The pending tests of the [review scenario](#review-scenario) pass. Write the results on the card.
