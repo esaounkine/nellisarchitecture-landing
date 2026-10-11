@@ -209,6 +209,6 @@ collections:
             summary: "{{fields.from}} → {{fields.to}}"
             hint: "Each rule sends an old URL to a new URL with a permanent (301) redirect. A changed news slug gets its rule automatically."
             fields:
-              - { label: "From", name: "from", widget: "string", pattern: ['^/[A-Za-z0-9._~/-]*$', "Start with /. Use letters, digits and . _ ~ - / only."], hint: "Old path, lowercase, starts with /, e.g. /old-page/" }
-              - { label: "To", name: "to", widget: "string", pattern: ['^(/|https://)', "Start with / or https://"], hint: "New path on this site, e.g. /studio/, or a full https:// URL." }
+              - { label: "From", name: "from", widget: "string", pattern: ['^/(?!.*(\.\.|//))[A-Za-z0-9._~/-]*$', "Start with /. Use letters, digits and . _ ~ - / only. No .. or //."], hint: "Old path, starts with /, e.g. /old-page/. Upper and lower case are different." }
+              - { label: "To", name: "to", widget: "string", pattern: ['^(/(?!/)(?!.*(\.\.|//))|https://)', "Start with / or https://. No .. or //."], hint: "New path on this site, e.g. /studio/, or a full https:// URL." }
               - { label: "Note", name: "note", widget: "text", required: false }
