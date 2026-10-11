@@ -24,6 +24,8 @@ data/                 # static "backend": projects, search index, filters, news 
 js/static-backend.js  # intercepts the theme's old AJAX calls, serves data/ instead
 content/news/*.md     # news source of truth (edited via the CMS)
 content/pages/*.json  # page content source of truth (edited via the CMS)
+content/redirects.json # CMS redirects (301), source of truth (edited via the CMS)
+_redirects            # Netlify redirects (generated from content/redirects.json + news slugs)
 build/news-template.html
 build/lib/            # page generator: helpers, page modules, partials/*.html
 build-news.js         # regenerates news pages, generated pages + sitemap

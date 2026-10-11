@@ -3,10 +3,11 @@ const assert = require('node:assert/strict');
 const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
+const { tomlFroms } = require('../build/lib/redirects');
 
 const SITE = [
   'admin', 'data', 'js', 'news', 'people', 'privacy', 'studio', 'wp-content',
-  'robots.txt', 'sitemap.xml',
+  'robots.txt', 'sitemap.xml', '_redirects',
   'netlify.toml', // Netlify never serves it, no rule needed
 ];
 const isSite = (entry) => entry.endsWith('.html') || SITE.includes(entry);
@@ -22,7 +23,7 @@ files.forEach((file) => {
 const rule = (entry) => (entries.get(entry) ? `/${entry}/*` : `/${entry}`);
 
 const toml = fs.readFileSync(path.join(root, 'netlify.toml'), 'utf8');
-const froms = new Set([...toml.matchAll(/^\s*from\s*=\s*"([^"]+)"/gm)].map((m) => m[1]));
+const froms = new Set(tomlFroms(toml));
 
 test('every internal root entry has a deny rule in netlify.toml', () => {
   [...entries.keys()].filter((entry) => !isSite(entry)).forEach((entry) => {

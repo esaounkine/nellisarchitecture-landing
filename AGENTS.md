@@ -50,9 +50,10 @@ When driving a card via `/ticket`, read the card's current list. Follow the stat
 The site replaces a live WordPress site. Search ranking must survive the migration.
 
 - `content/news/*.md` is the source of truth for news. `content/pages/*.json` is the source of truth for the generated pages. The CMS and people edit only these files (and uploads).
-- Never edit generated files by hand: `news/<slug>/index.html`, `data/news.json`, `sitemap.xml`, `index.html`, `studio/index.html`, `people/index.html` and `privacy/index.html`. Change `build-news.js`, `build/news-template.html` or `build/lib/`, then run the build.
+- Never edit generated files by hand: `news/<slug>/index.html`, `data/news.json`, `sitemap.xml`, `index.html`, `studio/index.html`, `people/index.html`, `privacy/index.html` and `_redirects`. Change `build-news.js`, `build/news-template.html` or `build/lib/`, then run the build.
 - To change the project grid or the overlays on Home, edit `build/lib/partials/index-projects.html`.
 - Keep every public URL of the old site. If a URL must change, add a 301 redirect in `netlify.toml`.
+- CMS redirects → `content/redirects.json`. Wildcard or fixed rules → `netlify.toml`. Netlify reads `_redirects` first.
 - Keep titles, meta descriptions, canonical URLs, Open Graph tags and schema.org data correct. Absolute URLs use the production domain `https://nellisarchitecture.com`.
 - Never delete or rename files in `wp-content/uploads/`. Pages and external sites link to them.
 - Netlify publishes the repo root. A new internal root file or folder needs a 404 deny rule in `netlify.toml`. A new public root file or folder needs an entry in the `SITE` allow-list in `test/netlify-deny.test.js`, and no deny rule. Root `*.html` pages and dotfiles need neither.

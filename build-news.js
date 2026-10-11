@@ -13,11 +13,14 @@
  *      from content/pages/*.json (build/lib/); their "News" link points at the newest post
  *   5. Updates data/news.json (used by the in-page news switcher)
  *   6. Regenerates sitemap.xml
+ *   7. Deletes news/<dir>/ folders that no post owns
+ *   8. Writes _redirects from content/redirects.json and changed news slugs
  */
 const fs = require('node:fs');
 const path = require('node:path');
 const { writePages } = require('./build/lib/pages');
 const { pageUrl } = require('./build/lib/seo');
+const redirects = require('./build/lib/redirects');
 
 const ROOT = __dirname;
 const DOMAIN = 'https://nellisarchitecture.com';
@@ -120,6 +123,7 @@ function loadPosts(dir) {
     const file = path.join(dir, f);
     const { fm, body } = parseFrontMatter(fs.readFileSync(file, 'utf8'), file);
     if (!fm.id) fm.id = `md${fm.slug}`;
+    fm.filename = f.slice(0, -3);
     fm.html = mdToHtml(body);
     fm.dateObj = parseDate(fm.date);
     return fm;
@@ -210,6 +214,31 @@ function sitemap(posts, pages) {
     + `${rows.join('\n')}\n</urlset>\n`;
 }
 
+/* Only folders directly inside news/ are deleted. */
+function pruneNews(root, posts) {
+  const newsRoot = path.join(root, 'news');
+  const slugs = new Set(posts.map((p) => p.slug));
+  fs.readdirSync(newsRoot, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && !slugs.has(d.name))
+    .forEach((d) => {
+      fs.rmSync(path.join(newsRoot, d.name), { recursive: true });
+      console.log(`deleted stale news/${d.name}/`);
+    });
+}
+
+/* Run after every page write: the checks read the final tree. */
+function writeRedirects(root, posts) {
+  const exists = redirects.onDisk(root);
+  const json = fs.readFileSync(path.join(root, 'content', 'redirects.json'), 'utf8');
+  const manual = redirects.parseRules(json);
+  const rules = redirects.mergeRules(manual, redirects.autoNewsRules(posts), exists);
+  const tomlFroms = redirects.tomlFroms(fs.readFileSync(path.join(root, 'netlify.toml'), 'utf8'));
+  const errors = redirects.validate(rules, { exists, tomlFroms });
+  if (errors.length) throw new Error(`content/redirects.json:\n${errors.join('\n')}`);
+  fs.writeFileSync(path.join(root, '_redirects'), redirects.render(rules));
+  return rules;
+}
+
 function build() {
   const posts = loadPosts(path.join(ROOT, 'content', 'news'));
   if (!posts.length) {
@@ -227,6 +256,8 @@ function build() {
     fs.writeFileSync(path.join(outDir, 'index.html'), renderPost(template, p, list));
     newsJson[p.id] = newsJsonEntry(p);
   });
+
+  pruneNews(ROOT, posts);
 
   /* ---------- refresh NewsList inside every news page (incl. untouched ones) ---------- */
   const newsRoot = path.join(ROOT, 'news');
@@ -250,12 +281,22 @@ function build() {
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson));
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts, pages));
+  const rules = writeRedirects(ROOT, posts);
 
-  console.log(`built ${posts.length} news pages; newest: ${newest.slug}`);
+  console.log(`built ${posts.length} news pages; newest: ${newest.slug}; `
+    + `${rules.length} redirects`);
 }
 
 if (require.main === module) build();
 
 module.exports = {
-  parseFrontMatter, inlineMd, mdToHtml, parseDate, esc, idNum, sitemap,
+  parseFrontMatter,
+  inlineMd,
+  mdToHtml,
+  parseDate,
+  esc,
+  idNum,
+  sitemap,
+  pruneNews,
+  writeRedirects,
 };

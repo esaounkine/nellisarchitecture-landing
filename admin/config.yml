@@ -20,7 +20,7 @@ collections:
     label_singular: "News article"
     folder: "content/news"
     create: true
-    slug: "{{slug}}"
+    slug: "{{fields.slug}}"
     sortable_fields: ["date", "title"]
     summary: "{{title}} — {{date}}"
     fields:
@@ -31,7 +31,7 @@ collections:
         format: "MMMM D, YYYY"
         date_format: "MMMM D, YYYY"
         time_format: false
-      - { label: "URL slug", name: "slug", widget: "string", hint: "Lowercase words separated by dashes. Auto-filled from the title — only change it before first publish." }
+      - { label: "URL slug", name: "slug", widget: "string", hint: "Lowercase words separated by dashes. A change after publish adds a 301 from the old URL. A second change needs a manual rule in Redirects." }
       - { label: "SEO title", name: "seo_title", widget: "string", required: false, hint: "Browser tab / Google result title. Leave empty to use the article title." }
       - { label: "Meta description", name: "description", widget: "text", required: false, hint: "150–160 characters shown under the title in Google." }
       - { label: "Hero image", name: "hero", widget: "image", required: false }
@@ -193,3 +193,22 @@ collections:
               - { label: "Role", name: "role", widget: "string" }
               - { label: "Photo", name: "photo", widget: "object", fields: *page_image }
               - { label: "Bio", name: "bio", widget: "text", hint: "Plain text, no HTML. The page joins the lines into one paragraph." }
+
+  - name: "redirects"
+    label: "Redirects"
+    format: "json"
+    delete: false
+    files:
+      - name: "redirects"
+        label: "Redirects (301)"
+        file: "content/redirects.json"
+        fields:
+          - label: "Redirects"
+            name: "redirects"
+            widget: "list"
+            summary: "{{fields.from}} → {{fields.to}}"
+            hint: "Each rule sends an old URL to a new URL with a permanent (301) redirect. A changed news slug gets its rule automatically."
+            fields:
+              - { label: "From", name: "from", widget: "string", pattern: ['^/[A-Za-z0-9._~/-]*$', "Start with /. Use letters, digits and . _ ~ - / only."], hint: "Old path, lowercase, starts with /, e.g. /old-page/" }
+              - { label: "To", name: "to", widget: "string", pattern: ['^(/|https://)', "Start with / or https://"], hint: "New path on this site, e.g. /studio/, or a full https:// URL." }
+              - { label: "Note", name: "note", widget: "text", required: false }
