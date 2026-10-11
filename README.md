@@ -62,7 +62,7 @@ To edit page texts (Home, Studio, People, Privacy, shared affiliations and forms
 # edit or add a file in content/news/, then:
 node build-news.js
 # commit + push (Netlify rebuilds), or test locally:
-python3 -m http.server 8000
+npm run serve
 ```
 
 ## Notes
