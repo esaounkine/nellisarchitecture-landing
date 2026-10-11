@@ -44,7 +44,16 @@ test('renderPages output has no relative asset or page links', () => {
     assert.doesNotMatch(p.html, /(src|href)=["']wp-content\//, p.file);
     assert.doesNotMatch(p.html, /url\(["']?wp-content\//, p.file);
     assert.doesNotMatch(p.html, /href=["'][^"'/:#]*\.html/, p.file);
+    assert.doesNotMatch(p.html, /(src|href|data-src)=["'][^"']*%3F/i, p.file);
   });
+});
+
+test('404.html links only to absolute paths, anchors or full URLs', () => {
+  const html = fs.readFileSync(path.join(ROOT, '404.html'), 'utf8');
+  const refs = [...html.matchAll(/(?:src|href)=["']([^"']*)["']|url\(["']?([^"')]*)/g)]
+    .map((m) => m[1] || m[2]);
+  assert.ok(refs.length > 0);
+  refs.forEach((ref) => assert.match(ref, /^(\/|#|https?:|data:)/, ref));
 });
 
 const img = (name) => ({
@@ -221,7 +230,7 @@ test('intro renders one <p> per paragraph and escapes text', () => {
 });
 
 test('index-projects partial closes every div it opens', () => {
-  const html = fs.readFileSync(path.join(__dirname, '..', 'build/lib/partials/index-projects.html'), 'utf8');
-  const count = (re) => (html.match(re) || []).length;
-  assert.equal(count(/<div[\s>]/g), count(/<\/div>/g));
+  const html = fs.readFileSync(path.join(ROOT, 'build/lib/partials/index-projects.html'), 'utf8');
+  const matches = (re) => (html.match(re) || []).length;
+  assert.equal(matches(/<div[\s>]/g), matches(/<\/div>/g));
 });

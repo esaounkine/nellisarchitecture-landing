@@ -105,3 +105,13 @@ test('SEO values are escaped and $& stays literal', () => {
   const canonical = seoTokens({ seo: { canonical: `${DOMAIN}/a"b<c>` } }, { slug: 'x' }).CANONICAL;
   assert.equal(canonical, `${DOMAIN}/a&quot;b&lt;c&gt;`);
 });
+
+test('og:image in head.html and news-template.html exists on disk', () => {
+  ['build/lib/partials/head.html', 'build/news-template.html'].forEach((file) => {
+    const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
+    const m = html.match(/property="og:image" content="([^"]+)"/);
+    assert.ok(m, file);
+    assert.ok(m[1].startsWith(DOMAIN), file);
+    assert.ok(fs.existsSync(path.join(ROOT, m[1].slice(DOMAIN.length))), m[1]);
+  });
+});

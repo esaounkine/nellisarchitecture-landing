@@ -107,3 +107,8 @@ test('loadPosts refuses a slug that is not lowercase letters, digits and dashes'
   });
   fs.rmSync(dir, { recursive: true });
 });
+
+test('news template has no feed link', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'build', 'news-template.html'), 'utf8');
+  assert.doesNotMatch(html, /href=["'][^"']*feed\//);
+});
