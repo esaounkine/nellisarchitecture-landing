@@ -1,3 +1,10 @@
 {
-  "h1": "Nellis Architecture | Award-Winning Architectural Design Firm"
+  "h1": "Nellis Architecture | Award-Winning Architectural Design Firm",
+  "seo": {
+    "title": "Nellis Architecture | Award-Winning Architectural Design Firm",
+    "og_title": "",
+    "description": "Nellis Architecture is one of the best architecture firms in Dubai, delivering award-winning residential, commercial, and bespoke architectural design solutions.",
+    "canonical": "",
+    "noindex": false
+  }
 }

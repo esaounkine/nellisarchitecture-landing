@@ -245,5 +245,12 @@
       },
       "bio": "Viktoriia is a dynamic and dedicated Business Manager with a passion for architecture, design, and the natural world. Originally from Ukraine, Viktoriia brings both structure and soul to the team she supports. Known for her energy, humour, and people-first mindset, she takes pride in fostering a positive, high-performing workplace. Having always been amazed by the beauty and creativity in architecture, she is proud to be part of the Nellis Architecture team and is committed to contributing to its continued success and growth."
     }
-  ]
+  ],
+  "seo": {
+    "title": "Architecture Team Dubai",
+    "og_title": "The People | Nellis Architecture Studio Team & Experts Our Team",
+    "description": "Meet the passionate team at Nellis Architecture. Our architects, designers, and creative experts bring innovation and artistry to every project.",
+    "canonical": "",
+    "noindex": false
+  }
 }

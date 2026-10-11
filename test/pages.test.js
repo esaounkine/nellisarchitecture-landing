@@ -31,7 +31,7 @@ test('renderPages writes each page to its folder and puts the News link in it', 
   const pages = renderPages(ROOT, '/news/x-$&/');
   assert.deepEqual(
     pages.map((p) => p.file),
-    ['index.html', 'privacy/index.html', 'studio/index.html', 'people/index.html'],
+    ['index.html', 'studio/index.html', 'people/index.html', 'privacy/index.html'],
   );
   pages.forEach((p) => {
     assert.ok(p.html.includes('href="/news/x-$&amp;/"'), p.file);
@@ -87,7 +87,9 @@ function studioFixture() {
 test('studio render puts each value in its places', () => {
   const siteFile = path.join(ROOT, 'content', 'pages', 'site.json');
   const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
-  const html = studio.render(studioFixture(), { site, newsHref: 'news/n/index.html' });
+  const html = studio.render(studioFixture(), {
+    site, newsHref: 'news/n/index.html', page: { slug: 'x' },
+  });
   assert.ok(!html.includes('{{'));
   assert.ok(html.includes('<h1 class="visually-hidden">Hidden H1</h1>'));
   assert.ok(html.includes('site-containerStudioPageIn Intro &lt;T&gt; &quot;q&quot;">'));
@@ -170,7 +172,9 @@ test('people render puts each value in its places', () => {
   const site = readSite();
   const bio = 'Line one & $& "q"\n\nLine <two>';
   const list = [person(1), { ...person(2), name: 'Ann $&', bio }, person(3)];
-  const html = people.render(peopleFixture(list), { site, newsHref: 'news/n/index.html' });
+  const html = people.render(peopleFixture(list), {
+    site, newsHref: 'news/n/index.html', page: { slug: 'x' },
+  });
   assert.ok(!html.includes('{{'));
   assert.ok(html.includes('<h1 class="visually-hidden">Hidden &amp; H1</h1>'));
   assert.ok(html.includes('<h1>People &lt;T&gt;</h1>'));
@@ -199,7 +203,9 @@ test('people renders items with the theme separator and nothing for an empty lis
 
 test('people render works with no people', () => {
   const site = readSite();
-  const html = people.render(peopleFixture([]), { site, newsHref: 'news/n/index.html' });
+  const html = people.render(peopleFixture([]), {
+    site, newsHref: 'news/n/index.html', page: { slug: 'x' },
+  });
   assert.ok(!html.includes('{{'));
   assert.equal(count(html, '<div class="accord__item">'), 0);
   assert.ok(html.includes('<section class="PeopleAccord">'));

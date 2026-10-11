@@ -17,6 +17,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { writePages } = require('./build/lib/pages');
+const { pageUrl } = require('./build/lib/seo');
 
 const ROOT = __dirname;
 const DOMAIN = 'https://nellisarchitecture.com';
@@ -193,12 +194,9 @@ function newsJsonEntry(p) {
   };
 }
 
-function sitemap(posts) {
+function sitemap(posts, pages) {
   const urls = [
-    { loc: `${DOMAIN}/`, pr: '1.0' },
-    { loc: `${DOMAIN}/studio/`, pr: '0.8' },
-    { loc: `${DOMAIN}/people/`, pr: '0.8' },
-    { loc: `${DOMAIN}/privacy/`, pr: '0.2' },
+    ...pages.filter((p) => !p.noindex).map((p) => ({ loc: pageUrl(p.slug), pr: p.priority })),
     ...posts.map((p) => ({
       loc: `${DOMAIN}/news/${p.slug}/`, pr: '0.6', lastmod: p.dateObj.toISOString().slice(0, 10),
     })),
@@ -248,10 +246,10 @@ function build() {
   /* ---------- nav "News" link -> newest post ---------- */
   const newest = posts[0];
   const newsHref = `/news/${newest.slug}/`;
-  writePages(ROOT, newsHref);
+  const pages = writePages(ROOT, newsHref);
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson));
-  fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts));
+  fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts, pages));
 
   console.log(`built ${posts.length} news pages; newest: ${newest.slug}`);
 }

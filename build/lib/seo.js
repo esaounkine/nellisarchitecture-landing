@@ -1,0 +1,29 @@
+const { escText, escAttr } = require('./html');
+
+const DOMAIN = 'https://nellisarchitecture.com';
+const INDEX = "<meta name='robots' content='index, follow, max-image-preview:large, "
+  + "max-snippet:-1, max-video-preview:-1' />";
+const NOINDEX = '<meta name="robots" content="noindex">';
+
+const pageUrl = (slug) => (slug ? `${DOMAIN}/${slug}/` : `${DOMAIN}/`);
+
+/* Head tokens from the page's `seo` object. The slug is fixed in the PAGES registry. */
+function seoTokens(content, page) {
+  const seo = content.seo || {};
+  if (seo.canonical && !seo.canonical.startsWith(`${DOMAIN}/`)) {
+    throw new Error(`seo.canonical must start with ${DOMAIN}/: ${seo.canonical}`);
+  }
+  const title = seo.title || content.title || content.h1;
+  const url = seo.canonical || pageUrl(page.slug);
+  return {
+    TITLE: escText(title),
+    OG_TITLE: escAttr(seo.og_title || title),
+    DESCRIPTION: escAttr(seo.description),
+    OG_DESCRIPTION: escAttr(seo.description),
+    CANONICAL: escAttr(url),
+    OG_URL: escAttr(url),
+    ROBOTS: seo.noindex ? NOINDEX : INDEX,
+  };
+}
+
+module.exports = { DOMAIN, pageUrl, seoTokens };

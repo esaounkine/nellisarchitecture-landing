@@ -4,19 +4,14 @@ const {
 const {
   head, top, affiliations, footer,
 } = require('../chrome');
+const { seoTokens } = require('../seo');
 
-/* Head and SEO values stay here until card yGn1v4co moves them to the CMS (D3). Raw HTML. */
+/* Fixed head values, raw HTML. SEO values come from content.seo (seoTokens). */
 /* eslint-disable @stylistic/max-len -- raw WordPress head values, kept byte for byte */
 const HEAD = {
   BEFORE: '',
   IDENTITY: '',
-  TITLE: 'Nellis Architecture Studio',
-  DESCRIPTION: 'Discover Nellis Architecture Studio in Dubai. Experts in luxury villa design, master planning, interiors, and landscape architecture for high-end residential and investment projects.',
-  CANONICAL: 'https://nellisarchitecture.com/studio/',
   OG_TYPE: 'article',
-  OG_TITLE: 'Architecture Studio Dubai | Luxury Villa Design &amp; Interiors',
-  OG_DESCRIPTION: 'Discover Nellis Architecture Studio in Dubai. Experts in luxury villa design, master planning, interiors, and landscape architecture for high-end residential and investment projects.',
-  OG_URL: 'https://nellisarchitecture.com/studio/',
   MODIFIED_TIME: '2026-04-24T06:23:40+00:00',
   SCHEMA: '{"@context":"https:\\/\\/schema.org","@graph":[{"@type":"WebPage","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/","url":"https:\\/\\/nellisarchitecture.com\\/studio\\/","name":"Architecture Studio Dubai | Luxury Villa Design & Interiors","isPartOf":{"@id":"https:\\/\\/nellisarchitecture.com\\/#website"},"datePublished":"2025-02-15T21:05:18+00:00","dateModified":"2026-04-24T06:23:40+00:00","description":"Discover Nellis Architecture Studio in Dubai. Experts in luxury villa design, master planning, interiors, and landscape architecture for high-end residential and investment projects.","breadcrumb":{"@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https:\\/\\/nellisarchitecture.com\\/studio\\/"]}]},{"@type":"BreadcrumbList","@id":"https:\\/\\/nellisarchitecture.com\\/studio\\/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https:\\/\\/nellisarchitecture.com\\/"},{"@type":"ListItem","position":2,"name":"Architecture Studio Dubai"}]},{"@type":"WebSite","@id":"https:\\/\\/nellisarchitecture.com\\/#website","url":"https:\\/\\/nellisarchitecture.com\\/","name":"Nellis Architecture","description":"","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https:\\/\\/nellisarchitecture.com\\/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"}]}',
 };
@@ -48,10 +43,10 @@ function values(items, first, next, indent) {
     + `${pad(indent)}</div>`).join('\n');
 }
 
-function render(content, { site, newsHref }) {
+function render(content, { site, newsHref, page }) {
   const { intro, founder } = content;
   return [
-    head(HEAD),
+    head({ ...HEAD, ...seoTokens(content, page) }),
     top(content.h1, site),
     fill(loadPartial('page-studio'), {
       NEWS_HREF: escAttr(newsHref),

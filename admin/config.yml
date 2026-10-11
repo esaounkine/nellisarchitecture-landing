@@ -81,11 +81,26 @@ collections:
         file: "content/pages/index.json"
         fields:
           - { label: "H1 (hidden heading)", name: "h1", widget: "string" }
+          - label: "SEO"
+            name: "seo"
+            widget: "object"
+            hint: "Page URL: https://nellisarchitecture.com/ (fixed, not editable)."
+            fields: &seo_fields
+              - { label: "SEO title", name: "title", widget: "string", required: false, hint: "Browser tab and Google result title. Leave empty to use the page title." }
+              - { label: "Social title (og:title)", name: "og_title", widget: "string", required: false, hint: "Title for shared links. Leave empty to use the SEO title." }
+              - { label: "Meta description", name: "description", widget: "text", hint: "150–160 characters shown under the title in Google." }
+              - { label: "Canonical URL", name: "canonical", widget: "string", required: false, pattern: ['^$|^https://nellisarchitecture\.com/', "Leave empty, or start with https://nellisarchitecture.com/"], hint: "Leave empty to use the page URL." }
+              - { label: "Hide from search (noindex)", name: "noindex", widget: "boolean", default: false, hint: "On: Google does not show the page, and the sitemap does not list it." }
       - name: "privacy"
         label: "Privacy"
         file: "content/pages/privacy.json"
         fields:
           - { label: "H1 (hidden heading)", name: "h1", widget: "string" }
+          - label: "SEO"
+            name: "seo"
+            widget: "object"
+            hint: "Page URL: https://nellisarchitecture.com/privacy/ (fixed, not editable)."
+            fields: *seo_fields
           - { label: "Title", name: "title", widget: "string" }
           - { label: "Body", name: "body", widget: "text", hint: "Plain text, no HTML. Each line shows as a separate paragraph." }
       - name: "studio"
@@ -93,6 +108,11 @@ collections:
         file: "content/pages/studio.json"
         fields:
           - { label: "H1 (hidden heading)", name: "h1", widget: "string" }
+          - label: "SEO"
+            name: "seo"
+            widget: "object"
+            hint: "Page URL: https://nellisarchitecture.com/studio/ (fixed, not editable)."
+            fields: *seo_fields
           - label: "Intro"
             name: "intro"
             widget: "object"
@@ -151,6 +171,11 @@ collections:
         file: "content/pages/people.json"
         fields:
           - { label: "H1 (hidden heading)", name: "h1", widget: "string" }
+          - label: "SEO"
+            name: "seo"
+            widget: "object"
+            hint: "Page URL: https://nellisarchitecture.com/people/ (fixed, not editable)."
+            fields: *seo_fields
           - label: "Intro"
             name: "intro"
             widget: "object"

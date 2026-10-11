@@ -69,11 +69,26 @@ test('idNum returns the numeric id or 0', () => {
   assert.equal(idNum({ id: 'mdslug' }), 0);
 });
 
-test('sitemap lists static pages and posts with lastmod', () => {
-  const xml = sitemap([{ slug: 'p', dateObj: new Date(Date.UTC(2026, 0, 2)) }]);
+const PAGE_LIST = [
+  { slug: '', priority: '1.0', noindex: false },
+  { slug: 'studio', priority: '0.8', noindex: false },
+  { slug: 'privacy', priority: '0.2', noindex: true },
+];
+
+test('sitemap lists the pages and posts with lastmod', () => {
+  const xml = sitemap([{ slug: 'p', dateObj: new Date(Date.UTC(2026, 0, 2)) }], PAGE_LIST);
   assert.match(xml, /^<\?xml version="1.0" encoding="UTF-8"\?>\n<urlset /);
   const site = 'https://nellisarchitecture.com';
-  assert.ok(xml.includes(`<url><loc>${site}/</loc><priority>1.0</priority></url>`));
+  assert.ok(xml.includes(`\n  <url><loc>${site}/</loc><priority>1.0</priority></url>\n`));
+  assert.ok(xml.includes(`<url><loc>${site}/studio/</loc><priority>0.8</priority></url>`));
   assert.ok(xml.includes(`<loc>${site}/news/p/</loc><lastmod>2026-01-02</lastmod>`));
+  assert.ok(!xml.includes('index.html'));
+  assert.ok(!xml.includes('.com//'));
   assert.ok(xml.endsWith('</urlset>\n'));
+});
+
+test('sitemap skips noindex pages', () => {
+  const xml = sitemap([], PAGE_LIST);
+  assert.ok(!xml.includes('/privacy/'));
+  assert.equal(xml.split('<url>').length - 1, 2);
 });
