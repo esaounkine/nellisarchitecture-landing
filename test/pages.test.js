@@ -219,3 +219,9 @@ test('intro renders one <p> per paragraph and escapes text', () => {
   );
   assert.equal(people.intro([]), '');
 });
+
+test('index-projects partial closes every div it opens', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'build/lib/partials/index-projects.html'), 'utf8');
+  const count = (re) => (html.match(re) || []).length;
+  assert.equal(count(/<div[\s>]/g), count(/<\/div>/g));
+});
