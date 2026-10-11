@@ -1,7 +1,10 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
 const {
-  parseFrontMatter, inlineMd, mdToHtml, parseDate, esc, idNum, sitemap,
+  parseFrontMatter, inlineMd, mdToHtml, parseDate, esc, idNum, sitemap, loadPosts,
 } = require('../build-news');
 
 test('parseFrontMatter reads plain and quoted values', () => {
@@ -91,4 +94,16 @@ test('sitemap skips noindex pages', () => {
   const xml = sitemap([], PAGE_LIST);
   assert.ok(!xml.includes('/privacy/'));
   assert.equal(xml.split('<url>').length - 1, 2);
+});
+
+test('loadPosts refuses a slug that is not lowercase letters, digits and dashes', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'posts-'));
+  const post = (slug) => `---\ntitle: T\nslug: ${slug}\ndate: 2026-01-02\n---\nBody\n`;
+  fs.writeFileSync(path.join(dir, 'ok.md'), post('ok-post-2'));
+  assert.equal(loadPosts(dir)[0].slug, 'ok-post-2');
+  ['..', '../x', 'a/b', 'Upper', 'two words', 'a--b', '-a', ''].forEach((bad) => {
+    fs.writeFileSync(path.join(dir, 'bad.md'), post(bad));
+    assert.throws(() => loadPosts(dir), /slug must be lowercase/, bad);
+  });
+  fs.rmSync(dir, { recursive: true });
 });

@@ -19,6 +19,8 @@ function tomlFroms(toml) {
 }
 
 /* A file at <p>, or <p>/index.html. */
+// ponytail: macOS finds files in any case, Netlify (Linux) does not.
+// A case-only typo in `to` passes locally and fails the Netlify build (fail-safe).
 function onDisk(root) {
   return (p) => {
     const f = path.join(root, p);

@@ -19,11 +19,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { writePages } = require('./build/lib/pages');
-const { pageUrl } = require('./build/lib/seo');
+const { pageUrl, DOMAIN } = require('./build/lib/seo');
 const redirects = require('./build/lib/redirects');
 
 const ROOT = __dirname;
-const DOMAIN = 'https://nellisarchitecture.com';
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const MONTHS = [
   'january', 'february', 'march', 'april', 'may', 'june',
   'july', 'august', 'september', 'october', 'november', 'december',
@@ -122,6 +122,9 @@ function loadPosts(dir) {
   const posts = fs.readdirSync(dir).filter((f) => f.endsWith('.md')).map((f) => {
     const file = path.join(dir, f);
     const { fm, body } = parseFrontMatter(fs.readFileSync(file, 'utf8'), file);
+    if (!SLUG.test(fm.slug || '')) {
+      throw new Error(`${file}: slug must be lowercase letters, digits and dashes: "${fm.slug}"`);
+    }
     if (!fm.id) fm.id = `md${fm.slug}`;
     fm.filename = f.slice(0, -3);
     fm.html = mdToHtml(body);
@@ -297,6 +300,7 @@ module.exports = {
   esc,
   idNum,
   sitemap,
+  loadPosts,
   pruneNews,
   writeRedirects,
 };

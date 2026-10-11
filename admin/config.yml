@@ -31,7 +31,7 @@ collections:
         format: "MMMM D, YYYY"
         date_format: "MMMM D, YYYY"
         time_format: false
-      - { label: "URL slug", name: "slug", widget: "string", hint: "Lowercase words separated by dashes. A change after publish adds a 301 from the old URL. A second change needs a manual rule in Redirects." }
+      - { label: "URL slug", name: "slug", widget: "string", pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', "Use lowercase letters, digits and single dashes only"], hint: "Lowercase words separated by dashes. A change after publish adds a 301 from the old URL. A second change needs a manual rule in Redirects." }
       - { label: "SEO title", name: "seo_title", widget: "string", required: false, hint: "Browser tab / Google result title. Leave empty to use the article title." }
       - { label: "Meta description", name: "description", widget: "text", required: false, hint: "150–160 characters shown under the title in Google." }
       - { label: "Hero image", name: "hero", widget: "image", required: false }
