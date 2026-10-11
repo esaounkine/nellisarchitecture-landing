@@ -9,11 +9,10 @@
  *   1. Reads every markdown file in content/news/
  *   2. Renders news/<slug>/index.html from build/news-template.html
  *   3. Rebuilds the NewsList sidebar on every news page (newest first)
- *   4. Builds index.html, privacy.html, pravicy.html and studio.html
- *      from content/pages/*.json (build/lib/)
- *   5. Points the main-nav "News" link at the newest post (static people.html)
- *   6. Updates data/news.json (used by the in-page news switcher)
- *   7. Regenerates sitemap.xml
+ *   4. Builds index.html, privacy.html, pravicy.html, studio.html and people.html
+ *      from content/pages/*.json (build/lib/); their "News" link points at the newest post
+ *   5. Updates data/news.json (used by the in-page news switcher)
+ *   6. Regenerates sitemap.xml
  */
 const fs = require('node:fs');
 const path = require('node:path');
@@ -250,12 +249,6 @@ function build() {
   const newest = posts[0];
   const newsHref = `news/${newest.slug}/index.html`;
   writePages(ROOT, newsHref);
-  // People is static until card qo7fIwG1 generates it.
-  const peopleFile = path.join(ROOT, 'people.html');
-  fs.writeFileSync(peopleFile, fs.readFileSync(peopleFile, 'utf8').replace(
-    /(<a[^>]*href=")news\/[^"]*\/index\.html("[^>]*>\s*News\s*<\/a>)/,
-    `$1${newsHref}$2`,
-  ));
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson));
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts));

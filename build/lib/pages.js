@@ -4,6 +4,7 @@ const path = require('node:path');
 const index = require('./pages/index');
 const privacy = require('./pages/privacy');
 const studio = require('./pages/studio');
+const people = require('./pages/people');
 
 /* pravicy.html is the old typo URL. It gets the privacy render until yGn1v4co removes it (D7). */
 const PAGES = [
@@ -11,6 +12,7 @@ const PAGES = [
   { file: 'privacy.html', content: 'privacy', module: privacy },
   { file: 'pravicy.html', content: 'privacy', module: privacy },
   { file: 'studio.html', content: 'studio', module: studio },
+  { file: 'people.html', content: 'people', module: people },
 ];
 
 function readContent(root, name) {

@@ -17,8 +17,7 @@ How this project is run — start here:
 ## Structure
 
 ```
-index.html, privacy.html, pravicy.html, studio.html                # pages (generated)
-people.html                                                        # page (static; News link generated)
+index.html, privacy.html, pravicy.html, studio.html, people.html   # pages (generated)
 news/<slug>/index.html                                             # 58 articles (generated)
 wp-content/                                                        # theme assets + images
 data/                 # static "backend": projects, search index, filters, news JSON
@@ -52,10 +51,10 @@ test/                 # unit tests (npm test)
 1. Go to `nellisarchitecture.com/admin` and log in (Netlify Identity invite).
 2. News → New article. Fill title, date, meta description, hero image, body.
 3. Publish → the site rebuilds automatically in ~1 minute:
-   new article page, refreshed sidebar on all 58 articles, homepage News link,
+   new article page, refreshed sidebar on all 58 articles, News link on each page,
    sitemap.xml, and the in-page switcher data.
 
-To edit page texts (Home, Privacy, shared affiliations and forms), open **Pages** in `/admin`.
+To edit page texts (Home, Studio, People, Privacy, shared affiliations and forms), open **Pages** in `/admin`.
 
 ### Manual alternative (no CMS)
 

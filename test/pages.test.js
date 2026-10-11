@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { bodyLines } = require('../build/lib/pages/privacy');
 const studio = require('../build/lib/pages/studio');
+const people = require('../build/lib/pages/people');
 const { renderPages } = require('../build/lib/pages');
 
 test('bodyLines ends every text line with <br><br>, except the last', () => {
@@ -30,7 +31,7 @@ test('renderPages puts the News link in each page and renders pravicy as privacy
   const pages = renderPages(ROOT, 'news/x-$&/index.html');
   assert.deepEqual(
     pages.map((p) => p.file),
-    ['index.html', 'privacy.html', 'pravicy.html', 'studio.html'],
+    ['index.html', 'privacy.html', 'pravicy.html', 'studio.html', 'people.html'],
   );
   pages.forEach((p) => {
     assert.ok(p.html.includes('href="news/x-$&amp;/index.html"'), p.file);
@@ -140,4 +141,68 @@ test('services renders one block per item and nothing for an empty list', () => 
     + '\n            <div'));
   assert.ok(html.endsWith(`${' '.repeat(10)}</a>`));
   assert.equal(studio.services({ button: 'Go', items: [] }), '');
+});
+
+function peopleFixture(list) {
+  return {
+    h1: 'Hidden & H1',
+    intro: { title: 'People <T>', paragraphs: ['Para one', 'Para "two"'], image: img('team') },
+    people: list,
+  };
+}
+
+const readSite = () => JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'content', 'pages', 'site.json'), 'utf8'),
+);
+
+const person = (n) => ({
+  name: `Name ${n}`, role: `Role ${n}`, photo: img(`p${n}`), bio: `Bio ${n}`,
+});
+
+test('people render puts each value in its places', () => {
+  const site = readSite();
+  const bio = 'Line one & $& "q"\n\nLine <two>';
+  const list = [person(1), { ...person(2), name: 'Ann $&', bio }, person(3)];
+  const html = people.render(peopleFixture(list), { site, newsHref: 'news/n/index.html' });
+  assert.ok(!html.includes('{{'));
+  assert.ok(html.includes('<h1 class="visually-hidden">Hidden &amp; H1</h1>'));
+  assert.ok(html.includes('<h1>People &lt;T&gt;</h1>'));
+  assert.ok(html.includes('          Para "two"        </p>'));
+  assert.ok(html.includes('data-src="wp-content/uploads/pages/team.png" '
+    + 'alt="team &quot;alt&quot;"'));
+  assert.ok(html.includes('href="news/n/index.html" class="newsPage"'));
+  assert.ok(html.includes(`\n${' '.repeat(14)}<div class="partner">`));
+  assert.ok(!html.includes(`${' '.repeat(16)}<div class="partner">`));
+  assert.equal(count(html, '<div class="accord__item">'), 3);
+  assert.ok(html.indexOf('Name 1') < html.indexOf('Ann $&amp;'));
+  assert.ok(html.indexOf('Ann $&amp;') < html.indexOf('Name 3'));
+  assert.ok(html.includes('<span class="accord__itemDol">Role 2</span>'));
+  assert.ok(html.includes('Line one &amp; $&amp; "q"\n\nLine &lt;two&gt;          </div>'));
+  assert.ok(html.includes('data-src="wp-content/uploads/pages/p3.png" '
+    + 'alt="p3 &quot;alt&quot;"'));
+});
+
+test('people renders items with the theme separator and nothing for an empty list', () => {
+  const html = people.people([person(1), person(2)]);
+  assert.ok(html.startsWith(`${' '.repeat(8)}<div class="accord__item">`));
+  assert.ok(html.includes('        </div>\n\n\n      \n        <div class="accord__item">'));
+  assert.ok(html.endsWith(`${' '.repeat(8)}</div>`));
+  assert.equal(people.people([]), '');
+});
+
+test('people render works with no people', () => {
+  const site = readSite();
+  const html = people.render(peopleFixture([]), { site, newsHref: 'news/n/index.html' });
+  assert.ok(!html.includes('{{'));
+  assert.equal(count(html, '<div class="accord__item">'), 0);
+  assert.ok(html.includes('<section class="PeopleAccord">'));
+});
+
+test('intro renders one <p> per paragraph and escapes text', () => {
+  assert.equal(people.intro(['a & b']), '        <p>\n          a &amp; b        </p>');
+  assert.equal(
+    people.intro(['a', 'b']),
+    '        <p>\n          a        </p>\n        <p>\n          b        </p>',
+  );
+  assert.equal(people.intro([]), '');
 });

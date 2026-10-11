@@ -51,7 +51,7 @@ collections:
           - label: "Affiliations"
             name: "affiliations"
             widget: "list"
-            hint: &site_hint "Changes show on Home, Privacy and Studio only, until the People card is done."
+            hint: &site_hint "Changes show on Home, Studio, People and Privacy. News articles keep the old values."
             fields:
               - { label: "Logo", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages", hint: *site_hint }
               - { label: "Alt text", name: "alt", widget: "string", required: false, hint: *site_hint }
@@ -102,7 +102,7 @@ collections:
               - label: "Photo"
                 name: "photo"
                 widget: "object"
-                fields: &studio_image
+                fields: &page_image
                   - { label: "Image", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages" }
                   - { label: "Alt text", name: "alt", widget: "string", required: false }
                   - { label: "Width (px)", name: "width", widget: "number", value_type: "int" }
@@ -110,7 +110,7 @@ collections:
               - { label: "Quote", name: "quote", widget: "text", hint: "Plain text, no HTML. Each line shows as a separate line." }
               - { label: "Quote author", name: "quote_author", widget: "string", hint: "The page adds the dash before the name." }
               - { label: "Paragraphs", name: "paragraphs", widget: "list", min: 2, max: 2, field: { label: "Paragraph", name: "paragraph", widget: "text" }, hint: "Two paragraphs. Each shows on mobile and on desktop." }
-              - { label: "Big image", name: "big_image", widget: "object", fields: *studio_image }
+              - { label: "Big image", name: "big_image", widget: "object", fields: *page_image }
           - label: "Services"
             name: "services"
             widget: "object"
@@ -141,8 +141,30 @@ collections:
             fields:
               - { label: "Title", name: "title", widget: "string", hint: "Shows as the section heading and in the Studio menu." }
               - { label: "Quote", name: "quote", widget: "text" }
-              - { label: "Photo", name: "photo", widget: "object", fields: *studio_image }
+              - { label: "Photo", name: "photo", widget: "object", fields: *page_image }
               - { label: "Label", name: "label", widget: "string" }
               - { label: "Name", name: "name", widget: "string" }
               - { label: "Bio", name: "bio", widget: "text" }
               - { label: "Text", name: "text", widget: "text" }
+      - name: "people"
+        label: "People"
+        file: "content/pages/people.json"
+        fields:
+          - { label: "H1 (hidden heading)", name: "h1", widget: "string" }
+          - label: "Intro"
+            name: "intro"
+            widget: "object"
+            fields:
+              - { label: "Title", name: "title", widget: "string", hint: "Shows as the page heading." }
+              - { label: "Paragraphs", name: "paragraphs", widget: "list", min: 1, field: { label: "Paragraph", name: "paragraph", widget: "text" } }
+              - { label: "Image", name: "image", widget: "object", fields: *page_image }
+          - label: "People"
+            name: "people"
+            widget: "list"
+            summary: "{{fields.name}}"
+            hint: "The page shows the people in this order. Drag an item to move it."
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Role", name: "role", widget: "string" }
+              - { label: "Photo", name: "photo", widget: "object", fields: *page_image }
+              - { label: "Bio", name: "bio", widget: "text", hint: "Plain text, no HTML. The page joins the lines into one paragraph." }
