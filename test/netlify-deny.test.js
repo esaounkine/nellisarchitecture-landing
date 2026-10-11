@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const SITE = [
-  'admin', 'data', 'js', 'news', 'wp-content',
+  'admin', 'data', 'js', 'news', 'people', 'privacy', 'studio', 'wp-content',
   'robots.txt', 'sitemap.xml',
   'netlify.toml', // Netlify never serves it, no rule needed
 ];
@@ -33,5 +33,12 @@ test('every internal root entry has a deny rule in netlify.toml', () => {
 test('no site entry has a deny rule in netlify.toml', () => {
   [...entries.keys()].filter(isSite).forEach((entry) => {
     assert.ok(!froms.has(rule(entry)), `netlify.toml: site path "${rule(entry)}" is denied`);
+  });
+});
+
+test('netlify.toml sends /pravicy to /privacy/ and leaves the page folders to Netlify', () => {
+  assert.match(toml, /from = "\/pravicy"\n\s*to = "\/privacy\/"\n\s*status = 301\n/);
+  ['studio', 'people', 'privacy'].forEach((page) => {
+    assert.ok(![...froms].some((f) => f.startsWith(`/${page}`)), `netlify.toml: rule for /${page}`);
   });
 });

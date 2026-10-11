@@ -25,7 +25,7 @@ const HEAD = {
   ].join('\n'),
   TITLE: 'Nellis Architecture | Award-Winning Architectural Design Firm',
   DESCRIPTION: 'Nellis Architecture is one of the best architecture firms in Dubai, delivering award-winning residential, commercial, and bespoke architectural design solutions.',
-  CANONICAL: 'index.html',
+  CANONICAL: 'https://nellisarchitecture.com/',
   OG_TYPE: 'website',
   OG_TITLE: 'Nellis Architecture | Award-Winning Architectural Design Firm',
   OG_DESCRIPTION: 'Nellis Architecture is one of the best architecture firms in Dubai, delivering award-winning residential, commercial, and bespoke architectural design solutions.',

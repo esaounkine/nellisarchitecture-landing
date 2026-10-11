@@ -29,11 +29,11 @@ function fill(tpl, tokens) {
   return out;
 }
 
-/* Theme lazy-load image. CMS paths are root-absolute; pages at the root link them relative. */
+/* Theme lazy-load image. CMS paths are root-absolute. */
 function lazyImg({
   src, alt, width, height,
 }) {
-  return `<img data-src="${escAttr(src.replace(/^\//, ''))}" alt="${escAttr(alt)}" `
+  return `<img data-src="${escAttr(src)}" alt="${escAttr(alt)}" `
     + `src="${PLACEHOLDER}" `
     + `class="lazyload" style="--smush-placeholder-width: ${escAttr(width)}px; `
     + `--smush-placeholder-aspect-ratio: ${escAttr(width)}/${escAttr(height)};" />`;

@@ -36,11 +36,11 @@ test('loadPartial strips exactly one trailing newline', () => {
   fs.rmSync(dir, { recursive: true });
 });
 
-test('lazyImg links the root-absolute src relative and escapes attributes', () => {
+test('lazyImg keeps the root-absolute src and escapes attributes', () => {
   const html = lazyImg({
     src: '/wp-content/uploads/a.png', alt: 'A "b"', width: 123, height: 54,
   });
-  assert.ok(html.startsWith('<img data-src="wp-content/uploads/a.png" alt="A &quot;b&quot;" '));
+  assert.ok(html.startsWith('<img data-src="/wp-content/uploads/a.png" alt="A &quot;b&quot;" '));
   assert.ok(html.endsWith('width: 123px; --smush-placeholder-aspect-ratio: 123/54;" />'));
 });
 
@@ -51,7 +51,7 @@ test('affiliations indents with the page indent level', () => {
   const two = affiliations([img, img], '  ').split('\n');
   assert.equal(two.length, 6);
   assert.equal(two[0], `${' '.repeat(14)}<div class="partner">`);
-  assert.ok(two[1].startsWith(`${' '.repeat(16)}<img data-src="a.png"`));
+  assert.ok(two[1].startsWith(`${' '.repeat(16)}<img data-src="/a.png"`));
   assert.equal(two[2], `${' '.repeat(14)}</div>`);
   const four = affiliations([img], '    ').split('\n');
   assert.equal(four[0], `${' '.repeat(28)}<div class="partner">`);
@@ -65,6 +65,6 @@ test('affiliations level defaults to 7 and moves the partner div', () => {
   assert.equal(affiliations([img], '  ', 7), affiliations([img], '  '));
   const eight = affiliations([img], '  ', 8).split('\n');
   assert.equal(eight[0], `${' '.repeat(16)}<div class="partner">`);
-  assert.ok(eight[1].startsWith(`${' '.repeat(18)}<img data-src="a.png"`));
+  assert.ok(eight[1].startsWith(`${' '.repeat(18)}<img data-src="/a.png"`));
   assert.equal(eight[2], `${' '.repeat(16)}</div>`);
 });

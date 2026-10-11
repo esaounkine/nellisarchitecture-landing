@@ -9,7 +9,7 @@
  *   1. Reads every markdown file in content/news/
  *   2. Renders news/<slug>/index.html from build/news-template.html
  *   3. Rebuilds the NewsList sidebar on every news page (newest first)
- *   4. Builds index.html, privacy.html, pravicy.html, studio.html and people.html
+ *   4. Builds index.html, studio/, people/ and privacy/index.html
  *      from content/pages/*.json (build/lib/); their "News" link points at the newest post
  *   5. Updates data/news.json (used by the in-page news switcher)
  *   6. Regenerates sitemap.xml
@@ -160,7 +160,7 @@ function renderPost(template, p, list) {
     : '<div class="NewsImg" style="display: none;">\n          </div>';
   const newsBtn = p.link
     ? `<a target="_blank" href="${p.link}" class="NewsBtn">MORE INFO ${ARROW_SVG}</a>`
-    : '<a href="../../index.html" class="NewsBtn"></a>';
+    : '<a href="/" class="NewsBtn"></a>';
 
   return template
     .replaceAll('{{SEO_TITLE}}', esc(p.seo_title || `${p.title} | Nellis Architecture`))
@@ -247,7 +247,7 @@ function build() {
 
   /* ---------- nav "News" link -> newest post ---------- */
   const newest = posts[0];
-  const newsHref = `news/${newest.slug}/index.html`;
+  const newsHref = `/news/${newest.slug}/`;
   writePages(ROOT, newsHref);
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson));

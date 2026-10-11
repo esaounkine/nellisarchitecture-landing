@@ -12,7 +12,7 @@ const HEAD = {
   IDENTITY: '',
   TITLE: 'Privacy Policy | Data Protection &#038; User Privacy',
   DESCRIPTION: 'Lees het privacybeleid van Nellis Architecture. Ontdek hoe wij persoonlijke gegevens verzamelen, gebruiken en beschermen volgens de geldende privacywetgeving.',
-  CANONICAL: 'privacy.html',
+  CANONICAL: 'https://nellisarchitecture.com/privacy/',
   OG_TYPE: 'article',
   OG_TITLE: 'Privacy Policy | Data Protection &amp; User Privacy | Nellis Architecture',
   OG_DESCRIPTION: 'Lees het privacybeleid van Nellis Architecture. Ontdek hoe wij persoonlijke gegevens verzamelen, gebruiken en beschermen volgens de geldende privacywetgeving.',

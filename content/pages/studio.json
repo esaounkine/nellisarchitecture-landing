@@ -28,19 +28,19 @@
     "items": [
       {
         "title": "Architecture",
-        "link": "index.html#architecture"
+        "link": "/#architecture"
       },
       {
         "title": "Master Planning",
-        "link": "index.html#master planning"
+        "link": "/#master planning"
       },
       {
         "title": "Interior Design",
-        "link": "index.html#interior design"
+        "link": "/#interior design"
       },
       {
         "title": "Landscape",
-        "link": "index.html#landscape"
+        "link": "/#landscape"
       }
     ]
   },

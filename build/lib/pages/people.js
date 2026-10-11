@@ -12,7 +12,7 @@ const HEAD = {
   IDENTITY: '',
   TITLE: 'Architecture Team Dubai',
   DESCRIPTION: 'Meet the passionate team at Nellis Architecture. Our architects, designers, and creative experts bring innovation and artistry to every project.',
-  CANONICAL: 'people.html',
+  CANONICAL: 'https://nellisarchitecture.com/people/',
   OG_TYPE: 'article',
   OG_TITLE: 'The People | Nellis Architecture Studio Team &amp; Experts Our Team',
   OG_DESCRIPTION: 'Meet the passionate team at Nellis Architecture. Our architects, designers, and creative experts bring innovation and artistry to every project.',

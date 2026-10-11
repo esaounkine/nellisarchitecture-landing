@@ -17,7 +17,7 @@ How this project is run — start here:
 ## Structure
 
 ```
-index.html, privacy.html, pravicy.html, studio.html, people.html   # pages (generated)
+index.html, {studio,people,privacy}/index.html                     # pages (generated)
 news/<slug>/index.html                                             # 58 articles (generated)
 wp-content/                                                        # theme assets + images
 data/                 # static "backend": projects, search index, filters, news JSON
@@ -28,7 +28,7 @@ build/news-template.html
 build/lib/            # page generator: helpers, page modules, partials/*.html
 build-news.js         # regenerates news pages, generated pages + sitemap
 admin/                # Decap CMS (news and page editing UI)
-netlify.toml          # build + headers + caching + 404 deny rules
+netlify.toml          # build + headers + caching + redirects + 404 deny rules
 eslint.config.mjs     # lint rules (npm run lint)
 test/                 # unit tests (npm test)
 ```

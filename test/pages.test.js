@@ -27,17 +27,24 @@ test('bodyLines escapes text and keeps a space before the break', () => {
 const ROOT = path.join(__dirname, '..');
 const count = (s, sub) => s.split(sub).length - 1;
 
-test('renderPages puts the News link in each page and renders pravicy as privacy', () => {
-  const pages = renderPages(ROOT, 'news/x-$&/index.html');
+test('renderPages writes each page to its folder and puts the News link in it', () => {
+  const pages = renderPages(ROOT, '/news/x-$&/');
   assert.deepEqual(
     pages.map((p) => p.file),
-    ['index.html', 'privacy.html', 'pravicy.html', 'studio.html', 'people.html'],
+    ['index.html', 'privacy/index.html', 'studio/index.html', 'people/index.html'],
   );
   pages.forEach((p) => {
-    assert.ok(p.html.includes('href="news/x-$&amp;/index.html"'), p.file);
+    assert.ok(p.html.includes('href="/news/x-$&amp;/"'), p.file);
     assert.ok(!p.html.includes('{{'), p.file);
   });
-  assert.equal(pages[2].html, pages[1].html);
+});
+
+test('renderPages output has no relative asset or page links', () => {
+  renderPages(ROOT, '/news/x/').forEach((p) => {
+    assert.doesNotMatch(p.html, /(src|href)=["']wp-content\//, p.file);
+    assert.doesNotMatch(p.html, /url\(["']?wp-content\//, p.file);
+    assert.doesNotMatch(p.html, /href=["'][^"'/:#]*\.html/, p.file);
+  });
 });
 
 const img = (name) => ({
@@ -99,11 +106,11 @@ test('studio render puts each value in its places', () => {
   assert.ok(html.includes('href="index.html#a b"'));
   assert.ok(html.includes('href="x&quot;y"'));
   assert.equal(count(html, '                Go\n'), 2);
-  assert.ok(html.includes('data-src="wp-content/uploads/pages/founder.png" '
+  assert.ok(html.includes('data-src="/wp-content/uploads/pages/founder.png" '
     + 'alt="founder &quot;alt&quot;" class="photo1 lazyload"'));
   assert.ok(html.includes('--smush-placeholder-width: 10px; '
     + '--smush-placeholder-aspect-ratio: 10/20;" />'));
-  assert.ok(html.includes('data-src="wp-content/uploads/pages/big.png"'));
+  assert.ok(html.includes('data-src="/wp-content/uploads/pages/big.png"'));
   assert.ok(html.includes('href="news/n/index.html" class="newsPage"'));
   assert.ok(html.includes(`${' '.repeat(16)}<div class="partner">`));
   assert.ok(html.includes('"Quote"      </p>'));
@@ -168,7 +175,7 @@ test('people render puts each value in its places', () => {
   assert.ok(html.includes('<h1 class="visually-hidden">Hidden &amp; H1</h1>'));
   assert.ok(html.includes('<h1>People &lt;T&gt;</h1>'));
   assert.ok(html.includes('          Para "two"        </p>'));
-  assert.ok(html.includes('data-src="wp-content/uploads/pages/team.png" '
+  assert.ok(html.includes('data-src="/wp-content/uploads/pages/team.png" '
     + 'alt="team &quot;alt&quot;"'));
   assert.ok(html.includes('href="news/n/index.html" class="newsPage"'));
   assert.ok(html.includes(`\n${' '.repeat(14)}<div class="partner">`));
@@ -178,7 +185,7 @@ test('people render puts each value in its places', () => {
   assert.ok(html.indexOf('Ann $&amp;') < html.indexOf('Name 3'));
   assert.ok(html.includes('<span class="accord__itemDol">Role 2</span>'));
   assert.ok(html.includes('Line one &amp; $&amp; "q"\n\nLine &lt;two&gt;          </div>'));
-  assert.ok(html.includes('data-src="wp-content/uploads/pages/p3.png" '
+  assert.ok(html.includes('data-src="/wp-content/uploads/pages/p3.png" '
     + 'alt="p3 &quot;alt&quot;"'));
 });
 

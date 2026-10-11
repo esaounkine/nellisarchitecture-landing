@@ -6,14 +6,15 @@ const privacy = require('./pages/privacy');
 const studio = require('./pages/studio');
 const people = require('./pages/people');
 
-/* pravicy.html is the old typo URL. It gets the privacy render until yGn1v4co removes it (D7). */
+/* slug is fixed in code: the page URL is /<slug>/ (Home: /). */
 const PAGES = [
-  { file: 'index.html', content: 'index', module: index },
-  { file: 'privacy.html', content: 'privacy', module: privacy },
-  { file: 'pravicy.html', content: 'privacy', module: privacy },
-  { file: 'studio.html', content: 'studio', module: studio },
-  { file: 'people.html', content: 'people', module: people },
+  { slug: '', content: 'index', module: index },
+  { slug: 'privacy', content: 'privacy', module: privacy },
+  { slug: 'studio', content: 'studio', module: studio },
+  { slug: 'people', content: 'people', module: people },
 ];
+
+const pageFile = (slug) => (slug ? `${slug}/index.html` : 'index.html');
 
 function readContent(root, name) {
   return JSON.parse(fs.readFileSync(path.join(root, 'content', 'pages', `${name}.json`), 'utf8'));
@@ -22,13 +23,16 @@ function readContent(root, name) {
 function renderPages(root, newsHref) {
   const ctx = { site: readContent(root, 'site'), newsHref };
   return PAGES.map((p) => ({
-    file: p.file,
+    file: pageFile(p.slug),
     html: p.module.render(readContent(root, p.content), ctx),
   }));
 }
 
 function writePages(root, newsHref) {
-  renderPages(root, newsHref).forEach((p) => fs.writeFileSync(path.join(root, p.file), p.html));
+  renderPages(root, newsHref).forEach((p) => {
+    fs.mkdirSync(path.dirname(path.join(root, p.file)), { recursive: true });
+    fs.writeFileSync(path.join(root, p.file), p.html);
+  });
 }
 
 module.exports = { PAGES, renderPages, writePages };
