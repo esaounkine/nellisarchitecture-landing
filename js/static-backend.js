@@ -9,6 +9,13 @@
   const REAL_XHR = window.XMLHttpRequest;
   const realFetch = window.fetch ? window.fetch.bind(window) : null;
   const cache = {};
+  let homeGrid = null;
+
+  /* WordPress answers "all" with an empty list; keep Home's own grid for it. */
+  document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.querySelector('.center .container');
+    if (grid && grid.querySelector('.project__item')) homeGrid = grid.innerHTML;
+  });
 
   function getJSON(url) {
     if (!cache[url]) {
@@ -45,6 +52,7 @@
       const rc = p.get('residentalCommercialIF') || '1';
       let key = cur.toLowerCase().replace(/[^a-z]+/g, '_').replace(/^_+|_+$/g, '');
       if (!key) key = 'all';
+      if (key === 'all' && homeGrid) return Promise.resolve(homeGrid);
       return getText(`/data/filters/${key}_${rc}.html`)
         .catch(() => getText('/data/filters/all_1.html'));
     }
