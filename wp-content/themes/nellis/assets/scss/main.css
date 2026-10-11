@@ -947,7 +947,7 @@ p {
 
 @font-face {
   font-family: "Switzer";
-  src: url("../fonts/Switzer-Thin.woff") format("woff");
+  src: url("../fonts/../fonts/Switzer-Thin.woff") format("woff");
   font-weight: 100;
   font-display: swap;
   font-style: normal;
@@ -955,7 +955,7 @@ p {
 
 @font-face {
   font-family: "Switzer";
-  src: url("../fonts/Switzer-Extralight.woff") format("woff");
+  src: url("../fonts/../fonts/Switzer-Extralight.woff") format("woff");
   font-weight: 200;
   font-display: swap;
   font-style: normal;
@@ -963,7 +963,7 @@ p {
 
 @font-face {
   font-family: "Switzer";
-  src: url("../fonts/Switzer-Light.woff") format("woff");
+  src: url("../fonts/../fonts/Switzer-Light.woff") format("woff");
   font-weight: 300;
   font-display: swap;
   font-style: normal;
@@ -971,7 +971,7 @@ p {
 
 @font-face {
   font-family: "Switzer";
-  src: url("../fonts/Switzer-Regular.woff") format("woff");
+  src: url("../fonts/../fonts/Switzer-Regular.woff") format("woff");
   font-weight: 400;
   font-display: swap;
   font-style: normal;
@@ -979,7 +979,7 @@ p {
 
 @font-face {
   font-family: "Switzer";
-  src: url("../fonts/Switzer-Medium.woff") format("woff");
+  src: url("../fonts/../fonts/Switzer-Medium.woff") format("woff");
   font-weight: 500;
   font-display: swap;
   font-style: normal;
@@ -987,7 +987,7 @@ p {
 
 @font-face {
   font-family: "Switzer";
-  src: url("../fonts/Switzer-Semibold.woff") format("woff");
+  src: url("../fonts/../fonts/Switzer-Semibold.woff") format("woff");
   font-weight: 600;
   font-display: swap;
   font-style: normal;
@@ -995,7 +995,7 @@ p {
 
 @font-face {
   font-family: "Switzer";
-  src: url("../fonts/Switzer-Black.woff") format("woff");
+  src: url("../fonts/../fonts/Switzer-Black.woff") format("woff");
   font-weight: 800;
   font-display: swap;
   font-style: normal;
@@ -1003,7 +1003,7 @@ p {
 
 @font-face {
   font-family: "Switzer";
-  src: url("../fonts/Switzer-Bold.woff") format("woff");
+  src: url("../fonts/../fonts/Switzer-Bold.woff") format("woff");
   font-weight: 700;
   font-display: swap;
   font-style: normal;
@@ -1011,7 +1011,7 @@ p {
 
 @font-face {
   font-family: "NothingYouCouldDo";
-  src: url("../fonts/NothingYouCouldDo.woff") format("woff");
+  src: url("../fonts/../fonts/NothingYouCouldDo.woff") format("woff");
   font-weight: 400;
   font-display: swap;
   font-style: normal;
@@ -5758,49 +5758,49 @@ header {
 
 .FirstBlockPeople .FirstBlock__BigImg {
   margin-top: 20px;
-  height: 968px;
+  /*height: 968px;*/
 }
 
 @media (max-width: 1919px) {
   .FirstBlockPeople .FirstBlock__BigImg {
-    height: 820px;
+    /*height: 820px;*/
   }
 }
 
 @media (max-width: 1600px) {
   .FirstBlockPeople .FirstBlock__BigImg {
-    height: 670px;
+    /*height: 670px;*/
   }
 }
 
 @media (max-width: 1179px) {
   .FirstBlockPeople .FirstBlock__BigImg {
-    height: 500px;
+    /*height: 500px;*/
     margin-top: 20px;
   }
 }
 
 @media (max-width: 980px) {
   .FirstBlockPeople .FirstBlock__BigImg {
-    height: 670px;
+    /*height: 670px;*/
   }
 }
 
 @media (max-width: 980px) {
   .FirstBlockPeople .FirstBlock__BigImg {
-    height: 500px;
+    /*height: 500px;*/
   }
 }
 
 @media (max-width: 759px) {
   .FirstBlockPeople .FirstBlock__BigImg {
-    height: 400px;
+    /*height: 400px;*/
   }
 }
 
 @media (max-width: 479px) {
   .FirstBlockPeople .FirstBlock__BigImg {
-    height: 260px;
+    /*height: 260px;*/
   }
 }
 
@@ -6952,7 +6952,7 @@ header {
 }
 
 .nd1 {
-  background: url("/wp-content/themes/nellis/assets/img/new1.png");
+  background: url("../img/new1.png'?>");
   background-size: cover;
   width: 216px;
   height: 124px;
@@ -6961,13 +6961,13 @@ header {
 .nd2 {
   width: 304px;
   height: 72px;
-  background: url("/wp-content/themes/nellis/assets/img/new2.png");
+  background: url("../img/new2.png'?>");
   background-size: cover;
 }
 
 @media (max-width: 600px) {
   .new--decor {
-    background: url("/wp-content/themes/nellis/assets/img/new3.png");
+    background: url("../img/new3.png'?>");
     background-size: cover;
     height: auto;
     width: 100%;
