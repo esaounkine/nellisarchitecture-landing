@@ -61,3 +61,11 @@ test('netlify.toml serves the feed and redirects the old WordPress feed URLs', (
     assert.match(toml, re, `netlify.toml: missing ${from} -> ${to} ${status}`);
   });
 });
+
+test('netlify.toml sends the old WordPress news archives to /news/', () => {
+  ['/news/tag/*', '/news/category/*', '/news/author/*'].forEach((from) => {
+    const esc = from.replace('*', '\\*');
+    const re = new RegExp(`from = "${esc}"\\n\\s*to = "/news/"\\n\\s*status = 301\\n`);
+    assert.match(toml, re, `netlify.toml: missing ${from} -> /news/ 301`);
+  });
+});

@@ -114,3 +114,19 @@
   from = "/news/:slug/feed"
   to = "/news/:slug/"
   status = 301
+
+# Old WordPress news archives (card Gn13FGP1): tag, category and author lists go to the news index.
+[[redirects]]
+  from = "/news/tag/*"
+  to = "/news/"
+  status = 301
+
+[[redirects]]
+  from = "/news/category/*"
+  to = "/news/"
+  status = 301
+
+[[redirects]]
+  from = "/news/author/*"
+  to = "/news/"
+  status = 301
