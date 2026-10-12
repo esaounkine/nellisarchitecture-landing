@@ -68,7 +68,7 @@ When an international client evaluates architects in Dubai, they are rarely comp
 
  
 
-This is why process matters as much as design output. Clients who have commissioned homes such as [Villa Aurea](https://nellisarchitecture.com/projects/villa-aurea) often describe the value of the relationship as much as the value of the finished building. A considered process, with clear communication and realistic timelines, gives an international client confidence that a home commissioned from a distance will still reflect their intentions closely.
+This is why process matters as much as design output. Clients who have commissioned homes such as [Villa Aurea](https://nellisarchitecture.com/projects/architecture/aurea/) often describe the value of the relationship as much as the value of the finished building. A considered process, with clear communication and realistic timelines, gives an international client confidence that a home commissioned from a distance will still reflect their intentions closely.
 
  
 

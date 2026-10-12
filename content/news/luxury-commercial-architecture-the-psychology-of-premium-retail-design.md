@@ -124,7 +124,7 @@ Marketing campaigns are seasonal. Product lines are cyclical. Store concepts are
 
  
 
-This permanence carries responsibility. A commercial architecture practice asked to design flagship or branded space is, in effect, being asked to build the most durable piece of brand communication the client will produce. Firms that understand this distinction – and that apply the same rigour to a boutique as to a [Miro](https://nellisarchitecture.com/projects/miro)-scale residence – are the ones capable of delivering commercial architecture that UAE clients can build a long-term identity around, rather than simply a season’s worth of foot traffic.
+This permanence carries responsibility. A commercial architecture practice asked to design flagship or branded space is, in effect, being asked to build the most durable piece of brand communication the client will produce. Firms that understand this distinction – and that apply the same rigour to a boutique as to a [Miro](https://nellisarchitecture.com/projects/architecture/miro/)-scale residence – are the ones capable of delivering commercial architecture that UAE clients can build a long-term identity around, rather than simply a season’s worth of foot traffic.
 
  
 
