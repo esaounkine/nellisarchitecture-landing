@@ -125,12 +125,15 @@ function schema(entry, pageTitle, desc) {
             '@type': 'ListItem', position: 1, name: 'Home', item: `${DOMAIN}/`,
           },
           {
+            '@type': 'ListItem', position: 2, name: 'Projects', item: `${DOMAIN}/projects/`,
+          },
+          {
             '@type': 'ListItem',
-            position: 2,
+            position: 3,
             name: CATEGORIES[entry.cat].label,
             item: DOMAIN + categoryHref(entry.cat),
           },
-          { '@type': 'ListItem', position: 3, name: entry.name },
+          { '@type': 'ListItem', position: 4, name: entry.name },
         ],
       },
     ],

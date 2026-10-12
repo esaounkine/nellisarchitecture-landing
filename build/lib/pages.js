@@ -22,6 +22,9 @@ const PAGES = [
   {
     slug: 'privacy', content: 'privacy', module: privacy, priority: '0.2',
   },
+  {
+    slug: 'projects', content: 'projects', module: category, priority: '0.7', category: 'all',
+  },
   ...CATEGORY_KEYS.map((cat) => ({
     slug: `projects/${cat}`,
     content: `projects-${cat}`,

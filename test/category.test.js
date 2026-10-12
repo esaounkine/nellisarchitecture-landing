@@ -115,17 +115,18 @@ test('category JSON-LD is a CollectionPage with a Home › category breadcrumb',
   assert.equal(pageNode.url, url);
   assert.equal(pageNode.name, 'T');
   assert.deepEqual(pageNode.isPartOf, { '@id': `${DOMAIN}/#website` });
-  assert.deepEqual(crumbs.itemListElement.map((i) => [i.name, i.item]), [
-    ['Home', `${DOMAIN}/`], ['Landscape', undefined],
+  assert.deepEqual(crumbs.itemListElement.map((i) => [i.position, i.name, i.item]), [
+    [1, 'Home', `${DOMAIN}/`], [2, 'Projects', `${DOMAIN}/projects/`], [3, 'Landscape', undefined],
   ]);
-  assert.ok(html.includes('<span>Projects</span>'));
-  assert.ok(html.includes('<span aria-current="page">Landscape</span>'));
+  assert.ok(html.includes('<a href="/projects/">Projects</a> <span aria-hidden="true">›</span>\n'
+    + '                    <span aria-current="page">Landscape</span>'));
+  assert.ok(!html.includes('aria-label="Categories"'));
 });
 
-test('sitemap lists the 4 category pages once at priority 0.7', () => {
+test('sitemap lists the hub and the 4 category pages once at priority 0.7', () => {
   const xml = sitemap([], renderPages(ROOT, '/n/', LIST), LIST);
-  CATEGORY_KEYS.forEach((cat) => {
-    const row = `<url><loc>${DOMAIN}/projects/${cat}/</loc><priority>0.7</priority></url>`;
+  ['', ...CATEGORY_KEYS.map((cat) => `${cat}/`)].forEach((cat) => {
+    const row = `<url><loc>${DOMAIN}/projects/${cat}</loc><priority>0.7</priority></url>`;
     assert.equal(count(xml, row), 1, cat);
   });
 });
@@ -146,4 +147,50 @@ test('an overridden project stays in its override category only', () => {
   assert.equal(inCategory(entry, 'architecture'), false);
   const other = { name: 'Zoya', cat: 'architecture', p: { res2: ['architecture', 'landscape'] } };
   assert.equal(inCategory(other, 'landscape'), true);
+});
+
+const hubFile = path.join(ROOT, 'content', 'pages', 'projects.json');
+const hubContent = JSON.parse(fs.readFileSync(hubFile, 'utf8'));
+
+test('the hub lists all projects in data/projects.json order and links the 4 categories', () => {
+  assert.deepEqual(names('all'), LIST.map((e) => e.name));
+  assert.equal(LIST.length, 32);
+  const html = render(hubContent, 'all');
+  assert.equal(count(html, '<div class="project__item">'), 32);
+  const hrefs = [...html.matchAll(/class="project__link" href="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(hrefs, LIST.map((e) => e.url));
+  const nav = html.split('aria-label="Categories">')[1].split('</nav>')[0];
+  assert.deepEqual([...nav.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)].map((m) => [m[1], m[2]]), [
+    ['/projects/architecture/', 'Architecture'], ['/projects/interior-design/', 'Interior Design'],
+    ['/projects/landscape/', 'Landscape'], ['/projects/master-planning/', 'Master Planning'],
+  ]);
+  assert.equal(count(nav, '·'), 3);
+});
+
+test('the hub crumb ends at Projects and its JSON-LD has Home › Projects', () => {
+  const html = render(hubContent, 'all');
+  assert.ok(html.includes('<a href="/">Home</a> <span aria-hidden="true">›</span>\n'
+    + '                    <span aria-current="page">Projects</span>\n                </nav>'));
+  assert.ok(!html.includes('<a href="/projects/">Projects</a>'));
+  const json = html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
+  const [pageNode, crumbs] = JSON.parse(json)['@graph'];
+  assert.equal(pageNode.url, `${DOMAIN}/projects/`);
+  assert.deepEqual(crumbs.itemListElement.map((i) => [i.position, i.name, i.item]), [
+    [1, 'Home', `${DOMAIN}/`], [2, 'Projects', undefined],
+  ]);
+});
+
+test('the hub head has its own SEO tags and an absolute og:image', () => {
+  const url = `${DOMAIN}/projects/`;
+  const html = render(hubContent, 'all');
+  assert.ok(html.includes('<title>Luxury Villa Portfolio, Dubai: All Projects | Nellis</title>'));
+  assert.ok(html.includes('<meta name="description" content="Luxury villa portfolio by Nellis '
+    + 'Architecture in Dubai: villas on Palm Jumeirah, Emirates Hills and Saadiyat, interiors, '
+    + 'landscape and master planning." />'));
+  assert.ok(html.includes(`<link rel="canonical" href="${url}" />`));
+  assert.ok(html.includes(`<meta property="og:url" content="${url}" />`));
+  assert.equal(count(html, 'property="og:image"'), 1);
+  const thumb = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'search.json'), 'utf8'))
+    .find((s) => s.title === LIST[0].name).minImg;
+  assert.ok(html.includes(`<meta property="og:image" content="${DOMAIN}${thumb}">`));
 });

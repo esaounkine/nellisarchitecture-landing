@@ -83,9 +83,3 @@
   from = "/pravicy"
   to = "/privacy/"
   status = 301
-
-# No /projects/ page yet: send it to Home. No force, so a future projects/index.html takes over.
-[[redirects]]
-  from = "/projects"
-  to = "/"
-  status = 301

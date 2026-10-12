@@ -196,13 +196,18 @@ test('the page keeps the overlay order of blocks', () => {
   assert.deepEqual([...at].sort((a, b) => a - b), at);
 });
 
-test('the breadcrumb links Home and the category page', () => {
+test('the breadcrumb links Home, the hub and the category page', () => {
   const html = renderEntry(byName('Orel'));
   assert.ok(html.includes('<a href="/">Home</a>'));
-  assert.ok(html.includes('<span>Projects</span>'));
+  assert.ok(html.includes('<a href="/projects/">Projects</a>'));
   assert.ok(html.includes('<a href="/projects/master-planning/">Master Planning</a>'));
-  assert.ok(html.includes('"name":"Master Planning",'
-    + `"item":"${DOMAIN}/projects/master-planning/"`));
+  const ld = JSON.parse(html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1]);
+  assert.deepEqual(ld['@graph'][1].itemListElement.map((i) => [i.position, i.name, i.item]), [
+    [1, 'Home', `${DOMAIN}/`],
+    [2, 'Projects', `${DOMAIN}/projects/`],
+    [3, 'Master Planning', `${DOMAIN}/projects/master-planning/`],
+    [4, 'Orel', undefined],
+  ]);
   assert.ok(html.includes('<span aria-current="page">Orel</span>'));
 });
 

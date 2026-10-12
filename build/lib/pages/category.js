@@ -7,7 +7,15 @@ const {
   head, top, affiliations, footer,
 } = require('../chrome');
 const { DOMAIN, pageUrl, seoTokens } = require('../seo');
-const { CATEGORIES, inCategory } = require('../projects');
+const {
+  CATEGORIES, CATEGORY_KEYS, categoryHref, inCategory,
+} = require('../projects');
+
+/* The /projects/ hub uses this module with category 'all'. */
+const HUB = 'all';
+const HUB_HREF = '/projects/';
+const IND = ' '.repeat(20);
+const SEP = '<span aria-hidden="true">›</span>';
 
 /* Home grid thumbnails: data/search.json minImg, by project title. */
 function thumbs(root) {
@@ -15,9 +23,9 @@ function thumbs(root) {
   return Object.fromEntries(list.map((s) => [s.title, s.minImg]));
 }
 
-/* Projects of the category, in data/projects.json order. */
+/* Projects of the category (hub: all projects), in data/projects.json order. */
 function members(projects, cat) {
-  const list = projects.filter((e) => inCategory(e, cat));
+  const list = cat === HUB ? projects : projects.filter((e) => inCategory(e, cat));
   if (!list.length) throw new Error(`projects/${cat}/: no project in this category`);
   return list;
 }
@@ -44,7 +52,31 @@ function items(list, thumb) {
   }).join('\n');
 }
 
-function schema(url, name, desc, label) {
+const labelOf = (cat) => (cat === HUB ? 'Projects' : CATEGORIES[cat].label);
+
+/* Breadcrumb after Home. Hub: Projects is the current page. */
+function crumbs(cat, label) {
+  const current = `${IND}<span aria-current="page">${escText(label)}</span>`;
+  if (cat === HUB) return current;
+  return `${IND}<a href="${HUB_HREF}">Projects</a> ${SEP}\n${current}`;
+}
+
+/* Hub only: links to the category pages. Category pages: empty. */
+function categoryLinks(cat) {
+  if (cat !== HUB) return '';
+  const links = CATEGORY_KEYS.map((k) => `${IND}<a href="${escAttr(categoryHref(k))}">`
+    + `${escText(CATEGORIES[k].label)}</a>`);
+  return `\n${' '.repeat(16)}<nav class="projectBreadcrumbs" aria-label="Categories">\n`
+    + `${links.join(' <span aria-hidden="true">·</span>\n')}\n${' '.repeat(16)}</nav>`;
+}
+
+function schema(url, name, desc, cat, label) {
+  const hubItem = {
+    '@type': 'ListItem', position: 2, name: 'Projects', item: DOMAIN + HUB_HREF,
+  };
+  const tail = cat === HUB
+    ? [{ '@type': 'ListItem', position: 2, name: label }]
+    : [hubItem, { '@type': 'ListItem', position: 3, name: label }];
   return JSON.stringify({
     '@context': 'https://schema.org',
     '@graph': [
@@ -65,7 +97,7 @@ function schema(url, name, desc, label) {
           {
             '@type': 'ListItem', position: 1, name: 'Home', item: `${DOMAIN}/`,
           },
-          { '@type': 'ListItem', position: 2, name: label },
+          ...tail,
         ],
       },
     ],
@@ -75,7 +107,7 @@ function schema(url, name, desc, label) {
 function render(content, {
   site, newsHref, page, root, projects,
 }) {
-  const { label } = CATEGORIES[page.category];
+  const label = labelOf(page.category);
   const list = members(projects, page.category);
   const thumb = thumbs(root);
   const seo = content.seo || {};
@@ -85,7 +117,13 @@ function render(content, {
     OG_IMAGE: `  <meta property="og:image" content="${escAttr(DOMAIN + thumb[list[0].name])}">`,
     OG_TYPE: 'website',
     MODIFIED_TIME: '',
-    SCHEMA: schema(pageUrl(page.slug), seo.title || content.h1, seo.description || '', label),
+    SCHEMA: schema(
+      pageUrl(page.slug),
+      seo.title || content.h1,
+      seo.description || '',
+      page.category,
+      label,
+    ),
     ...seoTokens(content, page),
   // Shortcut: no dates, so drop the empty modified_time line (as on project pages).
   // Upgrade: a head token for the whole line.
@@ -96,9 +134,10 @@ function render(content, {
     fill(loadPartial('page-category'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '    '),
-      LABEL: escText(label),
+      CRUMBS: crumbs(page.category, label),
       H1: escText(content.h1),
       INTRO: escText(content.intro),
+      CATEGORY_LINKS: categoryLinks(page.category),
       ITEMS: items(list, thumb),
     }),
     footer(),

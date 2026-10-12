@@ -197,17 +197,21 @@ collections:
               - { label: "Role", name: "role", widget: "string" }
               - { label: "Photo", name: "photo", widget: "object", fields: *page_image }
               - { label: "Bio", name: "bio", widget: "text", hint: "Plain text, no HTML. The page joins the lines into one paragraph." }
-      - name: "projects-architecture"
-        label: "Projects: Architecture"
-        file: "content/pages/projects-architecture.json"
+      - name: "projects"
+        label: "Projects: All"
+        file: "content/pages/projects.json"
         fields: &category_fields
           - { label: "H1 (page heading)", name: "h1", widget: "string" }
           - { label: "Intro", name: "intro", widget: "text", hint: "Plain text, no HTML. Shows above the project list." }
           - label: "SEO"
             name: "seo"
             widget: "object"
-            hint: "Page URL: https://nellisarchitecture.com/projects/<category>/ (fixed, not editable)."
+            hint: "Page URL: https://nellisarchitecture.com/projects/ (All) or /projects/<category>/ (fixed, not editable)."
             fields: *seo_fields
+      - name: "projects-architecture"
+        label: "Projects: Architecture"
+        file: "content/pages/projects-architecture.json"
+        fields: *category_fields
       - name: "projects-master-planning"
         label: "Projects: Master Planning"
         file: "content/pages/projects-master-planning.json"
