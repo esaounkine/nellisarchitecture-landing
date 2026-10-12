@@ -481,5 +481,6 @@ test('a sidebar category filters the grid in place on Home and on project pages'
   assert.ok(script.includes("const FILTER_KEY = 'nellisProjectFilter';"));
   const times = (s) => html.split(s).length - 1;
   const swaps = times("querySelector('.center .container').innerHTML = xhr.responseText");
-  assert.equal(times('Projects.scrollTop = 0;'), swaps, 'each filter starts the list at the top');
+  const scrolls = times('            showCurrent();');
+  assert.equal(scrolls, swaps, 'each filter shows the open project');
 });

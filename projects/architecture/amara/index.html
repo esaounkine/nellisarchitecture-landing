@@ -1813,6 +1813,25 @@ Villa Amara embodies the perfect balance of luxury and nature, making it an idea
           }
         });
       }
+      function currentOffset() {
+        const cur = [...document.querySelectorAll('.center .container .project__link')]
+          .find((a) => a.getAttribute('href') === location.pathname);
+        if (!cur || !matchMedia('(min-width: 1180px)').matches) return 0;
+        return cur.parentNode.offsetTop - document.querySelector('.center .container .project__item').offsetTop;
+      }
+      // The swapped-in thumbs have no size until they load: keep the open project in view
+      // while they load, unless the visitor scrolls first.
+      function showCurrent() {
+        let moved = false;
+        const stop = () => { moved = true; };
+        Projects.addEventListener('wheel', stop, { once: true });
+        Projects.addEventListener('touchstart', stop, { once: true });
+        const show = () => { if (!moved) Projects.scrollTop = currentOffset(); };
+        show();
+        document.querySelectorAll('.center .container img').forEach((img) => {
+          if (!img.complete) img.addEventListener('load', show, { once: true });
+        });
+      }
       function loadFilter() {
         saveFilter();
         var xhr = new XMLHttpRequest();
@@ -1822,7 +1841,7 @@ Villa Amara embodies the perfect balance of luxury and nature, making it an idea
           if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             document.querySelector('.center .container').innerHTML = xhr.responseText + '<div class="elscroll"></div><div class="new--decor"><div class="nd1"></div><div class="nd2"></div></div>';
             markCurrent();
-            Projects.scrollTop = 0;
+            showCurrent();
             setTimeout(() => {
               const scrollelem = document.querySelector('.elscroll');
               const rect = scrollelem.getBoundingClientRect();
