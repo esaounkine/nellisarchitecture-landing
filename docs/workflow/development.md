@@ -126,6 +126,27 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 - CMS: `/admin` (Decap CMS, Netlify Identity + Git Gateway, editorial workflow).
 - Forms: Netlify Forms (`data-netlify` attributes).
 
+### Netlify credits
+
+Netlify bills in credits ([how credits work](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/how-credits-work/), [plans](https://www.netlify.com/pricing/)). Builds and serving both use credits:
+
+| Item | Credits |
+|---|---|
+| Production deploy (each push to `master`, and each CMS publish) | 15 |
+| Deploy Preview, branch deploy, failed deploy, rollback | 0 |
+| Bandwidth | 20 per GB |
+| Web requests | 2 per 10,000 |
+| Forms | 0 |
+
+The Free plan has 300 credits each month and a hard limit. When the credits run out, Netlify pauses the site. Personal (1,000 credits) and Pro (3,000 credits) can buy more.
+
+Rules:
+
+- Push to `master` in batches. One push is one production deploy, whatever the number of commits. Do not push for docs or test changes alone.
+- Do the checks that need a deploy on a free branch deploy or Deploy Preview, when one is set up. Then push to `master` once.
+- CMS editors: one publish is one production deploy. Publish changes together.
+- Page weight costs credits after the DNS cutover. A first view of Home, Studio or People is about 5 MB (measured 2026-10-12); about 200 such views use 1 GB (20 credits). Check the credit use in Netlify → Usage before and after the cutover.
+
 ### Deploy check (Shipping)
 
 - Netlify deploy for the pushed commit is **Published**.
