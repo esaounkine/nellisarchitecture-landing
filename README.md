@@ -19,6 +19,7 @@ How this project is run — start here:
 ```
 index.html, {studio,people,privacy}/index.html                     # pages (generated)
 news/<slug>/index.html                                             # 58 articles (generated)
+projects/<category>/index.html                                     # 4 category pages (generated)
 projects/<category>/<slug>/index.html                              # 32 project pages (generated from data/projects.json)
 wp-content/                                                        # theme assets + images
 data/                 # static "backend": projects, search index, filters, news JSON

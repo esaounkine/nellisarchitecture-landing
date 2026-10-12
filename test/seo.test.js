@@ -6,6 +6,7 @@ const { seoTokens, pageUrl } = require('../build/lib/seo');
 const { PAGES, renderPages } = require('../build/lib/pages');
 // eslint-disable-next-line import-x/no-useless-path-segments -- Home page module
 const index = require('../build/lib/pages/index');
+const { loadProjects } = require('../build/lib/projects');
 
 const ROOT = path.join(__dirname, '..');
 const DOMAIN = 'https://nellisarchitecture.com';
@@ -80,7 +81,7 @@ test('noindex replaces the robots line', () => {
   const site = read('site');
   const content = { ...read('index'), seo: { ...read('index').seo, noindex: true } };
   const html = index.render(content, {
-    site, newsHref: '/n/', page: pageOf('index'), root: ROOT,
+    site, newsHref: '/n/', page: pageOf('index'), projects: loadProjects(ROOT),
   });
   assert.ok(html.includes('  <meta name="robots" content="noindex">\n'));
   assert.ok(!html.includes("name='robots'"));
@@ -101,7 +102,7 @@ test('SEO values are escaped and $& stays literal', () => {
   assert.equal(t.OG_DESCRIPTION, t.DESCRIPTION);
   const site = read('site');
   const html = index.render({ h1: 'H', seo }, {
-    site, newsHref: '/n/', page: pageOf('index'), root: ROOT,
+    site, newsHref: '/n/', page: pageOf('index'), projects: loadProjects(ROOT),
   });
   assert.ok(html.includes(`<title>${t.TITLE}</title>`));
   assert.ok(html.includes(`<meta property="og:title" content="${t.OG_TITLE}" />`));

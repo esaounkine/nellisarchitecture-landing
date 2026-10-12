@@ -5,6 +5,8 @@ const index = require('./pages/index');
 const privacy = require('./pages/privacy');
 const studio = require('./pages/studio');
 const people = require('./pages/people');
+const category = require('./pages/category');
+const { CATEGORY_KEYS, loadProjects } = require('./projects');
 
 /* slug is fixed in code: the page URL is /<slug>/ (Home: /). */
 const PAGES = [
@@ -20,6 +22,13 @@ const PAGES = [
   {
     slug: 'privacy', content: 'privacy', module: privacy, priority: '0.2',
   },
+  ...CATEGORY_KEYS.map((cat) => ({
+    slug: `projects/${cat}`,
+    content: `projects-${cat}`,
+    module: category,
+    priority: '0.7',
+    category: cat,
+  })),
 ];
 
 const pageFile = (slug) => (slug ? `${slug}/index.html` : 'index.html');
@@ -28,15 +37,16 @@ function readContent(root, name) {
   return JSON.parse(fs.readFileSync(path.join(root, 'content', 'pages', `${name}.json`), 'utf8'));
 }
 
-/* Each result also carries what the sitemap needs: slug, priority, noindex. */
-function renderPages(root, newsHref) {
+/* Each result also carries what the sitemap needs: slug, priority, noindex.
+   projects: loadProjects() result, read once by the build. */
+function renderPages(root, newsHref, projects = loadProjects(root)) {
   const site = readContent(root, 'site');
   return PAGES.map((p) => {
     const content = readContent(root, p.content);
     return {
       file: pageFile(p.slug),
       html: p.module.render(content, {
-        site, newsHref, page: p, root,
+        site, newsHref, page: p, root, projects,
       }),
       slug: p.slug,
       priority: p.priority,
@@ -45,8 +55,8 @@ function renderPages(root, newsHref) {
   });
 }
 
-function writePages(root, newsHref) {
-  const pages = renderPages(root, newsHref);
+function writePages(root, newsHref, projects) {
+  const pages = renderPages(root, newsHref, projects);
   pages.forEach((p) => {
     fs.mkdirSync(path.dirname(path.join(root, p.file)), { recursive: true });
     fs.writeFileSync(path.join(root, p.file), p.html);

@@ -43,3 +43,10 @@ test('netlify.toml sends /pravicy to /privacy/ and leaves the page folders to Ne
     assert.ok(![...froms].some((f) => f.startsWith(`/${page}`)), `netlify.toml: rule for /${page}`);
   });
 });
+
+test('netlify.toml sends only /projects to Home and leaves the category pages to Netlify', () => {
+  assert.match(toml, /from = "\/projects"\n\s*to = "\/"\n\s*status = 301\n/);
+  const block = toml.split('[[redirects]]').find((r) => r.includes('from = "/projects"'));
+  assert.doesNotMatch(block, /force/);
+  assert.deepEqual([...froms].filter((f) => f.startsWith('/projects')), ['/projects']);
+});

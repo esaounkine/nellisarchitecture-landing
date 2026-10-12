@@ -17,26 +17,30 @@ const CATEGORY_OVERRIDE = {
   'Evergreens Hotel': 'master-planning',
 };
 
-/* nav: the exact text of the Home filter link (the nav highlight compares it). */
 const CATEGORIES = {
-  architecture: { label: 'Architecture', nav: 'architecture' },
-  'interior-design': { label: 'Interior Design', nav: 'interior design' },
-  landscape: { label: 'Landscape', nav: 'landscape' },
-  'master-planning': { label: 'Master Planning', nav: 'master planning' },
+  architecture: { label: 'Architecture' },
+  'interior-design': { label: 'Interior Design' },
+  landscape: { label: 'Landscape' },
+  'master-planning': { label: 'Master Planning' },
 };
 
 const CATEGORY_KEYS = Object.keys(CATEGORIES);
 
 const slugify = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
-/* Interim: the Home filter. Card BJf6BWUL switches this to category pages. */
-const categoryHref = (cat) => `/#${encodeURIComponent(CATEGORIES[cat].nav)}`;
+const categoryHref = (cat) => `/projects/${cat}/`;
 
 function category(name, p) {
   const raw = (p.res2 || [])[0];
   const cat = CATEGORY_OVERRIDE[name] || CATEGORY_ALIAS[raw];
   if (!cat) throw new Error(`data/projects.json: ${name}: unknown category "${raw}"`);
   return cat;
+}
+
+/* Primary category (after overrides), or a secondary one in res2[1..]. */
+function inCategory(entry, cat) {
+  return entry.cat === cat
+    || (entry.p.res2 || []).slice(1).some((raw) => CATEGORY_ALIAS[raw] === cat);
 }
 
 /* data: the projects.json object, name -> [project]. */
@@ -125,6 +129,7 @@ module.exports = {
   CATEGORY_KEYS,
   slugify,
   categoryHref,
+  inCategory,
   projectList,
   loadProjects,
   hashTarget,

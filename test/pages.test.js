@@ -31,7 +31,11 @@ test('renderPages writes each page to its folder and puts the News link in it', 
   const pages = renderPages(ROOT, '/news/x-$&/');
   assert.deepEqual(
     pages.map((p) => p.file),
-    ['index.html', 'studio/index.html', 'people/index.html', 'privacy/index.html'],
+    [
+      'index.html', 'studio/index.html', 'people/index.html', 'privacy/index.html',
+      'projects/architecture/index.html', 'projects/interior-design/index.html',
+      'projects/landscape/index.html', 'projects/master-planning/index.html',
+    ],
   );
   pages.forEach((p) => {
     assert.ok(p.html.includes('href="/news/x-$&amp;/"'), p.file);

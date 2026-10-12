@@ -83,10 +83,10 @@ test('the real data has 32 projects in the agreed categories', () => {
   assert.equal(projectUrl('W44'), '/projects/architecture/w44/');
 });
 
-test('categoryHref points at the Home filter with the nav link text', () => {
-  assert.equal(categoryHref('architecture'), '/#architecture');
-  assert.equal(categoryHref('master-planning'), '/#master%20planning');
-  assert.equal(categoryHref('interior-design'), '/#interior%20design');
+test('categoryHref points at the category page', () => {
+  assert.equal(categoryHref('architecture'), '/projects/architecture/');
+  assert.equal(categoryHref('master-planning'), '/projects/master-planning/');
+  assert.equal(categoryHref('interior-design'), '/projects/interior-design/');
 });
 
 test('description strips tags, decodes entities, collapses space and cuts at a word', () => {
@@ -189,11 +189,13 @@ test('the page keeps the overlay order of blocks', () => {
   assert.deepEqual([...at].sort((a, b) => a - b), at);
 });
 
-test('the breadcrumb links Home and the category filter', () => {
+test('the breadcrumb links Home and the category page', () => {
   const html = renderEntry(byName('Orel'));
   assert.ok(html.includes('<a href="/">Home</a>'));
   assert.ok(html.includes('<span>Projects</span>'));
-  assert.ok(html.includes('<a href="/#master%20planning">Master Planning</a>'));
+  assert.ok(html.includes('<a href="/projects/master-planning/">Master Planning</a>'));
+  assert.ok(html.includes('"name":"Master Planning",'
+    + `"item":"${DOMAIN}/projects/master-planning/"`));
   assert.ok(html.includes('<span aria-current="page">Orel</span>'));
 });
 
@@ -224,7 +226,7 @@ test('head without OG_IMAGE renders exactly the old head', () => {
 });
 
 test('the other pages keep the default og:image', () => {
-  renderPages(ROOT, '/news/x/').forEach((p) => {
+  renderPages(ROOT, '/news/x/').filter((p) => !p.file.startsWith('projects/')).forEach((p) => {
     assert.equal(count(p.html, 'property="og:image"'), 1, p.file);
     assert.ok(p.html.includes(OLD_OG), p.file);
   });
@@ -269,11 +271,13 @@ test('pruneProjects deletes only stale folders in projects/ and keeps categories
   ].forEach(mk);
   fs.writeFileSync(path.join(root, 'projects', 'file.txt'), 'x');
   fs.writeFileSync(path.join(root, 'projects', 'landscape', 'index.html'), 'x');
+  fs.writeFileSync(path.join(root, 'projects', 'architecture', 'index.html'), 'x');
   pruneProjects(root, [{ cat: 'architecture', slug: 'zoya' }]);
   const exists = (rel) => fs.existsSync(path.join(root, rel));
   assert.ok(exists('projects/architecture/zoya'));
   assert.ok(!exists('projects/architecture/old'));
   assert.ok(exists('projects/landscape/index.html'));
+  assert.ok(exists('projects/architecture/index.html'));
   assert.ok(!exists('projects/gone'));
   assert.ok(exists('projects/file.txt'));
   assert.ok(exists('news/keep'));

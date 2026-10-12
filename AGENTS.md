@@ -49,8 +49,8 @@ When driving a card via `/ticket`, read the card's current list. Follow the stat
 
 The site replaces a live WordPress site. Search ranking must survive the migration.
 
-- `content/news/*.md` is the source of truth for news. `content/pages/*.json` is the source of truth for the generated pages. `content/redirects.json` is the source of truth for redirects. `data/projects.json` is the source of truth for the project pages. The CMS and people edit only these files (and uploads).
-- Never edit generated files by hand: `news/<slug>/index.html`, `projects/<category>/<slug>/index.html`, `data/news.json`, `sitemap.xml`, `index.html`, `studio/index.html`, `people/index.html`, `privacy/index.html` and `_redirects`. Change `build-news.js`, `build/news-template.html` or `build/lib/`, then run the build.
+- `content/news/*.md` is the source of truth for news. `content/pages/*.json` is the source of truth for the generated pages (`projects-<category>.json`: the category pages; the project list comes from `data/projects.json`). `content/redirects.json` is the source of truth for redirects. `data/projects.json` is the source of truth for the project pages. The CMS and people edit only these files (and uploads).
+- Never edit generated files by hand: `news/<slug>/index.html`, `projects/<category>/index.html`, `projects/<category>/<slug>/index.html`, `data/news.json`, `sitemap.xml`, `index.html`, `studio/index.html`, `people/index.html`, `privacy/index.html` and `_redirects`. Change `build-news.js`, `build/news-template.html` or `build/lib/`, then run the build.
 - `data/filters/*.html` are hand-kept, not generated. Each project item in them carries a link to its project page.
 - To change the project grid or the overlays on Home, edit `build/lib/partials/index-projects.html`.
 - Keep every public URL of the old site. If a URL must change, add a 301 redirect in `content/redirects.json` (or in `netlify.toml` for a wildcard rule).
