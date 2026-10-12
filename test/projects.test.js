@@ -5,7 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const vm = require('node:vm');
 const {
-  slugify, categoryHref, projectList, loadProjects, hashTarget, shouldRedirect, description,
+  slugify, categoryHref, projectList, loadProjects, hashTarget, description,
   earlyScript,
 } = require('../build/lib/projects');
 const project = require('../build/lib/pages/project');
@@ -40,6 +40,13 @@ const proj = (over = {}) => ({
   ...over,
 });
 const entry = (name, over) => projectList({ [name]: [proj(over)] })[0];
+/* A test project rendered in the place of Zoya: a project page needs its URL in the Home grid. */
+const fake = (name, over) => ({ ...entry(name, over), url: projectUrl('Zoya') });
+/* The open project panel only, without the grid and the kept second panel. */
+const current = (html) => html.slice(
+  html.search(/<div class="currentProject[ "]/),
+  html.indexOf('<div class="currentProject2">'),
+);
 
 test('slugify lowercases and joins words with dashes', () => {
   assert.equal(slugify('W44'), 'w44');
@@ -101,7 +108,7 @@ test('description strips tags, decodes entities, collapses space and cuts at a w
 });
 
 test('project page has its own title, description, canonical and one og:image', () => {
-  const html = renderEntry(entry('A "Q" <b>', {
+  const html = renderEntry(fake('A "Q" <b>', {
     project_text_1: ['Say "hi" &amp; <br>bye'],
   }));
   const name = 'A "Q" &lt;b&gt;';
@@ -109,7 +116,7 @@ test('project page has its own title, description, canonical and one og:image', 
   assert.ok(html.includes(`<title>${name} | Palm Jumeirah | Nellis Architecture</title>`));
   assert.ok(html.includes(`<meta name="description" content="${desc}" />`));
   assert.ok(html.includes(`<meta property="og:description" content="${desc}" />`));
-  const url = `${DOMAIN}/projects/architecture/a-q-b/`;
+  const url = `${DOMAIN}/projects/architecture/zoya/`;
   assert.ok(html.includes(`<link rel="canonical" href="${url}" />`));
   assert.ok(html.includes(`<meta property="og:url" content="${url}" />`));
   assert.equal(count(html, 'property="og:image'), 1);
@@ -140,7 +147,7 @@ test('every project og:image exists on disk', () => {
 });
 
 test('a video hero renders a video and og:image uses the first slide', () => {
-  const html = renderEntry(entry('V', { first_img_video: '/wp-content/uploads/v.mp4' }));
+  const html = renderEntry(fake('V', { first_img_video: '/wp-content/uploads/v.mp4' }));
   assert.ok(html.includes('<video autoplay muted loop playsinline>'
     + '<source src="/wp-content/uploads/v.mp4"'));
   assert.ok(html.includes(
@@ -150,13 +157,13 @@ test('a video hero renders a video and og:image uses the first slide', () => {
 });
 
 test('empty and missing texts render no block and never "undefined"', () => {
-  const tela = renderEntry(byName('Tela'));
+  const tela = current(renderEntry(byName('Tela')));
   assert.ok(!tela.includes('undefined'));
   assert.equal(count(tela, 'class="currentProject_container projText2"'), 1);
   assert.equal(project.texts([''], 'projText3'), '');
   assert.ok(!project.texts(['a\r\n\r\nb'], 'x').includes('\r'));
   assert.equal(project.texts(undefined, 'projText3'), '');
-  const html = renderEntry(entry('E', { project_text_2: [' ', ''], project_slider2: [] }));
+  const html = current(renderEntry(fake('E', { project_text_2: [' ', ''], project_slider2: [] })));
   assert.ok(!html.includes('projText2'));
   assert.ok(!html.includes('projText3'));
   assert.equal((html.match(/<div class="swiper[" ]/g) || []).length, 1);
@@ -164,8 +171,8 @@ test('empty and missing texts render no block and never "undefined"', () => {
 });
 
 test('slider2 gets curpadslide only when text 3 is empty', () => {
-  assert.ok(renderEntry(entry('A')).includes('<div class="swiper curpadslide">'));
-  assert.ok(!renderEntry(entry('A', { project_text_3: ['T3'] })).includes('curpadslide'));
+  assert.ok(renderEntry(fake('A')).includes('<div class="swiper curpadslide">'));
+  assert.ok(!renderEntry(fake('A', { project_text_3: ['T3'] })).includes('curpadslide'));
 });
 
 test('typeSet renders label/value pairs and drops an odd last entry', () => {
@@ -177,9 +184,9 @@ test('typeSet renders label/value pairs and drops an odd last entry', () => {
 });
 
 test('the page keeps the overlay order of blocks', () => {
-  const html = renderEntry(entry('O', {
+  const html = current(renderEntry(fake('O', {
     project_text_3: ['T3'], project_last_img: ['/wp-content/uploads/last.jpg'],
-  }));
+  })));
   const order = [
     'hero.jpg', 's1.jpg', 'projText1', 'i2.jpg', 'projText2', 's2.jpg', 'projText3', 'last.jpg',
     'item-name',
@@ -255,13 +262,6 @@ test('hashTarget finds the project for an old #proj= link', () => {
   assert.equal(hashTarget('', map), null);
 });
 
-test('shouldRedirect skips Back and Reload', () => {
-  assert.equal(shouldRedirect('navigate'), true);
-  assert.equal(shouldRedirect(undefined), true);
-  assert.equal(shouldRedirect('reload'), false);
-  assert.equal(shouldRedirect('back_forward'), false);
-});
-
 test('pruneProjects deletes only stale folders in projects/ and keeps categories', () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'proj-'));
   const mk = (rel) => fs.mkdirSync(path.join(root, rel), { recursive: true });
@@ -287,22 +287,43 @@ test('pruneProjects deletes only stale folders in projects/ and keeps categories
 function runEarly(hash, navType) {
   const js = earlyScript(LIST).replace(/^\s*<script>|<\/script>\s*$/g, '');
   const went = [];
+  const listeners = {};
+  const location = { hash, replace: (u) => went.push(u) };
   vm.runInNewContext(js, {
-    location: { hash, replace: (u) => went.push(u) },
+    location,
     performance: { getEntriesByType: () => [{ type: navType }] },
-    window: { performance: true },
+    window: {
+      performance: true,
+      addEventListener: (ev, fn) => {
+        listeners[ev] = fn;
+      },
+    },
   });
-  return went;
+  const change = (h) => {
+    location.hash = h;
+    listeners.hashchange();
+  };
+  return { went, change };
 }
 
-test('the Home early script sends #proj= links to the project page, except on Back/Reload', () => {
-  assert.deepEqual(runEarly('#proj=Evergreens%20Hotel', 'navigate'), [
-    '/projects/master-planning/evergreens-hotel/',
-  ]);
-  assert.deepEqual(runEarly('#proj=Zoya', 'reload'), []);
-  assert.deepEqual(runEarly('#proj=Zoya', 'back_forward'), []);
-  assert.deepEqual(runEarly('#proj=%E0', 'navigate'), []);
-  assert.deepEqual(runEarly('#architecture', 'navigate'), []);
+test('the Home early script always sends #proj= links to the project page', () => {
+  ['navigate', 'reload', 'back_forward'].forEach((type) => {
+    assert.deepEqual(runEarly('#proj=Evergreens%20Hotel', type).went, [
+      '/projects/master-planning/evergreens-hotel/',
+    ], type);
+  });
+  ['#proj=%E0', '#proj=Nope', '#architecture', '#', '#invite_token=abc', ''].forEach((h) => {
+    assert.deepEqual(runEarly(h, 'navigate').went, [], h);
+  });
+});
+
+test('the Home early script redirects a later #proj= hash change with replace', () => {
+  const { went, change } = runEarly('', 'navigate');
+  change('#architecture');
+  change('#invite_token=abc');
+  assert.deepEqual(went, []);
+  change('#proj=Zoya');
+  assert.deepEqual(went, ['/projects/architecture/zoya/']);
 });
 
 test('only Home has the early script, before static-backend.js', () => {
@@ -344,4 +365,76 @@ test('every filter fragment item links to its project page', () => {
       assert.equal(label, name);
     });
   });
+});
+
+const divsOpen = (html) => (html.match(/<div[\s>]/g) || []).length
+  - (html.match(/<\/div>/g) || []).length;
+const HOME = renderPages(ROOT, '/news/x/').find((p) => p.file === 'index.html').html;
+const PROJECT_LINK = /<a class="project__link no-prefetch" href="([^"]+)"( aria-current="page")?/g;
+
+test('every project page shows its project open next to the thumbnail column', () => {
+  const urls = LIST.map((e) => e.url).sort();
+  LIST.forEach((e) => {
+    const html = renderEntry(e);
+    assert.ok(html.includes('<div class="centerProject centerMini">'), e.name);
+    assert.ok(html.includes('<div class="currentProject project__openned">'), e.name);
+    const found = [...html.matchAll(PROJECT_LINK)];
+    assert.deepEqual(found.map((m) => m[1]).sort(), urls, e.name);
+    assert.deepEqual(found.filter((m) => m[2]).map((m) => m[1]), [e.url], e.name);
+    assert.equal(count(html, '<div class="project__item zeroOpac">'), 31, e.name);
+    assert.equal(count(html, '<div class="project__item">'), 1, e.name);
+    assert.equal(count(html, 'class="projectPL PLoppened"'), 1, e.name);
+    const own = html.indexOf(`href="${e.url}" aria-current="page"`);
+    const item = html.slice(own, html.indexOf('PLoppened', own));
+    assert.ok(own > -1 && !item.includes('<div class="project__item'), e.name);
+    assert.equal(divsOpen(current(html)), 0, e.name);
+    assert.equal(divsOpen(html), divsOpen(HOME), e.name);
+    assert.ok(!html.includes('{{'), e.name);
+  });
+});
+
+test('the close controls of the open project are links to Home', () => {
+  [current(renderEntry(byName('Zoya'))), current(HOME)].forEach((html) => {
+    assert.equal(count(html, 'currentProject__closeBtn'), 2);
+    assert.equal(count(html, 'currentProject__closeBtn" href="/">'), 2);
+  });
+});
+
+test('gridItem marks only the item that links the page', () => {
+  const item = '<div class="project__item">\n<a class="project__link no-prefetch" href="/a/" '
+    + 'aria-label="A"></a><div class="projectPL">';
+  assert.equal(
+    project.gridItem(item, '/a/'),
+    item.replace('href="/a/"', 'href="/a/" aria-current="page"')
+      .replace('"projectPL"', '"projectPL PLoppened"'),
+  );
+  const other = item.replace('"project__item"', '"project__item zeroOpac"');
+  assert.equal(project.gridItem(item, '/b/'), other);
+});
+
+test('a project page throws when the Home grid does not link it', () => {
+  assert.throws(() => renderEntry(entry('Nowhere')), /exactly once/);
+});
+
+test('Home opens no overlay: plain grid links and no project script', () => {
+  const html = HOME;
+  ['#proj=\' +', 'ajaxProject', 'project__openned', 'centerMini', 'PLoppened', 'zeroOpac',
+    'aria-current', 'get_post_by_field_project'].forEach((s) => {
+    assert.ok(!html.includes(s), s);
+  });
+  assert.ok(!/project__link[^\n]*\)\s*event\.preventDefault/.test(html));
+  assert.ok(html.includes('<div class="centerProject">'));
+  assert.ok(html.includes('<div class="currentProject">'));
+});
+
+test('burger.js no longer clicks the project close button', () => {
+  const file = path.join(ROOT, 'wp-content/themes/nellis/assets/JS/burger.js');
+  const js = fs.readFileSync(file, 'utf8');
+  assert.ok(!js.includes('currentProject__closeBtn'));
+});
+
+test('off Home, a category link opens the filtered Home', () => {
+  const html = fs.readFileSync(path.join(ROOT, 'build/lib/partials/index-projects.html'), 'utf8');
+  assert.ok(html.includes("if (location.pathname !== '/') {\n"
+    + "            location.assign('/#' + el.textContent);"));
 });

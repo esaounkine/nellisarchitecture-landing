@@ -61,7 +61,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
     
     
     const navItem = document.querySelectorAll('.nav__project_item a');
-    const currentProject__closeBtn = document.querySelector('.currentProject__closeBtn');
     const navItemMobile = document.querySelectorAll('.nav__project_item');
     const allPodkat = document.querySelectorAll('.podkat');
     const allNavBtn = document.querySelectorAll('.residentialcommercial');
@@ -76,7 +75,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 }
                 element.parentNode.querySelector('.podkat').classList.add('navCurrHeight');
                 element.parentNode.querySelector('.podkat .residentialcommercial').classList.add('btnActive');
-                currentProject__closeBtn.click();
             }catch{};
         });
     });
@@ -103,7 +101,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 allNavBtn[i].classList.remove('btnActive');
             }
             element.classList.add('btnActive');
-            currentProject__closeBtn.click();
         });
     });
     

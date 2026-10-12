@@ -1,0 +1,25 @@
+      <nav class="projectBreadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a> <span aria-hidden="true">›</span>
+        <span>Projects</span> <span aria-hidden="true">›</span>
+        <a href="{{CATEGORY_HREF}}">{{CATEGORY_LABEL}}</a> <span aria-hidden="true">›</span>
+        <span aria-current="page">{{NAME}}</span>
+      </nav>
+      <style>
+        .projectBreadcrumbs {
+          padding: 20px 22px 0 10px;
+          font-size: 14px;
+          font-weight: 300;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }
+
+        .projectBreadcrumbs a {
+          color: inherit;
+        }
+
+        @media screen and (max-width: 1179px) {
+          .projectBreadcrumbs {
+            padding: 10px 15px 0;
+          }
+        }
+      </style>

@@ -233,8 +233,10 @@ test('intro renders one <p> per paragraph and escapes text', () => {
   assert.equal(people.intro([]), '');
 });
 
-test('index-projects partial closes every div it opens', () => {
-  const html = fs.readFileSync(path.join(ROOT, 'build/lib/partials/index-projects.html'), 'utf8');
-  const matches = (re) => (html.match(re) || []).length;
-  assert.equal(matches(/<div[\s>]/g), matches(/<\/div>/g));
+['index-projects', 'current-project'].forEach((name) => {
+  test(`${name} partial closes every div it opens`, () => {
+    const html = fs.readFileSync(path.join(ROOT, `build/lib/partials/${name}.html`), 'utf8');
+    const matches = (re) => (html.match(re) || []).length;
+    assert.equal(matches(/<div[\s>]/g), matches(/<\/div>/g));
+  });
 });

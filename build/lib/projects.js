@@ -78,13 +78,8 @@ function hashTarget(hash, map) {
   return key ? map[key] : null;
 }
 
-/* Back/Reload keep the overlay, so the visitor can return to the Home grid. */
-function shouldRedirect(navType) {
-  return navType !== 'reload' && navType !== 'back_forward';
-}
-
-/* Home only: sends old /#proj=<Name> links to the project page
-   before the theme opens the overlay. */
+/* Home only: sends old /#proj=<Name> links (also theme search results,
+   which set the hash) to the project page. replace(): no history entry. */
 function earlyScript(list) {
   const map = Object.fromEntries(list.map((e) => [e.name, e.url]));
   return [
@@ -92,11 +87,12 @@ function earlyScript(list) {
     '    (function () {',
     `      var map = ${JSON.stringify(map).replace(/</g, '\\u003c')};`,
     `      ${hashTarget}`,
-    `      ${shouldRedirect}`,
-    '      var nav = window.performance && performance.getEntriesByType',
-    "        ? performance.getEntriesByType('navigation')[0] : null;",
-    '      var url = hashTarget(location.hash, map);',
-    '      if (url && shouldRedirect(nav && nav.type)) location.replace(url);',
+    '      function go() {',
+    '        var url = hashTarget(location.hash, map);',
+    '        if (url) location.replace(url);',
+    '      }',
+    '      go();',
+    "      window.addEventListener('hashchange', go);",
     '    }());',
     '  </script>',
     '',
@@ -134,7 +130,6 @@ module.exports = {
   projectList,
   loadProjects,
   hashTarget,
-  shouldRedirect,
   earlyScript,
   decodeEntities,
   description,

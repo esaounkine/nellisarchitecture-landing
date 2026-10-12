@@ -31,6 +31,18 @@ const HEAD = {
 };
 /* eslint-enable @stylistic/max-len */
 
+/* The project overlay stays closed and empty on Home: each project has its own page. */
+const CLOSED_PROJECT = {
+  OPEN_CLASS: '',
+  BREADCRUMB: '',
+  NAME: '',
+  AREA: '',
+  REGION: '',
+  HERO: '',
+  CONTENT: '',
+  TYPE_SET: '',
+};
+
 function render(content, {
   site, newsHref, page, projects,
 }) {
@@ -40,7 +52,10 @@ function render(content, {
     fill(loadPartial('page-index'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
-      PROJECTS: loadPartial('index-projects'),
+      PROJECTS: fill(loadPartial('index-projects'), {
+        CENTER_CLASS: '',
+        CURRENT_PROJECT: fill(loadPartial('current-project'), CLOSED_PROJECT),
+      }),
     }),
     footer(),
   ].join('\n');

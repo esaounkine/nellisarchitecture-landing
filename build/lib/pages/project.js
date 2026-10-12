@@ -31,11 +31,11 @@ function img(src, alt, lazy) {
 
 function hero(src, name) {
   if (isVideo(src)) {
-    return `${' '.repeat(16)}<div class="currentProject-heroImg">`
+    return `${' '.repeat(8)}<div class="currentProject-heroImg">`
       + '<video autoplay muted loop playsinline>'
       + `<source src="${escAttr(src)}" type="video/mp4" /></video></div>`;
   }
-  return `${' '.repeat(16)}<div class="currentProject-heroImg varVideo">`
+  return `${' '.repeat(8)}<div class="currentProject-heroImg varVideo">`
     + `${img(src, name, false)}</div>`;
 }
 
@@ -72,9 +72,7 @@ function typeSet(list) {
     items.push(`<div class="item"><div class="item-name">${set[i * 2]}</div>`
       + `<div class="item-char">${set[i * 2 + 1]}</div></div>`);
   }
-  if (!items.length) return '';
-  return '        <div class="currentProject__close"><div class="currentProject__close_container">'
-    + `<div class="currentProject__close_center">${items.join('')}</div></div></div>`;
+  return items.join('');
 }
 
 function body(name, p) {
@@ -90,7 +88,6 @@ function body(name, p) {
     swiper(p.project_slider2, name, 'gallery22', text3 ? '' : ' curpadslide'),
     texts(p.project_text_3, 'projText3'),
     last && `        <div class="currentProject_container projLastImg">${last}</div>`,
-    typeSet(p.project_type_set),
   ].filter(Boolean).join('\n');
 }
 
@@ -140,6 +137,61 @@ function schema(entry, pageTitle, desc) {
   }).replace(/</g, '\\u003c');
 }
 
+function currentProject(entry) {
+  const { name, p } = entry;
+  return fill(loadPartial('current-project'), {
+    OPEN_CLASS: ' project__openned',
+    BREADCRUMB: fill(loadPartial('project-breadcrumb'), {
+      CATEGORY_HREF: escAttr(categoryHref(entry.cat)),
+      CATEGORY_LABEL: escText(CATEGORIES[entry.cat].label),
+      NAME: escText(name),
+    }),
+    NAME: escText(name),
+    AREA: escText(p.project_rigth1),
+    REGION: escText(p.project_rigth2),
+    HERO: hero(p.first_img_video, name),
+    CONTENT: body(name, p),
+    TYPE_SET: typeSet(p.project_type_set),
+  });
+}
+
+/* Shortcut: the Home grid is static theme markup, so mark the open project by string edits.
+   Ceiling: the markup of a grid item must stay as in index-projects.html.
+   Upgrade: render the grid from data/projects.json. */
+const GRID_ITEM = /<div class="project__item">[\s\S]*?<div class="projectPL">/g;
+
+function gridItem(html, url) {
+  const link = `<a class="project__link no-prefetch" href="${url}"`;
+  if (!html.includes(link)) {
+    return html.replace('class="project__item"', 'class="project__item zeroOpac"');
+  }
+  return html.replace(link, `${link} aria-current="page"`)
+    .replace('class="projectPL"', 'class="projectPL PLoppened"');
+}
+
+/* Desktop: the thumbnail column starts at the open project (Zoya: at the column title). */
+const SCROLL_TO_CURRENT = [
+  '',
+  '  <script>',
+  "    if (matchMedia('(min-width: 1180px)').matches) {",
+  "      var column = document.querySelector('.centerProject');",
+  "      column.scrollTop = column.querySelector('[aria-current]').parentNode.offsetTop",
+  "        - column.querySelector('.project__item').offsetTop;",
+  '    }',
+  '  </script>',
+].join('\n');
+
+function projects(entry) {
+  const html = fill(loadPartial('index-projects'), {
+    CENTER_CLASS: ' centerMini',
+    CURRENT_PROJECT: currentProject(entry),
+  }).replace(GRID_ITEM, (m) => gridItem(m, entry.url));
+  if (html.split(`href="${entry.url}" aria-current="page"`).length !== 2) {
+    throw new Error(`${entry.name}: the Home grid must link ${entry.url} exactly once`);
+  }
+  return html + SCROLL_TO_CURRENT;
+}
+
 /* entry: one item of projectList(). */
 function render(entry, { site, newsHref }) {
   const { name, p } = entry;
@@ -166,21 +218,15 @@ function render(entry, { site, newsHref }) {
   return [
     headHtml,
     top(name, site),
-    fill(loadPartial('page-project'), {
+    fill(loadPartial('page-index'), {
       NEWS_HREF: escAttr(newsHref),
-      AFFILIATIONS: affiliations(site.affiliations, '    '),
-      CATEGORY_HREF: escAttr(categoryHref(entry.cat)),
-      CATEGORY_LABEL: escText(CATEGORIES[entry.cat].label),
-      NAME: escText(name),
-      AREA: escText(p.project_rigth1),
-      REGION: escText(p.project_rigth2),
-      HERO: hero(p.first_img_video, name),
-      BODY: body(name, p),
+      AFFILIATIONS: affiliations(site.affiliations, '  '),
+      PROJECTS: projects(entry),
     }),
     footer(),
   ].join('\n');
 }
 
 module.exports = {
-  render, title, ogImage, typeSet, texts,
+  render, title, ogImage, typeSet, texts, gridItem,
 };

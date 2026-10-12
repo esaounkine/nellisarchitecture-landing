@@ -1,7 +1,7 @@
 /*
  * static-backend.js — replaces the WordPress admin-ajax.php endpoints with
- * static JSON/HTML data. The original theme scripts (project overlay, project
- * filters, news switcher, live search) keep working unchanged.
+ * static JSON/HTML data. The original theme scripts (project filters, news
+ * switcher, live search) keep working unchanged.
  */
 (function staticBackend() {
   'use strict';
@@ -41,11 +41,6 @@
       p.set(k, v);
     });
     const action = p.get('action');
-
-    if (action === 'get_post_by_field_project') {
-      const title = p.get('field_value');
-      return getJSON('/data/projects.json').then((d) => JSON.stringify(d[title] || []));
-    }
 
     if (action === 'get_filtered_projects') {
       const cur = decodeURIComponent(p.get('currentUrl') || '');
