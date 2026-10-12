@@ -327,7 +327,7 @@
                             <a href="/news/" class="nav-item">
                                 <li class="newsPage">News</li>
                             </a>
-                            <a href="/privacy/#" class="nav-item">
+                            <a href="/contact/" class="nav-item">
                                 <li class="contactPage">Contact</li>
                             </a>
                             <div class="search">
@@ -848,16 +848,6 @@
                 } else if (WIDTH2 <= 1700) {
                     arrowUp.style.position = "absolute";
                     arrowUp.style.bottom = "250px";
-                }
-            });
-
-            const Contect = document.querySelector(".contactPage");
-            const burger = document.querySelector(".burger");
-            const burMenuMob = document.querySelector(".burMenuMob");
-            Contect.addEventListener("click", () => {
-                Contect.parentNode.href = "#foot";
-                if (!mobile) {} else {
-                    burger.click();
                 }
             });
         });

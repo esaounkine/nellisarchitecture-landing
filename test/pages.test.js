@@ -37,7 +37,7 @@ test('renderPages writes each page to its folder and puts the News link in it', 
     pages.map((p) => p.file),
     [
       'index.html', 'studio/index.html', 'people/index.html', 'privacy/index.html',
-      'projects/index.html',
+      'projects/index.html', 'contact/index.html',
       'projects/architecture/index.html', 'projects/interior-design/index.html',
       'projects/landscape/index.html', 'projects/master-planning/index.html',
     ],
@@ -68,6 +68,26 @@ test('every page links the nav Projects item to /projects/ and the logo to /', (
   assertNav(project.render(entry, { site, newsHref: '/news/n/' }), entry.url);
   const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
   assertNav(news, 'news-template.html');
+});
+
+const NAV_CONTACT = new RegExp('<a href="([^"]*)" class="(?:contactPage|nav-item)"[^>]*>'
+  + '\\s*(?:<li class="contactPage">)?Contact<', 'g');
+
+function assertContact(html, name) {
+  const hrefs = [...html.matchAll(NAV_CONTACT)].map((m) => m[1]);
+  assert.ok(hrefs.length > 0, name);
+  hrefs.forEach((h) => assert.equal(h, '/contact/', name));
+  assert.ok(!html.includes('Contect.addEventListener'), name);
+}
+
+test('every page links the nav Contact item to /contact/ with no click handler', () => {
+  renderPages(ROOT, '/news/', undefined, POSTS).forEach((p) => assertContact(p.html, p.file));
+  const [entry] = loadProjects(ROOT);
+  const siteFile = path.join(ROOT, 'content', 'pages', 'site.json');
+  const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
+  assertContact(project.render(entry, { site, newsHref: '/news/n/' }), entry.url);
+  const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
+  assertContact(news, 'news-template.html');
 });
 
 test('renderPages output has no relative asset or page links', () => {

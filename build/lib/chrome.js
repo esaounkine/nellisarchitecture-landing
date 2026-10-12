@@ -23,10 +23,17 @@ function formTokens(prefix, form) {
   };
 }
 
+/* formId: ' id="yourFormId"' in the modal (theme JS hooks it); '' on /contact/ (native post). */
+function contactForm(formId, form) {
+  return fill(loadPartial('contact-form'), { FORM_ID: formId, BUTTON: escText(form.button) });
+}
+
 function top(h1, site) {
+  const { CONTACT_BUTTON: _, ...contact } = formTokens('CONTACT', site.forms.contact);
   return fill(loadPartial('top'), {
     H1: escText(h1),
-    ...formTokens('CONTACT', site.forms.contact),
+    CONTACT_FORM: contactForm(' id="yourFormId"', site.forms.contact),
+    ...contact,
     ...formTokens('SKILLS', site.forms.skills),
   });
 }
@@ -45,5 +52,5 @@ function footer() {
 }
 
 module.exports = {
-  head, top, affiliations, footer,
+  head, top, contactForm, affiliations, footer,
 };

@@ -1,0 +1,33 @@
+      <form class="projectForm"{{FORM_ID}} name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        
+        <input
+          type="text"
+          name="name"
+          class="name"
+          placeholder="Name"
+          required />
+        <input
+          type="email"
+          name="email"
+          class="email"
+          placeholder="E-mail *"
+          required />
+        <input
+          type="tel"
+          name="phone"
+          class="phoneNumber"
+          placeholder="Phone number"
+          required />
+        <textarea
+          name="massage"
+          id="massage"
+          class="massage"
+          placeholder="Your message *"></textarea>
+
+
+        <div class="policyLink">
+          By submitting this form, I consent to the
+          <a href="/privacy/" target="_blank">Privacy Policy.</a>
+        </div>
+        <button type="submit">{{BUTTON}}</button>
+      </form>

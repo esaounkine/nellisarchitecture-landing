@@ -7,6 +7,7 @@ const studio = require('./pages/studio');
 const people = require('./pages/people');
 const category = require('./pages/category');
 const news = require('./pages/news');
+const contact = require('./pages/contact');
 const { CATEGORY_KEYS, loadProjects } = require('./projects');
 
 /* slug is fixed in code: the page URL is /<slug>/ (Home: /). */
@@ -28,6 +29,9 @@ const PAGES = [
   },
   {
     slug: 'news', content: 'news', module: news, priority: '0.7',
+  },
+  {
+    slug: 'contact', content: 'contact', module: contact, priority: '0.5',
   },
   ...CATEGORY_KEYS.map((cat) => ({
     slug: `projects/${cat}`,

@@ -17,7 +17,7 @@ How this project is run — start here:
 ## Structure
 
 ```
-index.html, {studio,people,privacy}/index.html                     # pages (generated)
+index.html, {studio,people,privacy,contact}/index.html             # pages (generated)
 news/index.html                                                    # news index: all articles, newest first (generated)
 news/<slug>/index.html                                             # 58 articles (generated)
 projects/index.html                                                # projects hub: all projects + category links (generated)

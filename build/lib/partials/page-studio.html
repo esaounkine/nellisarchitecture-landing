@@ -50,7 +50,7 @@
                 <a href="{{NEWS_HREF}}" class="newsPage" style="margin-left: 0;">News</a>
               </li>
               <li class="nav-item">
-                <a href="/studio/#" class="contactPage" style="margin-left: 0;">Contact</a>
+                <a href="/contact/" class="contactPage" style="margin-left: 0;">Contact</a>
               </li>
               <li class="search">
                 <svg
@@ -369,16 +369,6 @@
           });
         });
       }
-
-      const Contect = document.querySelector(".contactPage");
-      const burger = document.querySelector(".burger");
-      const burMenuMob = document.querySelector(".burMenuMob");
-      Contect.addEventListener("click", () => {
-        Contect.parentNode.href = "#foot";
-        if (!mobile) {} else {
-          burger.click();
-        }
-      });
     });
   </script>
   <script>

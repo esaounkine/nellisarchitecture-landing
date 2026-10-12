@@ -9,8 +9,9 @@
  *   1. Reads every markdown file in content/news/
  *   2. Renders news/<slug>/index.html from build/news-template.html
  *   3. Rebuilds the NewsList sidebar on every news page (newest first)
- *   4. Builds index.html, studio/, people/, privacy/, news/ and projects/<category>/index.html
- *      from content/pages/*.json (build/lib/); their "News" link points at /news/
+ *   4. Builds index.html, studio/, people/, privacy/, news/, contact/ and
+ *      projects/<category>/index.html from content/pages/*.json (build/lib/);
+ *      their "News" link points at /news/
  *   5. Updates data/news.json (used by the in-page news switcher)
  *   6. Regenerates sitemap.xml
  *   7. Builds projects/<category>/<slug>/index.html from data/projects.json

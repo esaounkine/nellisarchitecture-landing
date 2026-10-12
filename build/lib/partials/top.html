@@ -18,39 +18,7 @@
 
       <h2 class="formName">{{CONTACT_TITLE}}</h2>
       <div class="formDescr">{{CONTACT_DESCRIPTION}}</div>
-      <form class="projectForm" id="yourFormId" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-        
-        <input
-          type="text"
-          name="name"
-          class="name"
-          placeholder="Name"
-          required />
-        <input
-          type="email"
-          name="email"
-          class="email"
-          placeholder="E-mail *"
-          required />
-        <input
-          type="tel"
-          name="phone"
-          class="phoneNumber"
-          placeholder="Phone number"
-          required />
-        <textarea
-          name="massage"
-          id="massage"
-          class="massage"
-          placeholder="Your message *"></textarea>
-
-
-        <div class="policyLink">
-          By submitting this form, I consent to the
-          <a href="/privacy/" target="_blank">Privacy Policy.</a>
-        </div>
-        <button type="submit">{{CONTACT_BUTTON}}</button>
-      </form>
+{{CONTACT_FORM}}
       <div class="underForm">
         or send us an email to:
         <a href="mailto:{{CONTACT_EMAIL_HREF}}">{{CONTACT_EMAIL}}</a>

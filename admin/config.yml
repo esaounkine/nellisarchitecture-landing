@@ -55,7 +55,7 @@ collections:
           - label: "Affiliations"
             name: "affiliations"
             widget: "list"
-            hint: &site_hint "Changes show on Home, Studio, People, Privacy, the News index and the project and category pages. News articles keep the old values."
+            hint: &site_hint "Changes show on Home, Studio, People, Privacy, Contact, the News index and the project and category pages. News articles keep the old values."
             fields:
               - { label: "Logo", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages", hint: *site_hint }
               - { label: "Alt text", name: "alt", widget: "string", required: false, hint: *site_hint }
@@ -234,6 +234,17 @@ collections:
             name: "seo"
             widget: "object"
             hint: "Page URL: https://nellisarchitecture.com/news/ (fixed, not editable)."
+            fields: *seo_fields
+      - name: "contact"
+        label: "Contact"
+        file: "content/pages/contact.json"
+        fields:
+          - { label: "H1 (page heading)", name: "h1", widget: "string" }
+          - { label: "Intro", name: "intro", widget: "text", hint: "Plain text, no HTML. Shows above the address and the form." }
+          - label: "SEO"
+            name: "seo"
+            widget: "object"
+            hint: "Page URL: https://nellisarchitecture.com/contact/ (fixed, not editable)."
             fields: *seo_fields
       - name: "robots"
         label: "robots.txt"

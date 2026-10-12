@@ -329,7 +329,7 @@
                 <a href="/news/" class="newsPage" style="margin-left: 0;">News</a>
               </li>
               <li class="nav-item">
-                <a href="/#" class="contactPage" style="margin-left: 0;">Contact</a>
+                <a href="/contact/" class="contactPage" style="margin-left: 0;">Contact</a>
               </li>
               <li class="search">
                 <svg
@@ -1682,35 +1682,6 @@ Miro's L-shaped structure promotes an open-plan living space. Pivoting anodised 
           mobile = true;
         } else {
           mobile = false;
-        }
-      });
-      const Contect = document.querySelector(".contactPage");
-      const burger = document.querySelector(".burger");
-      const centerProjectScroll = document.querySelector(".centerProject");
-      const burMenuMob = document.querySelector(".burMenuMob");
-      const footer = document.querySelector("#foot");
-      Contect.addEventListener("click", () => {
-        if (WIDTH2 >= 1179) {
-          footer.style.opacity = "1";
-          center.classList.add("currentTransform");
-          arrowUp.classList.add("currentTransform");
-          setTimeout(() => {
-            footer.style.zIndex = "0";
-          }, 400);
-        } else {
-          burger.click();
-          document.querySelector("body").scroll({
-            top: document.querySelector("body").scrollHeight,
-            behavior: "smooth",
-          });
-        }
-        if (window.innerWidth <= 1179 && window.innerWidth >= 759) {
-          // burger.click();
-          document.querySelector(".burMenuMob").classList.remove('burMenuMobTrans');
-          document.querySelector(".centerProject").scroll({
-            top: document.querySelector(".centerProject").scrollHeight,
-            behavior: "smooth",
-          });
         }
       });
       const categoryLink = document.querySelectorAll(".nav__project_item a");

@@ -335,7 +335,7 @@
                 <a href="/news/" class="newsPage" style="margin-left: 0;">News</a>
               </li>
               <li class="nav-item">
-                <a href="/people/#" class="contactPage" style="margin-left: 0;">Contact</a>
+                <a href="/contact/" class="contactPage" style="margin-left: 0;">Contact</a>
               </li>
               <li class="search">
                 <svg
@@ -864,18 +864,6 @@ At Nellis Architecture, Siebert’s role focuses on Revit modelling and technica
         } else if (WIDTH2 <= 1700) {
           arrowUp.style.position = 'absolute';
           arrowUp.style.bottom = '260px';
-        }
-      });
-
-
-
-      const Contect = document.querySelector(".contactPage");
-      const burger = document.querySelector(".burger");
-      const burMenuMob = document.querySelector('.burMenuMob');
-      Contect.addEventListener("click", () => {
-        Contect.parentNode.href = '#foot';
-        if (!mobile) {} else {
-          burger.click();
         }
       });
 

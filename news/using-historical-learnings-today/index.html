@@ -340,7 +340,7 @@
                 <a href="/news/">News</a>
               </li>
               <li class="nav-item">
-                <a href="index.html#" class="contactPage">Contact</a>
+                <a href="/contact/" class="contactPage">Contact</a>
               </li>
               <div class="search">
                 <svg
@@ -1126,37 +1126,6 @@
         NewsList = document.querySelector(".NewsList"),
         arrowUp = document.querySelector(".arrowUp"),
         footer = document.querySelector(".footer__container");
-      const Contect = document.querySelector(".contactPage");
-      const burger = document.querySelector(".burger");
-      const burMenuMob = document.querySelector('.burMenuMob');
-
-      Contect.addEventListener("click", () => {
-        if (!mobile) {} else {
-          burger.click();
-          Contect.parentNode.href = '#foot';
-        }
-
-        if (window.innerWidth <= 1179 && window.innerWidth >= 759) {
-          burger.click();
-        }
-
-        if (!mobile) {
-          const clientHeight = NewsList.clientHeight;
-          const scrollTop = NewsList.scrollTop;
-          const scrollHeight = NewsList.scrollHeight;
-          if (!mobile) {
-            NewsList.classList.add("currentTransNews");
-            centerNews.classList.add("currentTransNews");
-            footer.classList.add("currentTransFootNews");
-            arrowUp.style.display = "none";
-          } else {
-            NewsList.classList.remove("currentTransNews");
-            centerNews.classList.remove("currentTransNews");
-            footer.classList.remove("currentTransFootNews");
-            arrowUp.style.display = "block";
-          }
-        }
-      });
 
       arrowUp.addEventListener("click", () => {
         NewsList.scroll({
