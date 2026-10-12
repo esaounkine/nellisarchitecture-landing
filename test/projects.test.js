@@ -398,6 +398,8 @@ test('the close controls of the open project are links to Home', () => {
     assert.equal(count(html, 'currentProject__closeBtn'), 2);
     assert.equal(count(html, 'currentProject__closeBtn" href="/">'), 2);
   });
+  // The bottom close is an <a> on a green bar; the theme `a` colour is green too.
+  assert.match(HOME, /\.currentProject__close a\.currentProject__closeBtn \{\s*color: inherit;/);
 });
 
 test('gridItem marks only the item that links the page', () => {
