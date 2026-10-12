@@ -1851,7 +1851,11 @@ Miro's L-shaped structure promotes an open-plan living space. Pivoting anodised 
       try {
         saved = JSON.parse(sessionStorage.getItem(FILTER_KEY));
       } catch {};
-      if (saved && saved.cat) {
+      const known = saved && [...categoryLink].some((a) => a.textContent.trim() === saved.cat);
+      if (saved && !known) {
+        try { sessionStorage.removeItem(FILTER_KEY); } catch {};
+      }
+      if (known) {
         currentUrl = saved.cat;
         currentSub = saved.sub === 0 ? 0 : 1;
         loadFilter();

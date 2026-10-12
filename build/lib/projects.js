@@ -84,7 +84,7 @@ function hashTarget(hash, map, cats) {
 
 /* Home only: sends old /#proj=<Name> links (also theme search results,
    which set the hash) to the project page, and old /#<category> links
-   (on load only; the Home filters set them later) to the category page.
+   (on load only) to the category page.
    replace(): no history entry. */
 function earlyScript(list) {
   const map = Object.fromEntries(list.map((e) => [e.name, e.url]));
