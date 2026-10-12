@@ -241,6 +241,7 @@ collections:
         fields:
           - { label: "H1 (page heading)", name: "h1", widget: "string" }
           - { label: "Intro", name: "intro", widget: "text", hint: "Plain text, no HTML. Shows above the address and the form." }
+          - { label: "Address", name: "address", widget: "hidden", default: "Ground Floor, Building 4, Mangrove Avenue A, Sustainability District, Expo City, Dubai, UAE" }
           - label: "SEO"
             name: "seo"
             widget: "object"
