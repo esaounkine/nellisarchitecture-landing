@@ -170,9 +170,9 @@ test('every real post renders exactly one og:image that exists on disk', () => {
 });
 
 test('readingTime counts plain-text words at 200 per minute, at least 1 minute', () => {
-  assert.equal(readingTime(''), '1 minutes');
-  assert.equal(readingTime('<p>one <a href="https://x.com/a b c">two</a></p>'), '1 minutes');
-  assert.equal(readingTime(`<p>${'w '.repeat(200)}</p>`), '1 minutes');
+  assert.equal(readingTime(''), '1 minute');
+  assert.equal(readingTime('<p>one <a href="https://x.com/a b c">two</a></p>'), '1 minute');
+  assert.equal(readingTime(`<p>${'w '.repeat(200)}</p>`), '1 minute');
   assert.equal(readingTime(`<p>${'w '.repeat(201)}</p>`), '2 minutes');
 });
 

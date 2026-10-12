@@ -184,7 +184,8 @@ function ogImage(p) {
 
 function readingTime(html) {
   const words = html.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
-  return `${Math.max(1, Math.ceil(words / 200))} minutes`;
+  const n = Math.max(1, Math.ceil(words / 200));
+  return `${n} minute${n === 1 ? '' : 's'}`;
 }
 
 function renderPost(template, p, list) {
