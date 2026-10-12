@@ -130,3 +130,34 @@
   from = "/news/author/*"
   to = "/news/"
   status = 301
+
+# Old WordPress (Yoast) sitemaps (card 6qHCVzaT): search engines still fetch them.
+[[redirects]]
+  from = "/sitemap_index.xml"
+  to = "/sitemap.xml"
+  status = 301
+
+[[redirects]]
+  from = "/post-sitemap.xml"
+  to = "/sitemap.xml"
+  status = 301
+
+[[redirects]]
+  from = "/page-sitemap.xml"
+  to = "/sitemap.xml"
+  status = 301
+
+[[redirects]]
+  from = "/category-sitemap.xml"
+  to = "/sitemap.xml"
+  status = 301
+
+[[redirects]]
+  from = "/post_tag-sitemap.xml"
+  to = "/sitemap.xml"
+  status = 301
+
+[[redirects]]
+  from = "/author-sitemap.xml"
+  to = "/sitemap.xml"
+  status = 301

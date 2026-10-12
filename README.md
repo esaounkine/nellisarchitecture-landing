@@ -34,6 +34,7 @@ build/news-template.html
 build/lib/            # page generator: helpers, page modules, partials/*.html
 build-news.js         # regenerates news pages, generated pages, sitemap + feed.xml
 feed.xml              # RSS feed, served at /feed/ (generated)
+robots.txt            # crawl rules (generated from content/robots.json, edited in the CMS)
 admin/                # Decap CMS (news and page editing UI)
 netlify.toml          # build + headers + caching + redirects + 404 deny rules
 eslint.config.mjs     # lint rules (npm run lint)

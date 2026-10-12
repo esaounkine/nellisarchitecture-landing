@@ -235,6 +235,11 @@ collections:
             widget: "object"
             hint: "Page URL: https://nellisarchitecture.com/news/ (fixed, not editable)."
             fields: *seo_fields
+      - name: "robots"
+        label: "robots.txt"
+        file: "content/robots.json"
+        fields:
+          - { label: "Rules", name: "rules", widget: "text", hint: "Crawl rules for https://nellisarchitecture.com/robots.txt. The build adds the Sitemap line; a Sitemap line typed here is dropped." }
 
   - name: "redirects"
     label: "Redirects"

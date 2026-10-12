@@ -17,6 +17,7 @@
  *   8. Deletes news/<dir>/ and projects/ folders that no post or project owns
  *   9. Writes _redirects from content/redirects.json and changed news slugs
  *  10. Writes feed.xml (RSS 2.0, 10 newest posts; netlify.toml serves it at /feed/)
+ *  11. Writes robots.txt from content/robots.json (plus the Sitemap line)
  */
 const fs = require('node:fs');
 const path = require('node:path');
@@ -26,6 +27,7 @@ const redirects = require('./build/lib/redirects');
 const { loadProjects, CATEGORY_KEYS } = require('./build/lib/projects');
 const project = require('./build/lib/pages/project');
 const { rss } = require('./build/lib/feed');
+const { robots } = require('./build/lib/robots');
 const { imageSize } = require('./build/lib/image-size');
 const { escAttr } = require('./build/lib/html');
 const { heroPath, FALLBACK_SRC } = require('./build/lib/pages/news');
@@ -358,6 +360,8 @@ function build() {
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson));
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts, pages, projects));
   fs.writeFileSync(path.join(ROOT, 'feed.xml'), rss(posts));
+  const robotsJson = fs.readFileSync(path.join(ROOT, 'content', 'robots.json'), 'utf8');
+  fs.writeFileSync(path.join(ROOT, 'robots.txt'), robots(JSON.parse(robotsJson).rules));
   const rules = writeRedirects(ROOT, posts);
 
   console.log(`built ${posts.length} news pages; newest: ${newest.slug}; `

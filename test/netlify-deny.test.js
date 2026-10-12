@@ -69,3 +69,12 @@ test('netlify.toml sends the old WordPress news archives to /news/', () => {
     assert.match(toml, re, `netlify.toml: missing ${from} -> /news/ 301`);
   });
 });
+
+test('netlify.toml sends the old WordPress sitemaps to /sitemap.xml', () => {
+  ['sitemap_index', 'post-sitemap', 'page-sitemap', 'category-sitemap', 'post_tag-sitemap',
+    'author-sitemap'].forEach((name) => {
+    const to = '"/sitemap\\.xml"';
+    const re = new RegExp(`from = "/${name}\\.xml"\\n\\s*to = ${to}\\n\\s*status = 301\\n`);
+    assert.match(toml, re, `netlify.toml: missing /${name}.xml -> /sitemap.xml 301`);
+  });
+});
