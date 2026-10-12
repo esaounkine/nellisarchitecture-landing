@@ -1793,60 +1793,83 @@ Miro's L-shaped structure promotes an open-plan living space. Pivoting anodised 
         });
       }
       const categoryLink = document.querySelectorAll(".nav__project_item a");
-      let currentUrl = decodeURIComponent(location.hash.slice(1));
-      if (currentUrl != '' && !currentUrl.startsWith("proj=")) {
+      const FILTER_KEY = 'nellisProjectFilter';
+      let currentUrl = '';
+      let currentSub = 1;
+      function saveFilter() {
+        try {
+          if (currentUrl == '' || currentUrl.toLowerCase() == 'all') {
+            sessionStorage.removeItem(FILTER_KEY);
+          } else {
+            sessionStorage.setItem(FILTER_KEY, JSON.stringify({ cat: currentUrl, sub: currentSub }));
+          }
+        } catch {};
+      }
+      /* Shortcut: copy the project page marks from its first grid, so Home names none of them.
+         Ceiling: the first grid must link the page. Upgrade: render the filtered lists per page. */
+      const gridLinks = [...document.querySelectorAll('.center .container .project__link')];
+      const ownLink = gridLinks.find((a) => a.getAttribute('href') === location.pathname);
+      const ownItem = ownLink && ownLink.parentNode;
+      const ownPL = ownItem && ownItem.querySelector('.projectPL').className;
+      const otherLink = gridLinks.find((a) => a !== ownLink);
+      const otherClass = otherLink && otherLink.parentNode.className;
+      function markCurrent() {
+        if (!ownItem) return;
+        document.querySelectorAll('.center .container .project__item').forEach((item) => {
+          const link = item.querySelector('.project__link');
+          if (link && link.getAttribute('href') === location.pathname) {
+            item.className = ownItem.className;
+            [...ownLink.attributes].forEach((at) => link.setAttribute(at.name, at.value));
+            item.querySelector('.projectPL').className = ownPL;
+          } else {
+            item.className = otherClass;
+          }
+        });
+      }
+      function loadFilter() {
+        saveFilter();
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'https://nellisarchitecture.com/wp-admin/admin-ajax.php', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onreadystatechange = function() {
           if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             document.querySelector('.center .container').innerHTML = xhr.responseText + '<div class="elscroll"></div><div class="new--decor"><div class="nd1"></div><div class="nd2"></div></div>';
+            markCurrent();
             Projects.scrollTop = 0;
             setTimeout(() => {
               const scrollelem = document.querySelector('.elscroll');
               const rect = scrollelem.getBoundingClientRect();
               scrollelem.style.height = window.innerHeight - rect.top + 250 + 'px';
             }, 400);
-
             allProject = document.querySelectorAll(".project__item");
             document.querySelector('.allproject').textContent = '(Projects ' + allProject.length + ')';
           }
         };
-        xhr.send('action=get_filtered_projects&currentUrl=' + encodeURIComponent(currentUrl) + '&residentalCommercialIF=' + '1');
+        xhr.send('action=get_filtered_projects&currentUrl=' + encodeURIComponent(currentUrl) + '&residentalCommercialIF=' + currentSub);
+      }
+      let saved = null;
+      try {
+        saved = JSON.parse(sessionStorage.getItem(FILTER_KEY));
+      } catch {};
+      if (saved && saved.cat) {
+        currentUrl = saved.cat;
+        currentSub = saved.sub === 0 ? 0 : 1;
+        loadFilter();
         for (let i = 0; i < categoryLink.length; i++) {
           categoryLink[i].classList.remove("categoryActive");
-        }
-        for (let i = 0; i <= categoryLink.length; i++) {
-          try {
-            if (categoryLink[i].textContent.includes(currentUrl)) {
-              categoryLink[i].classList.add("categoryActive");
-              categoryLink[i].nextElementSibling.querySelector('.residential').classList.add('btnActive');
-              categoryLink[i].nextElementSibling.classList.add("navCurrHeight");
-            };
-          } catch {};
+          const podkat = categoryLink[i].nextElementSibling || categoryLink[i].parentNode.nextElementSibling;
+          if (categoryLink[i].textContent.trim() == currentUrl && podkat) {
+            categoryLink[i].classList.add("categoryActive");
+            podkat.querySelector(currentSub ? '.residential' : '.commercial').classList.add('btnActive');
+            podkat.classList.add("navCurrHeight");
+          }
         }
       }
       categoryLink.forEach((el) => {
         el.addEventListener("click", () => {
-          history.pushState(null, null, location.pathname + '#' + el.textContent);
-          currentUrl = decodeURIComponent(location.hash.slice(1));
-          var xhr = new XMLHttpRequest();
-          xhr.open('POST', 'https://nellisarchitecture.com/wp-admin/admin-ajax.php', true);
-          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-          xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-              document.querySelector('.center .container').innerHTML = xhr.responseText + '<div class="elscroll"></div><div class="new--decor"><div class="nd1"></div><div class="nd2"></div></div>';
-              Projects.scrollTop = 0;
-              setTimeout(() => {
-                const scrollelem = document.querySelector('.elscroll');
-                const rect = scrollelem.getBoundingClientRect();
-                scrollelem.style.height = window.innerHeight - rect.top + 250 + 'px';
-              }, 400);
-              allProject = document.querySelectorAll(".project__item");
-              document.querySelector('.allproject').textContent = '(Projects ' + allProject.length + ')';
-            }
-          };
-          xhr.send('action=get_filtered_projects&currentUrl=' + encodeURIComponent(currentUrl) + '&residentalCommercialIF=' + '1');
+          currentUrl = el.textContent.trim();
+          currentSub = 1;
+          loadFilter();
           for (let i = 0; i < categoryLink.length; i++) {
             categoryLink[i].classList.remove("categoryActive");
           }
@@ -1856,47 +1879,15 @@ Miro's L-shaped structure promotes an open-plan living space. Pivoting anodised 
       commercialArr = document.querySelectorAll('.commercial');
       commercialArr.forEach(element => {
         element.addEventListener('click', () => {
-          currentUrl = decodeURIComponent(location.hash.slice(1));
-          var xhr = new XMLHttpRequest();
-          xhr.open('POST', 'https://nellisarchitecture.com/wp-admin/admin-ajax.php', true);
-          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-          xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-              document.querySelector('.center .container').innerHTML = xhr.responseText + '<div class="elscroll"></div><div class="new--decor"><div class="nd1"></div><div class="nd2"></div></div>';
-              Projects.scrollTop = 0;
-              setTimeout(() => {
-                const scrollelem = document.querySelector('.elscroll');
-                const rect = scrollelem.getBoundingClientRect();
-                scrollelem.style.height = window.innerHeight - rect.top + 250 + 'px';
-              }, 400);
-              allProject = document.querySelectorAll(".project__item");
-              document.querySelector('.allproject').textContent = '(Projects ' + allProject.length + ')';
-            }
-          };
-          xhr.send('action=get_filtered_projects&currentUrl=' + encodeURIComponent(currentUrl) + '&residentalCommercialIF=' + '0');
+          currentSub = 0;
+          loadFilter();
         });
       });
       resedentalArr = document.querySelectorAll('.residential');
       resedentalArr.forEach(element => {
         element.addEventListener('click', () => {
-          currentUrl = decodeURIComponent(location.hash.slice(1));
-          var xhr = new XMLHttpRequest();
-          xhr.open('POST', 'https://nellisarchitecture.com/wp-admin/admin-ajax.php', true);
-          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-          xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-              document.querySelector('.center .container').innerHTML = xhr.responseText + '<div class="elscroll"></div><div class="new--decor">                    <div class="nd1"></div><div class="nd2"></div></div>';
-              Projects.scrollTop = 0;
-              setTimeout(() => {
-                const scrollelem = document.querySelector('.elscroll');
-                const rect = scrollelem.getBoundingClientRect();
-                scrollelem.style.height = window.innerHeight - rect.top + 250 + 'px';
-              }, 400);
-              allProject = document.querySelectorAll(".project__item");
-              document.querySelector('.allproject').textContent = '(Projects ' + allProject.length + ')';
-            }
-          };
-          xhr.send('action=get_filtered_projects&currentUrl=' + encodeURIComponent(currentUrl) + '&residentalCommercialIF=' + '1');
+          currentSub = 1;
+          loadFilter();
         });
       });
     });

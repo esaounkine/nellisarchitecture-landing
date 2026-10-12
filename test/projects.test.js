@@ -472,8 +472,13 @@ test('burger.js no longer clicks the project close button', () => {
 test('a sidebar category filters the grid in place on Home and on project pages', () => {
   const html = fs.readFileSync(path.join(ROOT, 'build/lib/partials/index-projects.html'), 'utf8');
   assert.ok(!html.includes('location.assign('), 'a category click must not leave the page');
-  const push = "history.pushState(null, null, location.pathname + '#' + el.textContent);";
-  assert.ok(html.includes(push));
+  const script = html.slice(html.lastIndexOf('const categoryLink'), html.lastIndexOf('</script>'));
+  assert.ok(!script.includes('history.pushState'), 'a filter must not change the URL');
+  assert.ok(!script.includes('location.hash'), 'the filter state is not in the URL');
+  ['getItem(', 'setItem(', 'removeItem('].forEach((s) => {
+    assert.ok(script.includes(`sessionStorage.${s}FILTER_KEY`), s);
+  });
+  assert.ok(script.includes("const FILTER_KEY = 'nellisProjectFilter';"));
   const times = (s) => html.split(s).length - 1;
   const swaps = times("querySelector('.center .container').innerHTML = xhr.responseText");
   assert.equal(times('Projects.scrollTop = 0;'), swaps, 'each filter starts the list at the top');
