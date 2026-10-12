@@ -7,7 +7,7 @@ const { tomlFroms } = require('../build/lib/redirects');
 
 const SITE = [
   'admin', 'data', 'js', 'news', 'people', 'privacy', 'projects', 'studio', 'wp-content',
-  'robots.txt', 'sitemap.xml', '_redirects',
+  'robots.txt', 'sitemap.xml', 'feed.xml', '_redirects',
   'netlify.toml', // Netlify never serves it, no rule needed
 ];
 const isSite = (entry) => entry.endsWith('.html') || SITE.includes(entry);
@@ -46,4 +46,18 @@ test('netlify.toml sends /pravicy to /privacy/ and leaves the page folders to Ne
 
 test('netlify.toml has no /projects* rule: Netlify serves the hub and the category pages', () => {
   assert.deepEqual([...froms].filter((f) => f.startsWith('/projects')), []);
+});
+
+test('netlify.toml serves the feed and redirects the old WordPress feed URLs', () => {
+  [
+    ['/feed', '/feed.xml', 200],
+    ['/feed/atom', '/feed/', 301],
+    ['/feed/rss', '/feed/', 301],
+    ['/rss', '/feed/', 301],
+    ['/comments/feed', '/', 301],
+    ['/news/:slug/feed', '/news/:slug/', 301],
+  ].forEach(([from, to, status]) => {
+    const re = new RegExp(`from = "${from}"\\n\\s*to = "${to}"\\n\\s*status = ${status}\\n`);
+    assert.match(toml, re, `netlify.toml: missing ${from} -> ${to} ${status}`);
+  });
 });

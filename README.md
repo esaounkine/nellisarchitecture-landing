@@ -31,7 +31,8 @@ content/redirects.json # CMS redirects (301), source of truth (edited via the CM
 _redirects            # Netlify redirects (generated from content/redirects.json + news slugs)
 build/news-template.html
 build/lib/            # page generator: helpers, page modules, partials/*.html
-build-news.js         # regenerates news pages, generated pages + sitemap
+build-news.js         # regenerates news pages, generated pages, sitemap + feed.xml
+feed.xml              # RSS feed, served at /feed/ (generated)
 admin/                # Decap CMS (news and page editing UI)
 netlify.toml          # build + headers + caching + redirects + 404 deny rules
 eslint.config.mjs     # lint rules (npm run lint)
@@ -57,7 +58,7 @@ test/                 # unit tests (npm test)
 2. News → New article. Fill title, date, meta description, hero image, body.
 3. Publish → the site rebuilds automatically in ~1 minute:
    new article page, refreshed sidebar on all 58 articles, News link on each page,
-   sitemap.xml, and the in-page switcher data.
+   sitemap.xml, the RSS feed (feed.xml), and the in-page switcher data.
 
 To edit page texts (Home, Studio, People, Privacy, shared affiliations and forms), open **Pages** in `/admin`.
 

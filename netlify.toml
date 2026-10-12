@@ -83,3 +83,34 @@
   from = "/pravicy"
   to = "/privacy/"
   status = 301
+
+# Old WordPress feed URLs (card XP9tXnDS). Netlify matches a "from" with and without the trailing slash.
+[[redirects]]
+  from = "/feed"
+  to = "/feed.xml"
+  status = 200
+
+[[redirects]]
+  from = "/feed/atom"
+  to = "/feed/"
+  status = 301
+
+[[redirects]]
+  from = "/feed/rss"
+  to = "/feed/"
+  status = 301
+
+[[redirects]]
+  from = "/rss"
+  to = "/feed/"
+  status = 301
+
+[[redirects]]
+  from = "/comments/feed"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/news/:slug/feed"
+  to = "/news/:slug/"
+  status = 301

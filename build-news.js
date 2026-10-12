@@ -16,6 +16,7 @@
  *   7. Builds projects/<category>/<slug>/index.html from data/projects.json
  *   8. Deletes news/<dir>/ and projects/ folders that no post or project owns
  *   9. Writes _redirects from content/redirects.json and changed news slugs
+ *  10. Writes feed.xml (RSS 2.0, 10 newest posts; netlify.toml serves it at /feed/)
  */
 const fs = require('node:fs');
 const path = require('node:path');
@@ -24,6 +25,7 @@ const { pageUrl, DOMAIN } = require('./build/lib/seo');
 const redirects = require('./build/lib/redirects');
 const { loadProjects, CATEGORY_KEYS } = require('./build/lib/projects');
 const project = require('./build/lib/pages/project');
+const { rss } = require('./build/lib/feed');
 
 const ROOT = __dirname;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -319,6 +321,7 @@ function build() {
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson));
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts, pages, projects));
+  fs.writeFileSync(path.join(ROOT, 'feed.xml'), rss(posts));
   const rules = writeRedirects(ROOT, posts);
 
   console.log(`built ${posts.length} news pages; newest: ${newest.slug}; `
