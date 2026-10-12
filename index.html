@@ -5,23 +5,27 @@
   <script>
     (function () {
       var map = {"Zoya":"/projects/architecture/zoya/","AUREA":"/projects/architecture/aurea/","Athena":"/projects/architecture/athena/","Onyx":"/projects/architecture/onyx/","Moya":"/projects/architecture/moya/","Vaya":"/projects/architecture/vaya/","Skye Residences":"/projects/master-planning/skye-residences/","Sonia":"/projects/architecture/sonia/","Lumeria":"/projects/interior-design/lumeria/","Maelis":"/projects/architecture/maelis/","MILA":"/projects/architecture/mila/","Atelier":"/projects/architecture/atelier/","Miraia":"/projects/architecture/miraia/","Soul":"/projects/architecture/soul/","Ayla":"/projects/architecture/ayla/","W44":"/projects/architecture/w44/","Solari":"/projects/interior-design/solari/","Parus":"/projects/architecture/parus/","Tela":"/projects/architecture/tela/","Mantara":"/projects/architecture/mantara/","Dune":"/projects/architecture/dune/","Zephyr":"/projects/architecture/zephyr/","Miro":"/projects/architecture/miro/","Evergreens":"/projects/master-planning/evergreens/","HARMONIA":"/projects/architecture/harmonia/","Amara":"/projects/architecture/amara/","Breakwater":"/projects/architecture/breakwater/","Cassia":"/projects/architecture/cassia/","Evergreens Hotel":"/projects/master-planning/evergreens-hotel/","Evia":"/projects/architecture/evia/","WEST LINKS":"/projects/master-planning/west-links/","Orel":"/projects/master-planning/orel/"};
-      function hashTarget(hash, map) {
-  if (typeof hash !== 'string' || hash.indexOf('#proj=') !== 0) return null;
+      var cats = {"architecture":"/projects/architecture/","interior design":"/projects/interior-design/","landscape":"/projects/landscape/","master planning":"/projects/master-planning/"};
+      function hashTarget(hash, map, cats) {
+  if (typeof hash !== 'string' || hash.charAt(0) !== '#') return null;
+  const proj = hash.indexOf('#proj=') === 0;
+  if (!proj && !cats) return null;
   let name;
   try {
-    name = decodeURIComponent(hash.slice(6)).trim().toLowerCase();
+    name = decodeURIComponent(hash.slice(proj ? 6 : 1)).trim().toLowerCase();
   } catch (err) {
     return null;
   }
-  const key = Object.keys(map).find((k) => k.toLowerCase() === name);
-  return key ? map[key] : null;
+  const table = proj ? map : cats;
+  const key = Object.keys(table).find((k) => k.toLowerCase() === name);
+  return key ? table[key] : null;
 }
-      function go() {
-        var url = hashTarget(location.hash, map);
+      function go(c) {
+        var url = hashTarget(location.hash, map, c);
         if (url) location.replace(url);
       }
-      go();
-      window.addEventListener('hashchange', go);
+      go(cats);
+      window.addEventListener('hashchange', function () { go(); });
     }());
   </script>
   <script src="/js/static-backend.js"></script>
@@ -355,7 +359,7 @@
           <nav class="nav">
             <ul class="nav__items">
               <li class="nav-item">
-                <a href="/" class="projectPage" style="margin-left: 0;">Projects</a>
+                <a href="/projects/" class="projectPage" style="margin-left: 0;">Projects</a>
               </li>
               <li class="nav-item">
                 <a href="/studio/" class="studioPage" style="margin-left: 0;">Studio</a>

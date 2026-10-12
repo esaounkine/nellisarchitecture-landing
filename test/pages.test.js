@@ -5,7 +5,9 @@ const path = require('node:path');
 const { bodyLines } = require('../build/lib/pages/privacy');
 const studio = require('../build/lib/pages/studio');
 const people = require('../build/lib/pages/people');
+const project = require('../build/lib/pages/project');
 const { renderPages } = require('../build/lib/pages');
+const { loadProjects } = require('../build/lib/projects');
 
 test('bodyLines ends every text line with <br><br>, except the last', () => {
   assert.equal(bodyLines('one\ntwo\nlast'), 'one<br><br>\ntwo<br><br>\nlast');
@@ -42,6 +44,26 @@ test('renderPages writes each page to its folder and puts the News link in it', 
     assert.ok(p.html.includes('href="/news/x-$&amp;/"'), p.file);
     assert.ok(!p.html.includes('{{'), p.file);
   });
+});
+
+const NAV_PROJECTS = new RegExp('<a href="([^"]*)" class="(?:projectPage|nav-item)"[^>]*>'
+  + '\\s*(?:<li class="projectPage">)?Projects<', 'g');
+
+function assertNav(html, name) {
+  const hrefs = [...html.matchAll(NAV_PROJECTS)].map((m) => m[1]);
+  assert.ok(hrefs.length > 0, name);
+  hrefs.forEach((h) => assert.equal(h, '/projects/', name));
+  assert.match(html, /<a href="\/" class="logo">/, name);
+}
+
+test('every page links the nav Projects item to /projects/ and the logo to /', () => {
+  renderPages(ROOT, '/news/x/').forEach((p) => assertNav(p.html, p.file));
+  const [entry] = loadProjects(ROOT);
+  const siteFile = path.join(ROOT, 'content', 'pages', 'site.json');
+  const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
+  assertNav(project.render(entry, { site, newsHref: '/news/n/' }), entry.url);
+  const news = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
+  assertNav(news, 'news-template.html');
 });
 
 test('renderPages output has no relative asset or page links', () => {

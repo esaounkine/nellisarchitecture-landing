@@ -65,34 +65,45 @@ function loadProjects(root) {
 }
 
 /* Runs in the browser too (earlyScript): keep it self-contained ES2015.
-   Bad encoding (URIError) means no target. */
-function hashTarget(hash, map) {
-  if (typeof hash !== 'string' || hash.indexOf('#proj=') !== 0) return null;
+   #proj=<Name> -> map. Any other hash -> cats (old /#<category> filter
+   links), only when cats is passed. Bad encoding (URIError) means no target. */
+function hashTarget(hash, map, cats) {
+  if (typeof hash !== 'string' || hash.charAt(0) !== '#') return null;
+  const proj = hash.indexOf('#proj=') === 0;
+  if (!proj && !cats) return null;
   let name;
   try {
-    name = decodeURIComponent(hash.slice(6)).trim().toLowerCase();
+    name = decodeURIComponent(hash.slice(proj ? 6 : 1)).trim().toLowerCase();
   } catch (err) {
     return null;
   }
-  const key = Object.keys(map).find((k) => k.toLowerCase() === name);
-  return key ? map[key] : null;
+  const table = proj ? map : cats;
+  const key = Object.keys(table).find((k) => k.toLowerCase() === name);
+  return key ? table[key] : null;
 }
 
 /* Home only: sends old /#proj=<Name> links (also theme search results,
-   which set the hash) to the project page. replace(): no history entry. */
+   which set the hash) to the project page, and old /#<category> links
+   (on load only; the Home filters set them later) to the category page.
+   replace(): no history entry. */
 function earlyScript(list) {
   const map = Object.fromEntries(list.map((e) => [e.name, e.url]));
+  const cats = Object.fromEntries(CATEGORY_KEYS.map((k) => [
+    CATEGORIES[k].label.toLowerCase(), categoryHref(k),
+  ]));
+  const json = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
   return [
     '  <script>',
     '    (function () {',
-    `      var map = ${JSON.stringify(map).replace(/</g, '\\u003c')};`,
+    `      var map = ${json(map)};`,
+    `      var cats = ${json(cats)};`,
     `      ${hashTarget}`,
-    '      function go() {',
-    '        var url = hashTarget(location.hash, map);',
+    '      function go(c) {',
+    '        var url = hashTarget(location.hash, map, c);',
     '        if (url) location.replace(url);',
     '      }',
-    '      go();',
-    "      window.addEventListener('hashchange', go);",
+    '      go(cats);',
+    "      window.addEventListener('hashchange', function () { go(); });",
     '    }());',
     '  </script>',
     '',

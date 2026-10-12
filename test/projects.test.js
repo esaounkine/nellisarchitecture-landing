@@ -267,6 +267,24 @@ test('hashTarget finds the project for an old #proj= link', () => {
   assert.equal(hashTarget('', map), null);
 });
 
+test('hashTarget finds the category page for an old /#<category> link only with cats', () => {
+  const cats = {
+    architecture: '/projects/architecture/',
+    'master planning': '/projects/master-planning/',
+    'interior design': '/projects/interior-design/',
+    landscape: '/projects/landscape/',
+  };
+  assert.equal(hashTarget('#architecture', {}, cats), '/projects/architecture/');
+  assert.equal(hashTarget('#master%20planning', {}, cats), '/projects/master-planning/');
+  assert.equal(hashTarget('#Interior%20Design', {}, cats), '/projects/interior-design/');
+  assert.equal(hashTarget('#%20landscape%20', {}, cats), '/projects/landscape/');
+  const misses = ['#master-planning', '#%E0', '#', '#invite_token=abc', '#all', '', 'architecture'];
+  misses.forEach((h) => {
+    assert.equal(hashTarget(h, {}, cats), null, h);
+  });
+  assert.equal(hashTarget('#proj=architecture', {}, cats), null);
+});
+
 test('pruneProjects deletes only stale folders in projects/ and keeps categories', () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'proj-'));
   const mk = (rel) => fs.mkdirSync(path.join(root, rel), { recursive: true });
@@ -317,8 +335,19 @@ test('the Home early script always sends #proj= links to the project page', () =
       '/projects/master-planning/evergreens-hotel/',
     ], type);
   });
-  ['#proj=%E0', '#proj=Nope', '#architecture', '#', '#invite_token=abc', ''].forEach((h) => {
+  ['#proj=%E0', '#proj=Nope', '#', '#invite_token=abc', '#all', ''].forEach((h) => {
     assert.deepEqual(runEarly(h, 'navigate').went, [], h);
+  });
+});
+
+test('the Home early script sends an old /#<category> link on load to the category page', () => {
+  ['navigate', 'reload', 'back_forward'].forEach((type) => {
+    assert.deepEqual(runEarly('#architecture', type).went, ['/projects/architecture/'], type);
+    assert.deepEqual(
+      runEarly('#master%20planning', type).went,
+      ['/projects/master-planning/'],
+      type,
+    );
   });
 });
 
