@@ -10,7 +10,7 @@ const OG_IMAGE = [
 ].join('\n');
 
 function head(values) {
-  return fill(loadPartial('head'), { OG_IMAGE, ...values });
+  return fill(loadPartial('head'), { EARLY_SCRIPT: '', OG_IMAGE, ...values });
 }
 
 function formTokens(prefix, form) {

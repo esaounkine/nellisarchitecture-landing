@@ -3,6 +3,7 @@ const {
   head, top, affiliations, footer,
 } = require('../chrome');
 const { seoTokens } = require('../seo');
+const { loadProjects, earlyScript } = require('../projects');
 
 /* Fixed head values, raw HTML. SEO values come from content.seo (seoTokens). */
 /* eslint-disable @stylistic/max-len -- raw WordPress head values, kept byte for byte */
@@ -30,9 +31,11 @@ const HEAD = {
 };
 /* eslint-enable @stylistic/max-len */
 
-function render(content, { site, newsHref, page }) {
+function render(content, {
+  site, newsHref, page, root,
+}) {
   return [
-    head({ ...HEAD, ...seoTokens(content, page) }),
+    head({ ...HEAD, EARLY_SCRIPT: earlyScript(loadProjects(root)), ...seoTokens(content, page) }),
     top(content.h1, site),
     fill(loadPartial('page-index'), {
       NEWS_HREF: escAttr(newsHref),

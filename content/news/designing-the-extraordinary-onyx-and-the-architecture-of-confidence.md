@@ -74,7 +74,7 @@ For the design team, Onyx became a professional turning point, particularly in t
 
 For [Nellis Architecture](https://nellisarchitecture.com/news/the-craft-of-time-why-enduring-architecture-matters/), Onyx is more than a project. It is a declaration of what residential architecture can be when vision, discipline and trust align. “It was a concept we had never tried before,” says Pieter. “Seeing it realised, and then recognised at the African Property Awards, gives us confidence. It proves that our design philosophy, balancing beauty, craft and context, can resonate anywhere.” Valentina agrees. “I am proud of this one. I expected it to win. It stands apart.”
 
-For a young, Dubai based architectural firm expanding internationally, the recognition marks not only expertise, but identity. “[Onyx](https://nellisarchitecture.com/#proj=Onyx) confirmed that a Dubai based studio can design confidently for other regions while still feeling local,” says Lee. “It shows that if you listen carefully, research deeply and keep your standards high, the work will speak clearly in any context.”
+For a young, Dubai based architectural firm expanding internationally, the recognition marks not only expertise, but identity. “[Onyx](https://nellisarchitecture.com/projects/architecture/onyx/) confirmed that a Dubai based studio can design confidently for other regions while still feeling local,” says Lee. “It shows that if you listen carefully, research deeply and keep your standards high, the work will speak clearly in any context.”
 
  
 

@@ -104,7 +104,7 @@ For brands commissioning flagship and branded commercial space in the UAE, this 
 
  
 
-Nellis Architecture’s work on the [W44 showroom](https://nellisarchitecture.com/#proj=W44) was approached from this position from the outset – not simply as a space to display products, but as an architectural expression of the brand it represents. Every material decision, threshold, and proportion was tested against a single question: does this reinforce the brand’s position, or merely accommodate it?
+Nellis Architecture’s work on the [W44 showroom](https://nellisarchitecture.com/projects/architecture/w44/) was approached from this position from the outset – not simply as a space to display products, but as an architectural expression of the brand it represents. Every material decision, threshold, and proportion was tested against a single question: does this reinforce the brand’s position, or merely accommodate it?
 
  
 

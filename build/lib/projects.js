@@ -1,3 +1,4 @@
+/* eslint no-unused-vars: ["error", { "caughtErrors": "none" }] -- see hashTarget */
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -58,13 +59,13 @@ function loadProjects(root) {
   return projectList(JSON.parse(fs.readFileSync(path.join(root, 'data', 'projects.json'), 'utf8')));
 }
 
-/* Runs in the browser too (earlyScript): keep it self-contained ES2015. */
+/* Runs in the browser too (earlyScript): keep it self-contained ES2015.
+   Bad encoding (URIError) means no target. */
 function hashTarget(hash, map) {
   if (typeof hash !== 'string' || hash.indexOf('#proj=') !== 0) return null;
   let name;
   try {
     name = decodeURIComponent(hash.slice(6)).trim().toLowerCase();
-    // eslint-disable-next-line no-unused-vars -- bad encoding: no target
   } catch (err) {
     return null;
   }

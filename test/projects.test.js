@@ -3,8 +3,10 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
+const vm = require('node:vm');
 const {
   slugify, categoryHref, projectList, loadProjects, hashTarget, shouldRedirect, description,
+  earlyScript,
 } = require('../build/lib/projects');
 const project = require('../build/lib/pages/project');
 const { head } = require('../build/lib/chrome');
@@ -216,7 +218,8 @@ test('head without OG_IMAGE renders exactly the old head', () => {
     MODIFIED_TIME: 'M',
     SCHEMA: '{}',
   };
-  const old = fill(loadPartial('head').replace('{{OG_IMAGE}}', OLD_OG), values);
+  const old = fill(loadPartial('head').replace('{{OG_IMAGE}}', OLD_OG)
+    .replace('{{EARLY_SCRIPT}}', ''), values);
   assert.equal(head(values), old);
 });
 
@@ -275,4 +278,66 @@ test('pruneProjects deletes only stale folders in projects/ and keeps categories
   assert.ok(exists('projects/file.txt'));
   assert.ok(exists('news/keep'));
   assert.ok(exists('projects-other/x'));
+});
+
+function runEarly(hash, navType) {
+  const js = earlyScript(LIST).replace(/^\s*<script>|<\/script>\s*$/g, '');
+  const went = [];
+  vm.runInNewContext(js, {
+    location: { hash, replace: (u) => went.push(u) },
+    performance: { getEntriesByType: () => [{ type: navType }] },
+    window: { performance: true },
+  });
+  return went;
+}
+
+test('the Home early script sends #proj= links to the project page, except on Back/Reload', () => {
+  assert.deepEqual(runEarly('#proj=Evergreens%20Hotel', 'navigate'), [
+    '/projects/master-planning/evergreens-hotel/',
+  ]);
+  assert.deepEqual(runEarly('#proj=Zoya', 'reload'), []);
+  assert.deepEqual(runEarly('#proj=Zoya', 'back_forward'), []);
+  assert.deepEqual(runEarly('#proj=%E0', 'navigate'), []);
+  assert.deepEqual(runEarly('#architecture', 'navigate'), []);
+});
+
+test('only Home has the early script, before static-backend.js', () => {
+  renderPages(ROOT, '/news/x/').forEach((p) => {
+    const at = p.html.indexOf('hashTarget(location.hash');
+    if (p.file === 'index.html') {
+      assert.ok(at > -1 && at < p.html.indexOf('/js/static-backend.js'));
+    } else {
+      assert.equal(at, -1, p.file);
+    }
+  });
+  assert.ok(!renderEntry(byName('Zoya')).includes('hashTarget'));
+});
+
+const LINK = new RegExp('<div class="project__item">\\s*'
+  + '<a class="project__link no-prefetch" href="([^"]+)" aria-label="([^"]+)"></a>'
+  + '[\\s\\S]*?<span class="project__name">([^<]+)</span>', 'g');
+const links = (html) => [...html.matchAll(LINK)];
+
+test('every Home grid item links to its project page', () => {
+  const html = fs.readFileSync(path.join(ROOT, 'build/lib/partials/index-projects.html'), 'utf8');
+  const found = links(html);
+  assert.equal(count(html, '<div class="project__item">'), 32);
+  assert.equal(found.length, 32);
+  found.forEach(([, href, label, name]) => {
+    assert.equal(href, projectUrl(name), name);
+    assert.equal(label, name);
+  });
+});
+
+test('every filter fragment item links to its project page', () => {
+  const dir = path.join(ROOT, 'data', 'filters');
+  fs.readdirSync(dir).forEach((f) => {
+    const html = fs.readFileSync(path.join(dir, f), 'utf8');
+    const found = links(html);
+    assert.equal(found.length, count(html, '<div class="project__item">'), f);
+    found.forEach(([, href, label, name]) => {
+      assert.equal(href, projectUrl(name), `${f}: ${name}`);
+      assert.equal(label, name);
+    });
+  });
 });

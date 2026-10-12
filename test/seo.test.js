@@ -79,7 +79,9 @@ test('noindex replaces the robots line', () => {
   assert.equal(t.ROBOTS, '<meta name="robots" content="noindex">');
   const site = read('site');
   const content = { ...read('index'), seo: { ...read('index').seo, noindex: true } };
-  const html = index.render(content, { site, newsHref: '/n/', page: pageOf('index') });
+  const html = index.render(content, {
+    site, newsHref: '/n/', page: pageOf('index'), root: ROOT,
+  });
   assert.ok(html.includes('  <meta name="robots" content="noindex">\n'));
   assert.ok(!html.includes("name='robots'"));
 });
@@ -98,7 +100,9 @@ test('SEO values are escaped and $& stays literal', () => {
   assert.equal(t.DESCRIPTION, 'D &quot;q&quot; &lt;b&gt; &amp; $&amp;');
   assert.equal(t.OG_DESCRIPTION, t.DESCRIPTION);
   const site = read('site');
-  const html = index.render({ h1: 'H', seo }, { site, newsHref: '/n/', page: pageOf('index') });
+  const html = index.render({ h1: 'H', seo }, {
+    site, newsHref: '/n/', page: pageOf('index'), root: ROOT,
+  });
   assert.ok(html.includes(`<title>${t.TITLE}</title>`));
   assert.ok(html.includes(`<meta property="og:title" content="${t.OG_TITLE}" />`));
   assert.ok(html.includes(`<meta name="description" content="${t.DESCRIPTION}" />`));

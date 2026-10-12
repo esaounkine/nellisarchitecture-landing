@@ -2,6 +2,29 @@
 <html lang="en">
 
 <head>
+  <script>
+    (function () {
+      var map = {"Zoya":"/projects/architecture/zoya/","AUREA":"/projects/architecture/aurea/","Athena":"/projects/architecture/athena/","Onyx":"/projects/architecture/onyx/","Moya":"/projects/architecture/moya/","Vaya":"/projects/architecture/vaya/","Skye Residences":"/projects/master-planning/skye-residences/","Sonia":"/projects/architecture/sonia/","Lumeria":"/projects/interior-design/lumeria/","Maelis":"/projects/architecture/maelis/","MILA":"/projects/architecture/mila/","Atelier":"/projects/architecture/atelier/","Miraia":"/projects/architecture/miraia/","Soul":"/projects/architecture/soul/","Ayla":"/projects/architecture/ayla/","W44":"/projects/architecture/w44/","Solari":"/projects/interior-design/solari/","Parus":"/projects/architecture/parus/","Tela":"/projects/architecture/tela/","Mantara":"/projects/architecture/mantara/","Dune":"/projects/architecture/dune/","Zephyr":"/projects/architecture/zephyr/","Miro":"/projects/architecture/miro/","Evergreens":"/projects/master-planning/evergreens/","HARMONIA":"/projects/architecture/harmonia/","Amara":"/projects/architecture/amara/","Breakwater":"/projects/architecture/breakwater/","Cassia":"/projects/architecture/cassia/","Evergreens Hotel":"/projects/master-planning/evergreens-hotel/","Evia":"/projects/architecture/evia/","WEST LINKS":"/projects/master-planning/west-links/","Orel":"/projects/master-planning/orel/"};
+      function hashTarget(hash, map) {
+  if (typeof hash !== 'string' || hash.indexOf('#proj=') !== 0) return null;
+  let name;
+  try {
+    name = decodeURIComponent(hash.slice(6)).trim().toLowerCase();
+  } catch (err) {
+    return null;
+  }
+  const key = Object.keys(map).find((k) => k.toLowerCase() === name);
+  return key ? map[key] : null;
+}
+      function shouldRedirect(navType) {
+  return navType !== 'reload' && navType !== 'back_forward';
+}
+      var nav = window.performance && performance.getEntriesByType
+        ? performance.getEntriesByType('navigation')[0] : null;
+      var url = hashTarget(location.hash, map);
+      if (url && shouldRedirect(nav && nav.type)) location.replace(url);
+    }());
+  </script>
   <script src="/js/static-backend.js"></script>
   <!-- Netlify Identity: handles /#invite_token and /#recovery_token links, then sends editors to the CMS -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
@@ -622,6 +645,7 @@
 
 
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/zoya/" aria-label="Zoya"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -635,6 +659,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/aurea/" aria-label="AUREA"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -648,6 +673,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/athena/" aria-label="Athena"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -661,6 +687,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/onyx/" aria-label="Onyx"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -674,6 +701,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/moya/" aria-label="Moya"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -687,6 +715,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/vaya/" aria-label="Vaya"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -700,6 +729,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/master-planning/skye-residences/" aria-label="Skye Residences"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -713,6 +743,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/sonia/" aria-label="Sonia"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -726,6 +757,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/interior-design/lumeria/" aria-label="Lumeria"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -739,6 +771,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/maelis/" aria-label="Maelis"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -752,6 +785,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/mila/" aria-label="MILA"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -765,6 +799,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/atelier/" aria-label="Atelier"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -778,6 +813,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/miraia/" aria-label="Miraia"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -791,6 +827,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/soul/" aria-label="Soul"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -804,6 +841,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/ayla/" aria-label="Ayla"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -817,6 +855,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/w44/" aria-label="W44"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -830,6 +869,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/interior-design/solari/" aria-label="Solari"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -843,6 +883,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/parus/" aria-label="Parus"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -856,6 +897,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/tela/" aria-label="Tela"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -869,6 +911,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/mantara/" aria-label="Mantara"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -882,6 +925,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/dune/" aria-label="Dune"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -895,6 +939,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/zephyr/" aria-label="Zephyr"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -908,6 +953,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/miro/" aria-label="Miro"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -921,6 +967,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/master-planning/evergreens/" aria-label="Evergreens"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -934,6 +981,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/harmonia/" aria-label="HARMONIA"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -947,6 +995,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/amara/" aria-label="Amara"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -960,6 +1009,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/breakwater/" aria-label="Breakwater"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -973,6 +1023,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/cassia/" aria-label="Cassia"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -986,6 +1037,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/master-planning/evergreens-hotel/" aria-label="Evergreens Hotel"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -999,6 +1051,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/architecture/evia/" aria-label="Evia"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -1012,6 +1065,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/master-planning/west-links/" aria-label="WEST LINKS"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -1025,6 +1079,7 @@
             </div>
           </div>
                   <div class="project__item">
+            <a class="project__link no-prefetch" href="/projects/master-planning/orel/" aria-label="Orel"></a>
             <div class="projAbout">more info</div>
             <img
               class="project__item-img lazyload"
@@ -1637,6 +1692,12 @@
       list-style: disc;
       margin-left: 16px;
     }
+
+    .project__link {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+    }
   </style>
 
   <script>
@@ -1928,6 +1989,8 @@
       });
       const projectContainer = document.querySelector('.centerProject .container');
       projectContainer.addEventListener('click', (event) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return;
+        if (event.target.closest('a.project__link')) event.preventDefault();
         const clickedElement = event.target.closest('.project__item');
         if (clickedElement) {
           const index = Array.from(projectContainer.children).indexOf(clickedElement); // Находим индекс

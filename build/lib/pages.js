@@ -35,7 +35,9 @@ function renderPages(root, newsHref) {
     const content = readContent(root, p.content);
     return {
       file: pageFile(p.slug),
-      html: p.module.render(content, { site, newsHref, page: p }),
+      html: p.module.render(content, {
+        site, newsHref, page: p, root,
+      }),
       slug: p.slug,
       priority: p.priority,
       noindex: Boolean(content.seo && content.seo.noindex),

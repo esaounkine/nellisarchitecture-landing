@@ -44,7 +44,7 @@ Quality in architecture design is quiet. It sits in well-calibrated lighting, in
 
  
 
-In Dubai and across the UAE, the craft of time informs our approach to [premium villa design](https://nellisarchitecture.com/#proj=Evergreens%20Hotel). Planting that matures into shade, materials that gain depth as they age, and layouts that adapt to family life. This is how contemporary residential architecture becomes part of a long-term story.
+In Dubai and across the UAE, the craft of time informs our approach to [premium villa design](https://nellisarchitecture.com/projects/master-planning/evergreens-hotel/). Planting that matures into shade, materials that gain depth as they age, and layouts that adapt to family life. This is how contemporary residential architecture becomes part of a long-term story.
 
 “Our responsibility is to make sure every detail is delivered correctly on site,” says Quinton Murdoch, Associate Architect. “Precision is what turns a concept into a home that lasts.”
 

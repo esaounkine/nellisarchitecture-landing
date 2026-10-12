@@ -56,7 +56,7 @@ Architectural design services must therefore balance technical precision with sp
 
  
 
-Islamic gardens were structured through geometry. Order created calm. Repetition created rhythm. Shade provided relief. In contemporary [luxury home design in Dubai](https://nellisarchitecture.com/#proj=Zoya), these principles are translated through structured planting, colonnades, pergolas and outdoor rooms defined by both architecture and landscape. A carefully considered villa design in the UAE integrates shaded pathways and framed perspectives that guide movement while offering protection from sun and exposure.
+Islamic gardens were structured through geometry. Order created calm. Repetition created rhythm. Shade provided relief. In contemporary [luxury home design in Dubai](https://nellisarchitecture.com/projects/architecture/zoya/), these principles are translated through structured planting, colonnades, pergolas and outdoor rooms defined by both architecture and landscape. A carefully considered villa design in the UAE integrates shaded pathways and framed perspectives that guide movement while offering protection from sun and exposure.
 
  
 
