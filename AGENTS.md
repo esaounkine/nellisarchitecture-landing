@@ -15,6 +15,7 @@ Durable working agreements. Hold to these agreements regardless of tools.
 - **Abstract the design, concretise the execution:** specs are tool-neutral and vendor-neutral. A person or any agent can follow a spec. *Bindings* (the harness, the board, the exact commands) are named and concrete, in one place. Do not genericise the bindings.
 - **Name bindings, do not wrap them:** when a choice is tool-specific (Claude Code, Trello, Netlify, npm), state the tool as the current binding. Do not build an abstraction layer for tools we do not use.
 - **Abstraction, not at the cost of performance:** refuse indirection and adapters added for hypothetical futures (YAGNI). The shortest path wins.
+- **Simple site, consistent site:** this is a simple static site. Consistency and performance come first. SEO drives the content; agents keep everything consistent. Do not add scope, options or follow-up ideas. Choose the simplest option that matches the existing patterns and continue. Ask the operator only when a choice changes content, a public URL or cost.
 
 ## Decisions
 
