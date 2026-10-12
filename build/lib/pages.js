@@ -6,6 +6,7 @@ const privacy = require('./pages/privacy');
 const studio = require('./pages/studio');
 const people = require('./pages/people');
 const category = require('./pages/category');
+const news = require('./pages/news');
 const { CATEGORY_KEYS, loadProjects } = require('./projects');
 
 /* slug is fixed in code: the page URL is /<slug>/ (Home: /). */
@@ -25,6 +26,9 @@ const PAGES = [
   {
     slug: 'projects', content: 'projects', module: category, priority: '0.7', category: 'all',
   },
+  {
+    slug: 'news', content: 'news', module: news, priority: '0.7',
+  },
   ...CATEGORY_KEYS.map((cat) => ({
     slug: `projects/${cat}`,
     content: `projects-${cat}`,
@@ -41,15 +45,17 @@ function readContent(root, name) {
 }
 
 /* Each result also carries what the sitemap needs: slug, priority, noindex.
-   projects: loadProjects() result, read once by the build. */
-function renderPages(root, newsHref, projects = loadProjects(root)) {
+   projects: loadProjects() result, read once by the build. posts: loadPosts() result.
+   Shortcut: without posts (unit tests) the /news/ page is left out.
+   Upgrade: load the posts here once loadPosts moves to build/lib/. */
+function renderPages(root, newsHref, projects = loadProjects(root), posts = null) {
   const site = readContent(root, 'site');
-  return PAGES.map((p) => {
+  return PAGES.filter((p) => posts || p.module !== news).map((p) => {
     const content = readContent(root, p.content);
     return {
       file: pageFile(p.slug),
       html: p.module.render(content, {
-        site, newsHref, page: p, root, projects,
+        site, newsHref, page: p, root, projects, posts,
       }),
       slug: p.slug,
       priority: p.priority,
@@ -58,8 +64,8 @@ function renderPages(root, newsHref, projects = loadProjects(root)) {
   });
 }
 
-function writePages(root, newsHref, projects) {
-  const pages = renderPages(root, newsHref, projects);
+function writePages(root, newsHref, projects, posts) {
+  const pages = renderPages(root, newsHref, projects, posts);
   pages.forEach((p) => {
     fs.mkdirSync(path.dirname(path.join(root, p.file)), { recursive: true });
     fs.writeFileSync(path.join(root, p.file), p.html);

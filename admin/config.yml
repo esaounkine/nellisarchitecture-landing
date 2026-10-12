@@ -37,7 +37,7 @@ collections:
         time_format: false
       - { label: "URL slug", name: "slug", widget: "string", pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', "Use lowercase letters, digits and single dashes only"], hint: "Lowercase words separated by dashes. A change after publish adds a 301 from the old URL. A second change needs a manual rule in Redirects." }
       - { label: "SEO title", name: "seo_title", widget: "string", required: false, hint: "Browser tab / Google result title. Leave empty to use the article title." }
-      - { label: "Meta description", name: "description", widget: "text", required: false, hint: "150–160 characters shown under the title in Google." }
+      - { label: "Meta description", name: "description", widget: "text", required: false, hint: "150–160 characters shown under the title in Google. Also shows as the excerpt on /news/." }
       - { label: "Hero image", name: "hero", widget: "image", required: false }
       - { label: "Hero image alt text", name: "hero_alt", widget: "string", required: false }
       - { label: "External link (optional)", name: "link", widget: "string", required: false, hint: "If set, a MORE INFO button appears under the article pointing here." }
@@ -55,7 +55,7 @@ collections:
           - label: "Affiliations"
             name: "affiliations"
             widget: "list"
-            hint: &site_hint "Changes show on Home, Studio, People, Privacy and the project and category pages. News articles keep the old values."
+            hint: &site_hint "Changes show on Home, Studio, People, Privacy, the News index and the project and category pages. News articles keep the old values."
             fields:
               - { label: "Logo", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages", hint: *site_hint }
               - { label: "Alt text", name: "alt", widget: "string", required: false, hint: *site_hint }
@@ -224,6 +224,17 @@ collections:
         label: "Projects: Landscape"
         file: "content/pages/projects-landscape.json"
         fields: *category_fields
+      - name: "news"
+        label: "News: index"
+        file: "content/pages/news.json"
+        fields:
+          - { label: "H1 (page heading)", name: "h1", widget: "string" }
+          - { label: "Intro", name: "intro", widget: "text", hint: "Plain text, no HTML. Shows above the news list." }
+          - label: "SEO"
+            name: "seo"
+            widget: "object"
+            hint: "Page URL: https://nellisarchitecture.com/news/ (fixed, not editable)."
+            fields: *seo_fields
 
   - name: "redirects"
     label: "Redirects"

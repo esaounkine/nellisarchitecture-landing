@@ -8,6 +8,7 @@ const people = require('../build/lib/pages/people');
 const project = require('../build/lib/pages/project');
 const { renderPages } = require('../build/lib/pages');
 const { loadProjects } = require('../build/lib/projects');
+const { loadPosts } = require('../build-news');
 
 test('bodyLines ends every text line with <br><br>, except the last', () => {
   assert.equal(bodyLines('one\ntwo\nlast'), 'one<br><br>\ntwo<br><br>\nlast');
@@ -28,6 +29,7 @@ test('bodyLines escapes text and keeps a space before the break', () => {
 
 const ROOT = path.join(__dirname, '..');
 const count = (s, sub) => s.split(sub).length - 1;
+const POSTS = loadPosts(path.join(ROOT, 'content', 'news'));
 
 test('renderPages writes each page to its folder and puts the News link in it', () => {
   const pages = renderPages(ROOT, '/news/x-$&/');
@@ -57,7 +59,9 @@ function assertNav(html, name) {
 }
 
 test('every page links the nav Projects item to /projects/ and the logo to /', () => {
-  renderPages(ROOT, '/news/x/').forEach((p) => assertNav(p.html, p.file));
+  const pages = renderPages(ROOT, '/news/', undefined, POSTS);
+  assert.ok(pages.some((p) => p.file === 'news/index.html'));
+  pages.forEach((p) => assertNav(p.html, p.file));
   const [entry] = loadProjects(ROOT);
   const siteFile = path.join(ROOT, 'content', 'pages', 'site.json');
   const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
@@ -67,7 +71,7 @@ test('every page links the nav Projects item to /projects/ and the logo to /', (
 });
 
 test('renderPages output has no relative asset or page links', () => {
-  renderPages(ROOT, '/news/x/').forEach((p) => {
+  renderPages(ROOT, '/news/x/', undefined, POSTS).forEach((p) => {
     assert.doesNotMatch(p.html, /(src|href)=["']wp-content\//, p.file);
     assert.doesNotMatch(p.html, /url\(["']?wp-content\//, p.file);
     assert.doesNotMatch(p.html, /href=["'][^"'/:#]*\.html/, p.file);

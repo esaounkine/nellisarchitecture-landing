@@ -109,6 +109,13 @@ test('loadPosts refuses a slug that is not lowercase letters, digits and dashes'
   fs.rmSync(dir, { recursive: true });
 });
 
+test('news template links the nav News item and the News crumb to /news/', () => {
+  const html = fs.readFileSync(path.join(__dirname, '..', 'build', 'news-template.html'), 'utf8');
+  assert.ok(html.includes('<a href="/news/">News</a>\n              </li>'));
+  assert.ok(html.includes('<a href="/">Home</a> <span>/</span> <a href="/news/">News</a>'));
+  assert.doesNotMatch(html, /href="index\.html"/);
+});
+
 test('news template has no feed link', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'build', 'news-template.html'), 'utf8');
   assert.doesNotMatch(html, /href=["'][^"']*feed\//);
@@ -167,6 +174,16 @@ test('every real post renders exactly one og:image that exists on disk', () => {
       .forEach((k) => assert.equal(meta(html, k).length, 1, k));
     assert.ok(fs.existsSync(path.join(ROOT, urls[0].slice(SITE.length))), urls[0]);
   });
+});
+
+test('renderPost breadcrumb schema links News to /news/', () => {
+  const html = renderPost(TEMPLATE, post({ title: 'P' }), '');
+  const ld = html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
+  const json = JSON.parse(ld);
+  const crumbs = json['@graph'].find((n) => n['@type'] === 'BreadcrumbList');
+  assert.deepEqual(crumbs.itemListElement.map((i) => [i.position, i.name, i.item]), [
+    [1, 'Home', `${SITE}/`], [2, 'News', `${SITE}/news/`], [3, 'P', undefined],
+  ]);
 });
 
 test('readingTime counts plain-text words at 200 per minute, at least 1 minute', () => {

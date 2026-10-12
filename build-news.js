@@ -9,8 +9,8 @@
  *   1. Reads every markdown file in content/news/
  *   2. Renders news/<slug>/index.html from build/news-template.html
  *   3. Rebuilds the NewsList sidebar on every news page (newest first)
- *   4. Builds index.html, studio/, people/, privacy/ and projects/<category>/index.html
- *      from content/pages/*.json (build/lib/); their "News" link points at the newest post
+ *   4. Builds index.html, studio/, people/, privacy/, news/ and projects/<category>/index.html
+ *      from content/pages/*.json (build/lib/); their "News" link points at /news/
  *   5. Updates data/news.json (used by the in-page news switcher)
  *   6. Regenerates sitemap.xml
  *   7. Builds projects/<category>/<slug>/index.html from data/projects.json
@@ -28,6 +28,7 @@ const project = require('./build/lib/pages/project');
 const { rss } = require('./build/lib/feed');
 const { imageSize } = require('./build/lib/image-size');
 const { escAttr } = require('./build/lib/html');
+const { heroPath, FALLBACK_SRC } = require('./build/lib/pages/news');
 
 const ROOT = __dirname;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -43,7 +44,7 @@ const ARROW_SVG = '<svg width="15" height="9" viewBox="0 0 15 9" fill="none" '
   + '8.2308 11.1716 8.03553L14.3536 4.85355Z" fill="currentColor"/></svg>';
 
 const FALLBACK_IMG = {
-  url: `${DOMAIN}/wp-content/themes/nellis/assets/img/minis.png`,
+  url: `${DOMAIN}${FALLBACK_SRC}`,
   width: 968,
   height: 504,
   type: 'image/png',
@@ -168,7 +169,9 @@ function articleSchema(p) {
           {
             '@type': 'ListItem', position: 1, name: 'Home', item: `${DOMAIN}/`,
           },
-          { '@type': 'ListItem', position: 2, name: 'News' },
+          {
+            '@type': 'ListItem', position: 2, name: 'News', item: `${DOMAIN}/news/`,
+          },
           { '@type': 'ListItem', position: 3, name: p.title }],
       },
     ],
@@ -177,8 +180,8 @@ function articleSchema(p) {
 
 /* og:image = the hero when it is a local JPEG/PNG; else the theme image. */
 function ogImage(p) {
-  if (!(p.hero || '').startsWith(`${DOMAIN}/`)) return FALLBACK_IMG;
-  const size = imageSize(path.join(ROOT, p.hero.slice(DOMAIN.length)));
+  const rel = heroPath(p);
+  const size = rel && imageSize(path.join(ROOT, rel));
   return size ? { url: p.hero, ...size } : FALLBACK_IMG;
 }
 
@@ -264,6 +267,24 @@ function pruneNews(root, posts) {
     });
 }
 
+/* Refresh the NewsList inside every news/<dir>/index.html (incl. untouched ones).
+   news/index.html (the /news/ page) has no NewsList and stays as it is. */
+function refreshNewsLists(root, list) {
+  const newsRoot = path.join(root, 'news');
+  fs.readdirSync(newsRoot)
+    .map((d) => path.join(newsRoot, d, 'index.html'))
+    .filter((f) => fs.existsSync(f))
+    .forEach((f) => {
+      const src = fs.readFileSync(f, 'utf8');
+      const i = src.indexOf('<div class="NewsList">');
+      const j = src.indexOf('<div class="elscroll"></div>', i);
+      if (i > -1 && j > i) {
+        const head = `${src.slice(0, i)}<div class="NewsList">\n`;
+        fs.writeFileSync(f, `${head}${list}\n                ${src.slice(j)}`);
+      }
+    });
+}
+
 /* Only folders inside projects/ are deleted. Category folders always stay
    (they hold the category page, card BJf6BWUL); files are never deleted. */
 function pruneProjects(root, list) {
@@ -326,26 +347,12 @@ function build() {
 
   pruneNews(ROOT, posts);
 
-  /* ---------- refresh NewsList inside every news page (incl. untouched ones) ---------- */
-  const newsRoot = path.join(ROOT, 'news');
-  fs.readdirSync(newsRoot)
-    .map((d) => path.join(newsRoot, d, 'index.html'))
-    .filter((f) => fs.existsSync(f))
-    .forEach((f) => {
-      const src = fs.readFileSync(f, 'utf8');
-      const i = src.indexOf('<div class="NewsList">');
-      const j = src.indexOf('<div class="elscroll"></div>', i);
-      if (i > -1 && j > i) {
-        const head = `${src.slice(0, i)}<div class="NewsList">\n`;
-        fs.writeFileSync(f, `${head}${list}\n                ${src.slice(j)}`);
-      }
-    });
+  refreshNewsLists(ROOT, list);
 
-  /* ---------- nav "News" link -> newest post ---------- */
   const newest = posts[0];
-  const newsHref = `/news/${newest.slug}/`;
+  const newsHref = '/news/';
   const projects = loadProjects(ROOT);
-  const pages = writePages(ROOT, newsHref, projects);
+  const pages = writePages(ROOT, newsHref, projects, posts);
   writeProjects(ROOT, projects, newsHref);
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson));
@@ -371,6 +378,7 @@ module.exports = {
   renderPost,
   readingTime,
   pruneNews,
+  refreshNewsLists,
   pruneProjects,
   writeRedirects,
 };
