@@ -6,7 +6,7 @@ const path = require('node:path');
 const { tomlFroms } = require('../build/lib/redirects');
 
 const SITE = [
-  'admin', 'data', 'js', 'news', 'people', 'privacy', 'studio', 'wp-content',
+  'admin', 'data', 'js', 'news', 'people', 'privacy', 'projects', 'studio', 'wp-content',
   'robots.txt', 'sitemap.xml', '_redirects',
   'netlify.toml', // Netlify never serves it, no rule needed
 ];

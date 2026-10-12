@@ -26,4 +26,6 @@ function seoTokens(content, page) {
   };
 }
 
-module.exports = { DOMAIN, pageUrl, seoTokens };
+module.exports = {
+  DOMAIN, INDEX, pageUrl, seoTokens,
+};

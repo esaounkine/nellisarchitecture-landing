@@ -1,0 +1,186 @@
+const {
+  escText, escAttr, fill, loadPartial,
+} = require('../html');
+const {
+  head, top, affiliations, footer,
+} = require('../chrome');
+const { DOMAIN, INDEX } = require('../seo');
+const { CATEGORIES, categoryHref, description } = require('../projects');
+
+/* eslint-disable @stylistic/max-len -- raw theme SVG, as in the overlay */
+const SWIPER_NAV_BUTTON = (cls) => `                    <svg class="${cls}" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.172 8.99968L-3.83699e-07 8.99968L-2.96276e-07 6.99968L12.172 6.99968L6.808 1.63568L8.222 0.221679L16 7.99968L8.222 15.7777L6.808 14.3637L12.172 8.99968Z" fill="#00372A" />
+                    </svg>`;
+/* eslint-enable @stylistic/max-len */
+
+const isVideo = (src) => /\.(mp4|avi|mov|webm|mkv)$/i.test(src);
+const nonEmpty = (list) => (list || []).filter((t) => t && t.trim());
+
+/* Project texts are HTML from our own data (entities, </br>): output raw, as the overlay does. */
+function texts(list, cls) {
+  const ps = nonEmpty(list)
+    .map((t) => `<p class="parag">${t.replace(/\r\n?/g, '\n')}</p>`)
+    .join('');
+  return ps && `        <div class="currentProject_container ${cls}">${ps}</div>`;
+}
+
+function img(src, alt, lazy) {
+  const loading = lazy ? ' loading="lazy"' : '';
+  return `<img src="${escAttr(src)}" alt="${escAttr(alt)}"${loading} data-fancybox="galleryHI">`;
+}
+
+function hero(src, name) {
+  if (isVideo(src)) {
+    return `${' '.repeat(16)}<div class="currentProject-heroImg">`
+      + '<video autoplay muted loop playsinline>'
+      + `<source src="${escAttr(src)}" type="video/mp4" /></video></div>`;
+  }
+  return `${' '.repeat(16)}<div class="currentProject-heroImg varVideo">`
+    + `${img(src, name, false)}</div>`;
+}
+
+function swiper(list, name, gallery, extra = '') {
+  if (!nonEmpty(list).length) return '';
+  const slides = nonEmpty(list).map((src) => `<a class="swiper-slide" href="${escAttr(src)}" `
+    + `data-fancybox="${gallery}">`
+    + `<img src="${escAttr(src)}" alt="${escAttr(name)}" loading="lazy" /></a>`);
+  return [
+    `        <div class="swiper${extra}">`,
+    `            <div class="swiper-wrapper">${slides.join('')}</div>`,
+    '            <div class="swiper__nav">',
+    '                <div class="swiper__nav_container">',
+    SWIPER_NAV_BUTTON('btnp'),
+    '                    <div class="swiper-paginationCust"></div>',
+    SWIPER_NAV_BUTTON('btnn'),
+    '                </div>',
+    '            </div>',
+    '        </div>',
+  ].join('\n');
+}
+
+function images(list, name, wrap) {
+  return nonEmpty(list)
+    .map((src) => wrap(`<div class="currentProject-heroImg">${img(src, name, true)}</div>`))
+    .join('');
+}
+
+/* label/value pairs; an odd last entry is dropped, as in the overlay. */
+function typeSet(list) {
+  const set = list || [];
+  const items = [];
+  for (let i = 0; i < Math.floor(set.length / 2); i += 1) {
+    items.push(`<div class="item"><div class="item-name">${set[i * 2]}</div>`
+      + `<div class="item-char">${set[i * 2 + 1]}</div></div>`);
+  }
+  if (!items.length) return '';
+  return '        <div class="currentProject__close"><div class="currentProject__close_container">'
+    + `<div class="currentProject__close_center">${items.join('')}</div></div></div>`;
+}
+
+function body(name, p) {
+  const img2 = images(p.project_img2, name, (h) => (
+    `<div class="currentProject_container">${h}</div>`));
+  const last = images(p.project_last_img, name, (h) => h);
+  const text3 = nonEmpty(p.project_text_3).length;
+  return [
+    swiper(p.project_slider1, name, 'gallery11'),
+    texts(p.project_text_1, 'projText1'),
+    img2 && `        <div class="curProjimg2">${img2}</div>`,
+    texts(p.project_text_2, 'projText2'),
+    swiper(p.project_slider2, name, 'gallery22', text3 ? '' : ' curpadslide'),
+    texts(p.project_text_3, 'projText3'),
+    last && `        <div class="currentProject_container projLastImg">${last}</div>`,
+    typeSet(p.project_type_set),
+  ].filter(Boolean).join('\n');
+}
+
+/* og:image: the hero, or the first slide when the hero is a video. */
+function ogImage(p) {
+  const src = isVideo(p.first_img_video) ? (p.project_slider1 || [])[0] : p.first_img_video;
+  return src ? `  <meta property="og:image" content="${escAttr(DOMAIN + src)}">` : '';
+}
+
+function title(name, p) {
+  const area = (p.project_rigth1 || p.project_rigth2 || '').trim();
+  return area ? `${name} | ${area} | Nellis Architecture` : `${name} | Nellis Architecture`;
+}
+
+function schema(entry, pageTitle, desc) {
+  const url = DOMAIN + entry.url;
+  return JSON.stringify({
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebPage',
+        '@id': url,
+        url,
+        name: pageTitle,
+        description: desc,
+        isPartOf: { '@id': `${DOMAIN}/#website` },
+        breadcrumb: { '@id': `${url}#breadcrumb` },
+        inLanguage: 'en-US',
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${url}#breadcrumb`,
+        itemListElement: [
+          {
+            '@type': 'ListItem', position: 1, name: 'Home', item: `${DOMAIN}/`,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: CATEGORIES[entry.cat].label,
+            item: DOMAIN + categoryHref(entry.cat),
+          },
+          { '@type': 'ListItem', position: 3, name: entry.name },
+        ],
+      },
+    ],
+  }).replace(/</g, '\\u003c');
+}
+
+/* entry: one item of projectList(). */
+function render(entry, { site, newsHref }) {
+  const { name, p } = entry;
+  const pageTitle = title(name, p);
+  const desc = description((p.project_text_1 || [])[0]);
+  const url = DOMAIN + entry.url;
+  const headHtml = head({
+    BEFORE: '',
+    IDENTITY: '',
+    OG_IMAGE: ogImage(p),
+    TITLE: escText(pageTitle),
+    ROBOTS: INDEX,
+    DESCRIPTION: escAttr(desc),
+    CANONICAL: escAttr(url),
+    OG_TYPE: 'article',
+    OG_TITLE: escAttr(pageTitle),
+    OG_DESCRIPTION: escAttr(desc),
+    OG_URL: escAttr(url),
+    MODIFIED_TIME: '',
+    SCHEMA: schema(entry, pageTitle, desc),
+  // Shortcut: the data has no dates, so drop the empty modified_time line.
+  // Upgrade: a head token for the whole line.
+  }).replace('\t<meta property="article:modified_time" content="" />\n', '');
+  return [
+    headHtml,
+    top(name, site),
+    fill(loadPartial('page-project'), {
+      NEWS_HREF: escAttr(newsHref),
+      AFFILIATIONS: affiliations(site.affiliations, '    '),
+      CATEGORY_HREF: escAttr(categoryHref(entry.cat)),
+      CATEGORY_LABEL: escText(CATEGORIES[entry.cat].label),
+      NAME: escText(name),
+      AREA: escText(p.project_rigth1),
+      REGION: escText(p.project_rigth2),
+      HERO: hero(p.first_img_video, name),
+      BODY: body(name, p),
+    }),
+    footer(),
+  ].join('\n');
+}
+
+module.exports = {
+  render, title, ogImage, typeSet, texts,
+};

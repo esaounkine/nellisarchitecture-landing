@@ -13,14 +13,17 @@
  *      from content/pages/*.json (build/lib/); their "News" link points at the newest post
  *   5. Updates data/news.json (used by the in-page news switcher)
  *   6. Regenerates sitemap.xml
- *   7. Deletes news/<dir>/ folders that no post owns
- *   8. Writes _redirects from content/redirects.json and changed news slugs
+ *   7. Builds projects/<category>/<slug>/index.html from data/projects.json
+ *   8. Deletes news/<dir>/ and projects/ folders that no post or project owns
+ *   9. Writes _redirects from content/redirects.json and changed news slugs
  */
 const fs = require('node:fs');
 const path = require('node:path');
 const { writePages } = require('./build/lib/pages');
 const { pageUrl, DOMAIN } = require('./build/lib/seo');
 const redirects = require('./build/lib/redirects');
+const { loadProjects, CATEGORY_KEYS } = require('./build/lib/projects');
+const project = require('./build/lib/pages/project');
 
 const ROOT = __dirname;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -201,9 +204,10 @@ function newsJsonEntry(p) {
   };
 }
 
-function sitemap(posts, pages) {
+function sitemap(posts, pages, projects = []) {
   const urls = [
     ...pages.filter((p) => !p.noindex).map((p) => ({ loc: pageUrl(p.slug), pr: p.priority })),
+    ...projects.map((e) => ({ loc: `${DOMAIN}${e.url}`, pr: '0.7' })),
     ...posts.map((p) => ({
       loc: `${DOMAIN}/news/${p.slug}/`, pr: '0.6', lastmod: p.dateObj.toISOString().slice(0, 10),
     })),
@@ -227,6 +231,35 @@ function pruneNews(root, posts) {
       fs.rmSync(path.join(newsRoot, d.name), { recursive: true });
       console.log(`deleted stale news/${d.name}/`);
     });
+}
+
+/* Only folders inside projects/ are deleted. Category folders always stay
+   (they hold the category page, card BJf6BWUL); files are never deleted. */
+function pruneProjects(root, list) {
+  const projRoot = path.join(root, 'projects');
+  const keep = new Set(list.map((e) => path.join(e.cat, e.slug)));
+  const dirs = (rel) => fs.readdirSync(path.join(projRoot, rel), { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => path.join(rel, d.name));
+  const remove = (rel) => {
+    fs.rmSync(path.join(projRoot, rel), { recursive: true });
+    console.log(`deleted stale projects/${rel}/`);
+  };
+  dirs('').forEach((cat) => {
+    if (!CATEGORY_KEYS.includes(cat)) remove(cat);
+    else dirs(cat).filter((d) => !keep.has(d)).forEach(remove);
+  });
+}
+
+function writeProjects(root, list, newsHref) {
+  const siteFile = path.join(root, 'content', 'pages', 'site.json');
+  const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
+  list.forEach((e) => {
+    const outDir = path.join(root, e.url);
+    fs.mkdirSync(outDir, { recursive: true });
+    fs.writeFileSync(path.join(outDir, 'index.html'), project.render(e, { site, newsHref }));
+  });
+  pruneProjects(root, list);
 }
 
 /* Run after every page write: the checks read the final tree. */
@@ -281,13 +314,15 @@ function build() {
   const newest = posts[0];
   const newsHref = `/news/${newest.slug}/`;
   const pages = writePages(ROOT, newsHref);
+  const projects = loadProjects(ROOT);
+  writeProjects(ROOT, projects, newsHref);
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson));
-  fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts, pages));
+  fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts, pages, projects));
   const rules = writeRedirects(ROOT, posts);
 
   console.log(`built ${posts.length} news pages; newest: ${newest.slug}; `
-    + `${rules.length} redirects`);
+    + `${projects.length} project pages; ${rules.length} redirects`);
 }
 
 if (require.main === module) build();
@@ -302,5 +337,6 @@ module.exports = {
   sitemap,
   loadPosts,
   pruneNews,
+  pruneProjects,
   writeRedirects,
 };

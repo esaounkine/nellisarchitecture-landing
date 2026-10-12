@@ -2,8 +2,15 @@ const {
   escText, escAttr, fill, lazyImg, loadPartial,
 } = require('./html');
 
+const OG_IMAGE = [
+  // eslint-disable-next-line @stylistic/max-len -- raw WordPress head value, kept byte for byte
+  '  <meta property="og:image" content="https://nellisarchitecture.com/wp-content/themes/nellis/assets/img/minis.png">',
+  '  <meta property="og:image:width" content="968">',
+  '  <meta property="og:image:height" content="504">',
+].join('\n');
+
 function head(values) {
-  return fill(loadPartial('head'), values);
+  return fill(loadPartial('head'), { OG_IMAGE, ...values });
 }
 
 function formTokens(prefix, form) {
