@@ -55,7 +55,7 @@ collections:
           - label: "Affiliations"
             name: "affiliations"
             widget: "list"
-            hint: &site_hint "Changes show on Home, Studio, People and Privacy. News articles keep the old values."
+            hint: &site_hint "Changes show on Home, Studio, People, Privacy and the project and category pages. News articles keep the old values."
             fields:
               - { label: "Logo", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages", hint: *site_hint }
               - { label: "Alt text", name: "alt", widget: "string", required: false, hint: *site_hint }

@@ -39,8 +39,9 @@ function category(name, p) {
 
 /* Primary category (after overrides), or a secondary one in res2[1..]. */
 function inCategory(entry, cat) {
-  return entry.cat === cat
-    || (entry.p.res2 || []).slice(1).some((raw) => CATEGORY_ALIAS[raw] === cat);
+  if (entry.cat === cat) return true;
+  if (CATEGORY_OVERRIDE[entry.name]) return false;
+  return (entry.p.res2 || []).slice(1).some((raw) => CATEGORY_ALIAS[raw] === cat);
 }
 
 /* data: the projects.json object, name -> [project]. */

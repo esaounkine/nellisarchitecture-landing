@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const category = require('../build/lib/pages/category');
 const { PAGES, renderPages } = require('../build/lib/pages');
-const { loadProjects, CATEGORY_KEYS } = require('../build/lib/projects');
+const { loadProjects, CATEGORY_KEYS, inCategory } = require('../build/lib/projects');
 const { sitemap } = require('../build-news');
 
 const ROOT = path.join(__dirname, '..');
@@ -136,4 +136,14 @@ test('category partials close every div they open', () => {
     const matches = (re) => (html.match(re) || []).length;
     assert.equal(matches(/<div[\s>]/g), matches(/<\/div>/g), name);
   });
+});
+
+test('an overridden project stays in its override category only', () => {
+  const res2 = ['architecture', 'landscape'];
+  const entry = { name: 'Skye Residences', cat: 'master-planning', p: { res2 } };
+  assert.equal(inCategory(entry, 'master-planning'), true);
+  assert.equal(inCategory(entry, 'landscape'), false);
+  assert.equal(inCategory(entry, 'architecture'), false);
+  const other = { name: 'Zoya', cat: 'architecture', p: { res2: ['architecture', 'landscape'] } };
+  assert.equal(inCategory(other, 'landscape'), true);
 });
