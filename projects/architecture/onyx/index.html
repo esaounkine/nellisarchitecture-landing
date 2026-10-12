@@ -1683,7 +1683,6 @@ With outdoor living a desired focal point, a spacious infinity pool featuring st
   </script>
 
   <script>
-    const permalink = '/';
     document.addEventListener("DOMContentLoaded", () => {
       const Projects = document.querySelector(".centerProject");
       const footer = document.querySelector("#foot");
@@ -1788,6 +1787,7 @@ With outdoor living a desired focal point, a spacious infinity pool featuring st
         xhr.onreadystatechange = function() {
           if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             document.querySelector('.center .container').innerHTML = xhr.responseText + '<div class="elscroll"></div><div class="new--decor"><div class="nd1"></div><div class="nd2"></div></div>';
+            Projects.scrollTop = 0;
             setTimeout(() => {
               const scrollelem = document.querySelector('.elscroll');
               const rect = scrollelem.getBoundingClientRect();
@@ -1814,11 +1814,7 @@ With outdoor living a desired focal point, a spacious infinity pool featuring st
       }
       categoryLink.forEach((el) => {
         el.addEventListener("click", () => {
-          if (location.pathname !== '/') {
-            location.assign('/#' + el.textContent);
-            return;
-          }
-          history.pushState(null, null, permalink + '#' + el.textContent);
+          history.pushState(null, null, location.pathname + '#' + el.textContent);
           currentUrl = decodeURIComponent(location.hash.slice(1));
           var xhr = new XMLHttpRequest();
           xhr.open('POST', 'https://nellisarchitecture.com/wp-admin/admin-ajax.php', true);
@@ -1826,6 +1822,7 @@ With outdoor living a desired focal point, a spacious infinity pool featuring st
           xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
               document.querySelector('.center .container').innerHTML = xhr.responseText + '<div class="elscroll"></div><div class="new--decor"><div class="nd1"></div><div class="nd2"></div></div>';
+              Projects.scrollTop = 0;
               setTimeout(() => {
                 const scrollelem = document.querySelector('.elscroll');
                 const rect = scrollelem.getBoundingClientRect();
@@ -1852,6 +1849,7 @@ With outdoor living a desired focal point, a spacious infinity pool featuring st
           xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
               document.querySelector('.center .container').innerHTML = xhr.responseText + '<div class="elscroll"></div><div class="new--decor"><div class="nd1"></div><div class="nd2"></div></div>';
+              Projects.scrollTop = 0;
               setTimeout(() => {
                 const scrollelem = document.querySelector('.elscroll');
                 const rect = scrollelem.getBoundingClientRect();
@@ -1874,6 +1872,7 @@ With outdoor living a desired focal point, a spacious infinity pool featuring st
           xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
               document.querySelector('.center .container').innerHTML = xhr.responseText + '<div class="elscroll"></div><div class="new--decor">                    <div class="nd1"></div><div class="nd2"></div></div>';
+              Projects.scrollTop = 0;
               setTimeout(() => {
                 const scrollelem = document.querySelector('.elscroll');
                 const rect = scrollelem.getBoundingClientRect();
