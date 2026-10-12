@@ -8,9 +8,11 @@
     "serve": "serve -l 8000",
     "lint": "eslint .",
     "format": "eslint . --fix",
-    "test": "node --test"
+    "test": "node --test",
+    "cms": "decap-server"
   },
   "devDependencies": {
+    "decap-server": "^3.11.3",
     "eslint": "^9.39.5",
     "eslint-config-airbnb-extended": "^3.3.0",
     "globals": "^17.13.0",

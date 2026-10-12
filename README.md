@@ -67,6 +67,8 @@ node build-news.js
 npm run serve
 ```
 
+To use the CMS on your computer, see [Local CMS](docs/workflow/development.md#commands).
+
 ## Notes
 
 - Contact-form spam protection uses Netlify's honeypot; the old PHP captcha is gone.

@@ -8,6 +8,10 @@ backend:
 
 publish_mode: editorial_workflow
 
+# Local editing: run `npm run cms` with `npm run serve`, then open http://localhost:8000/admin/.
+# Decap uses this only on localhost; the live site keeps git-gateway.
+local_backend: true
+
 media_folder: "wp-content/uploads/news"
 public_folder: "/wp-content/uploads/news"
 

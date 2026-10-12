@@ -110,6 +110,7 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 - Install: `npm ci`.
 - Build: `npm run build` (runs `node build-news.js`). It regenerates `news/*/index.html`, `data/news.json`, `sitemap.xml`, `index.html`, `studio/index.html`, `people/index.html`, `privacy/index.html` and `_redirects`. It deletes `news/<dir>/` folders that no post owns.
 - Local preview: `npm run serve` ([serve](https://www.npmjs.com/package/serve)), then open <http://localhost:8000>.
+- Local CMS: also run `npm run cms` ([decap-server](https://www.npmjs.com/package/decap-server), port 8081), then open <http://localhost:8000/admin/> and click Login (no password). The CMS writes straight to the files in your working copy. There is no editorial workflow and no commit. Run the build and commit yourself. Decap uses the local backend only on `localhost` (`local_backend: true` in `admin/config.yml`).
 - Lint: `npm run lint` ([ESLint](https://eslint.org/) with [eslint-config-airbnb-extended](https://www.npmjs.com/package/eslint-config-airbnb-extended), config in `eslint.config.mjs`). Fix style: `npm run format`.
 - Unit tests: `npm test` ([node:test](https://nodejs.org/api/test.html), files in `test/`).
 - **Checks** (Test state and before a push): `npm run lint && npm test && npm run build`, then `git status`. Only the expected files may change.
