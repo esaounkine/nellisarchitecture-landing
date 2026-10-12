@@ -27,5 +27,5 @@ function seoTokens(content, page) {
 }
 
 module.exports = {
-  DOMAIN, INDEX, pageUrl, seoTokens,
+  DOMAIN, INDEX, NOINDEX, pageUrl, seoTokens,
 };

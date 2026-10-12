@@ -23,7 +23,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { writePages } = require('./build/lib/pages');
-const { pageUrl, DOMAIN } = require('./build/lib/seo');
+const {
+  pageUrl, DOMAIN, INDEX, NOINDEX,
+} = require('./build/lib/seo');
 const redirects = require('./build/lib/redirects');
 const { loadProjects, CATEGORY_KEYS } = require('./build/lib/projects');
 const project = require('./build/lib/pages/project');
@@ -143,6 +145,10 @@ function loadPosts(dir) {
     if (!SLUG.test(fm.slug || '')) {
       throw new Error(`${file}: slug must be lowercase letters, digits and dashes: "${fm.slug}"`);
     }
+    if (!['true', 'false', '', undefined].includes(fm.noindex)) {
+      throw new Error(`${file}: noindex must be true or false: "${fm.noindex}"`);
+    }
+    fm.noindex = fm.noindex === 'true';
     if (!fm.id) fm.id = `md${fm.slug}`;
     fm.filename = f.slice(0, -3);
     fm.html = mdToHtml(body);
@@ -206,6 +212,7 @@ function renderPost(template, p, list) {
 
   return template
     .replaceAll('{{SEO_TITLE}}', esc(p.seo_title || `${p.title} | Nellis Architecture`))
+    .replaceAll('{{ROBOTS}}', p.noindex ? NOINDEX : INDEX)
     .replaceAll('{{META_DESC}}', esc(p.description || ''))
     .replace(/\{\{SLUG\}\}/g, p.slug)
     .replaceAll('{{OG_TITLE}}', esc(p.seo_title || p.title))
@@ -245,7 +252,7 @@ function sitemap(posts, pages, projects = []) {
   const urls = [
     ...pages.filter((p) => !p.noindex).map((p) => ({ loc: pageUrl(p.slug), pr: p.priority })),
     ...projects.map((e) => ({ loc: `${DOMAIN}${e.url}`, pr: '0.7' })),
-    ...posts.map((p) => ({
+    ...posts.filter((p) => !p.noindex).map((p) => ({
       loc: `${DOMAIN}/news/${p.slug}/`, pr: '0.6', lastmod: p.dateObj.toISOString().slice(0, 10),
     })),
   ];

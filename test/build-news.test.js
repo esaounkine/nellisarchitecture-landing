@@ -7,6 +7,7 @@ const {
   parseFrontMatter, inlineMd, mdToHtml, parseDate, esc, idNum, sitemap, loadPosts,
   renderPost, readingTime,
 } = require('../build-news');
+const { INDEX, NOINDEX } = require('../build/lib/seo');
 
 test('parseFrontMatter reads plain and quoted values', () => {
   const src = '---\ntitle: "A \\"quoted\\" title"\nslug: my-post\n---\n\nBody text\n';
@@ -198,4 +199,38 @@ test('renderPost writes the reading time and keeps the author', () => {
   assert.deepEqual(meta(html, 'twitter:data2'), ['3 minutes']);
   assert.deepEqual(meta(html, 'twitter:data1'), ['Santaclaus']);
   assert.deepEqual(meta(html, 'author'), ['Santaclaus']);
+});
+
+test('loadPosts reads noindex as a boolean and refuses other values', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'posts-'));
+  const file = path.join(dir, 'p.md');
+  const write = (line) => fs.writeFileSync(file, `---\ntitle: T\nslug: p\n${line}\n---\nBody\n`);
+  [['noindex: true', true], ['noindex: "true"', true], ['noindex: false', false],
+    ['noindex: "false"', false], ['', false], ['noindex:', false]].forEach(([line, want]) => {
+    write(line);
+    assert.equal(loadPosts(dir)[0].noindex, want, line);
+  });
+  ['yes', '1', 'True'].forEach((bad) => {
+    write(`noindex: ${bad}`);
+    const named = (e) => e.message.includes(file) && /noindex/.test(e.message);
+    assert.throws(() => loadPosts(dir), named, bad);
+  });
+  fs.rmSync(dir, { recursive: true });
+});
+
+test('renderPost writes noindex robots for a noindex post, index robots by default', () => {
+  const hidden = renderPost(TEMPLATE, post({ noindex: true }), '');
+  assert.equal(hidden.split(NOINDEX).length - 1, 1);
+  assert.ok(!hidden.includes(INDEX));
+  assert.ok(!hidden.includes('{{ROBOTS}}'));
+  const shown = renderPost(TEMPLATE, post(), '');
+  assert.equal(shown.split(INDEX).length - 1, 1);
+  assert.ok(!shown.includes(NOINDEX));
+});
+
+test('sitemap skips noindex posts and keeps the others', () => {
+  const dateObj = new Date(Date.UTC(2026, 0, 2));
+  const xml = sitemap([{ slug: 'a', dateObj, noindex: true }, { slug: 'b', dateObj }], []);
+  assert.ok(!xml.includes('/news/a/'));
+  assert.ok(xml.includes('/news/b/'));
 });

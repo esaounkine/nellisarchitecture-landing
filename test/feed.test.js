@@ -44,3 +44,7 @@ test('rss is deterministic and handles no posts', () => {
   assert.equal(rss(posts), rss(posts));
   assert.equal(items(rss([])).length, 0);
 });
+
+test('rss keeps a noindex post', () => {
+  assert.equal(items(rss([post(1, { noindex: true })])).length, 1);
+});

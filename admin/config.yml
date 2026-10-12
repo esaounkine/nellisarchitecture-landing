@@ -38,6 +38,7 @@ collections:
       - { label: "URL slug", name: "slug", widget: "string", pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', "Use lowercase letters, digits and single dashes only"], hint: "Lowercase words separated by dashes. A change after publish adds a 301 from the old URL. A second change needs a manual rule in Redirects." }
       - { label: "SEO title", name: "seo_title", widget: "string", required: false, hint: "Browser tab / Google result title. Leave empty to use the article title." }
       - { label: "Meta description", name: "description", widget: "text", required: false, hint: "150–160 characters shown under the title in Google. Also shows as the excerpt on /news/." }
+      - { label: "Hide from search (noindex)", name: "noindex", widget: "boolean", default: false, required: false, hint: "On: Google does not show the article, and the sitemap does not list it. The article stays on the site and in the news list." }
       - { label: "Hero image", name: "hero", widget: "image", required: false }
       - { label: "Hero image alt text", name: "hero_alt", widget: "string", required: false }
       - { label: "External link (optional)", name: "link", widget: "string", required: false, hint: "If set, a MORE INFO button appears under the article pointing here." }

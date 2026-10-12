@@ -61,6 +61,7 @@ test/                 # unit tests (npm test)
 3. Publish → the site rebuilds automatically in ~1 minute:
    new article page, refreshed sidebar on all 58 articles, the /news/ list,
    sitemap.xml, the RSS feed (feed.xml), and the in-page switcher data.
+4. To hide an article from Google, turn on **Hide from search (noindex)**. The sitemap drops it; the site and the news list keep it.
 
 To edit page texts (Home, Studio, People, Privacy, the News index, shared affiliations and forms), open **Pages** in `/admin`.
 

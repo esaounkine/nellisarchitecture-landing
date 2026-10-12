@@ -169,3 +169,7 @@ test('news partials close every div they open', () => {
     assert.equal(matches(/<div[\s>]/g), matches(/<\/div>/g), name);
   });
 });
+
+test('the /news/ page keeps a noindex post', () => {
+  assert.ok(render([post({ slug: 'hidden', noindex: true })]).includes('href="/news/hidden/"'));
+});
