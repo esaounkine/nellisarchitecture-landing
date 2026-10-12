@@ -59,6 +59,17 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       fileInput.files = newDataTransfer.files;
   };
+
+  const syncInput = () => {
+      const dataTransfer = new DataTransfer();
+      currentFiles.forEach(file => dataTransfer.items.add(file));
+      fileInput.files = dataTransfer.files;
+  };
+
+  fileInput.form.addEventListener('reset', () => {
+      currentFiles = [];
+      addLabel.style.display = "flex";
+  });
   
   fileInput.addEventListener("change", function (event) {
       const files = event.target.files;
@@ -69,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (currentFiles.length + files.length > MAX_FILES) {
           alert(`Вы можете загрузить не более ${MAX_FILES} файлов.`);
           addLabel.style.display = "flex";
+          syncInput();
           return;
       }
   
@@ -115,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
               addLabel.style.display = "flex";
           });
       }
+      syncInput();
   });
   
 

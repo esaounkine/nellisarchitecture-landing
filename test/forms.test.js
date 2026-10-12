@@ -43,3 +43,26 @@ test('every Netlify form has a honeypot field; the brief form sends files', () =
     });
   });
 });
+
+test('the brief form sends each attachment in its own field', () => {
+  const inputs = [1, 2, 3, 4, 5].map((i) => `<input type="file" name="file${i}">`).join('');
+  const hidden = `<div hidden>${inputs}</div>`;
+  PAGES.forEach((file) => {
+    const brief = forms(read(file)).find((f) => f.includes('name="brief"'));
+    assert.ok(brief.replace(/\s+/g, '').includes(hidden.replace(/\s+/g, '')), file);
+  });
+  SOURCES.forEach((file) => {
+    const html = read(file);
+    assert.ok(html.includes("['files[]', 'file1', 'file2', 'file3', 'file4', 'file5']"), file);
+    assert.ok(html.includes('formData.delete(name);'), file);
+    assert.ok(html.includes("formData.append('file' + (i + 1), file);"), file);
+    assert.ok(html.includes('.slice(0, 5)'), file);
+    assert.ok(html.includes("alert('Files are too large (8 MB total).');"), file);
+  });
+});
+
+test('the theme keeps the file input in step with its file list', () => {
+  const js = read('wp-content/themes/nellis/assets/JS/modal.js');
+  assert.equal(count(js, 'syncInput();'), 2);
+  assert.ok(js.includes("fileInput.form.addEventListener('reset'"));
+});

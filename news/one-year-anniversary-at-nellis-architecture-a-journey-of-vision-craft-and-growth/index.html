@@ -192,6 +192,13 @@
       <div class="formDescr">Please take a moment to complete the form below.</div>
       <form id="yourFormId2" class="projectForm" name="brief" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field">
         <p hidden><label>Leave empty: <input name="bot-field"></label></p>
+        <div hidden>
+          <input type="file" name="file1">
+          <input type="file" name="file2">
+          <input type="file" name="file3">
+          <input type="file" name="file4">
+          <input type="file" name="file5">
+        </div>
         
         <input
           type="text"
@@ -1460,8 +1467,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingFileLabels = document.querySelectorAll(".loadingFile");
     form.addEventListener('submit', function(event) {
         event.preventDefault();
+        var files = Array.prototype.slice.call(document.getElementById('file-input').files).slice(0, 5);
+        var total = files.reduce(function(sum, file) { return sum + file.size; }, 0);
+        if (total > 8 * 1000 * 1000) {
+            alert('Files are too large (8 MB total).');
+            return;
+        }
         var formData = new FormData(form);
         formData.append('form-name', form.getAttribute('name'));
+        ['files[]', 'file1', 'file2', 'file3', 'file4', 'file5'].forEach(function(name) {
+            formData.delete(name);
+        });
+        files.forEach(function(file, i) {
+            formData.append('file' + (i + 1), file);
+        });
         fetch('/', { method: 'POST', body: formData }).then(function(response) {
             if (!response.ok) throw new Error(response.status);
             alert('Thank you. Your message has been sent.');
