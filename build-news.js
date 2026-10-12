@@ -26,6 +26,8 @@ const redirects = require('./build/lib/redirects');
 const { loadProjects, CATEGORY_KEYS } = require('./build/lib/projects');
 const project = require('./build/lib/pages/project');
 const { rss } = require('./build/lib/feed');
+const { imageSize } = require('./build/lib/image-size');
+const { escAttr } = require('./build/lib/html');
 
 const ROOT = __dirname;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -39,6 +41,13 @@ const ARROW_SVG = '<svg width="15" height="9" viewBox="0 0 15 9" fill="none" '
   + '0.964466C10.2692 1.15973 10.2692 1.47631 10.4645 1.67157L13.2929 4.5L10.4645 '
   + '7.32843C10.2692 7.52369 10.2692 7.84027 10.4645 8.03553C10.2692 8.2308 10.9763 '
   + '8.2308 11.1716 8.03553L14.3536 4.85355Z" fill="currentColor"/></svg>';
+
+const FALLBACK_IMG = {
+  url: `${DOMAIN}/wp-content/themes/nellis/assets/img/minis.png`,
+  width: 968,
+  height: 504,
+  type: 'image/png',
+};
 
 /* ---------- tiny front-matter + markdown parser ---------- */
 function parseFrontMatter(src, file = '') {
@@ -166,7 +175,20 @@ function articleSchema(p) {
   });
 }
 
+/* og:image = the hero when it is a local JPEG/PNG; else the theme image. */
+function ogImage(p) {
+  if (!(p.hero || '').startsWith(`${DOMAIN}/`)) return FALLBACK_IMG;
+  const size = imageSize(path.join(ROOT, p.hero.slice(DOMAIN.length)));
+  return size ? { url: p.hero, ...size } : FALLBACK_IMG;
+}
+
+function readingTime(html) {
+  const words = html.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
+  return `${Math.max(1, Math.ceil(words / 200))} minutes`;
+}
+
 function renderPost(template, p, list) {
+  const img = ogImage(p);
   const newsImg = p.hero
     ? `<div class="NewsImg">\n            <img src="${p.hero}" alt="${esc(p.hero_alt || p.title)}" `
       + 'class="lazyload">\n          </div>'
@@ -181,7 +203,13 @@ function renderPost(template, p, list) {
     .replace(/\{\{SLUG\}\}/g, p.slug)
     .replaceAll('{{OG_TITLE}}', esc(p.seo_title || p.title))
     .replaceAll('{{OG_DESC}}', esc(p.description || ''))
+    .replaceAll('{{PUB_TIME}}', p.dateObj.toISOString())
     .replaceAll('{{MOD_TIME}}', p.dateObj.toISOString())
+    .replaceAll('{{OG_IMAGE}}', escAttr(img.url))
+    .replaceAll('{{OG_IMAGE_WIDTH}}', img.width)
+    .replaceAll('{{OG_IMAGE_HEIGHT}}', img.height)
+    .replaceAll('{{OG_IMAGE_TYPE}}', img.type)
+    .replaceAll('{{READ_TIME}}', readingTime(p.html))
     .replaceAll('{{SCHEMA}}', articleSchema(p))
     .replaceAll('{{NEWS_IMG}}', newsImg)
     .replaceAll('{{TITLE}}', p.title)
@@ -339,6 +367,8 @@ module.exports = {
   idNum,
   sitemap,
   loadPosts,
+  renderPost,
+  readingTime,
   pruneNews,
   pruneProjects,
   writeRedirects,

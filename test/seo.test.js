@@ -111,10 +111,10 @@ test('SEO values are escaped and $& stays literal', () => {
   assert.equal(canonical, `${DOMAIN}/a&quot;b&lt;c&gt;`);
 });
 
-test('og:image of the pages and news-template.html exists on disk', () => {
-  const template = fs.readFileSync(path.join(ROOT, 'build/news-template.html'), 'utf8');
+/* News posts: see test/build-news.test.js (every real post renders one og:image on disk). */
+test('og:image of the pages exists on disk', () => {
   const pages = renderPages(ROOT, '/news/x/').map((p) => [p.file, p.html]);
-  [...pages, ['build/news-template.html', template]].forEach(([file, html]) => {
+  pages.forEach(([file, html]) => {
     const m = html.match(/property="og:image" content="([^"]+)"/);
     assert.ok(m, file);
     assert.ok(m[1].startsWith(DOMAIN), file);

@@ -5,6 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const {
   parseFrontMatter, inlineMd, mdToHtml, parseDate, esc, idNum, sitemap, loadPosts,
+  renderPost, readingTime,
 } = require('../build-news');
 
 test('parseFrontMatter reads plain and quoted values', () => {
@@ -111,4 +112,73 @@ test('loadPosts refuses a slug that is not lowercase letters, digits and dashes'
 test('news template has no feed link', () => {
   const html = fs.readFileSync(path.join(__dirname, '..', 'build', 'news-template.html'), 'utf8');
   assert.doesNotMatch(html, /href=["'][^"']*feed\//);
+});
+
+const ROOT = path.join(__dirname, '..');
+const TEMPLATE = fs.readFileSync(path.join(ROOT, 'build', 'news-template.html'), 'utf8');
+const meta = (html, prop) => [
+  ...html.matchAll(new RegExp(`(?:property|name)="${prop}" content="([^"]*)"`, 'g')),
+].map((m) => m[1]);
+const SITE = 'https://nellisarchitecture.com';
+const UP = `${SITE}/wp-content/uploads`;
+const post = (over) => ({
+  slug: 's', title: 'T', html: '<p>x</p>', dateObj: new Date(Date.UTC(2025, 11, 22)), ...over,
+});
+
+test('renderPost gives each post its own og:image, size and published time', () => {
+  const a = renderPost(TEMPLATE, post({
+    hero: `${UP}/2025/12/25-questions.jpg`,
+  }), '');
+  const b = renderPost(TEMPLATE, post({
+    hero: `${UP}/2025/09/Bespoke-Design-for-Dubai-Homes.png`,
+    dateObj: new Date(Date.UTC(2025, 8, 3)),
+  }), '');
+  assert.deepEqual(meta(a, 'og:image'), [`${UP}/2025/12/25-questions.jpg`]);
+  assert.deepEqual(meta(a, 'og:image:width'), ['1187']);
+  assert.deepEqual(meta(a, 'og:image:height'), ['791']);
+  assert.deepEqual(meta(a, 'og:image:type'), ['image/jpeg']);
+  assert.deepEqual(meta(a, 'article:published_time'), ['2025-12-22T00:00:00.000Z']);
+  assert.deepEqual(meta(a, 'article:modified_time'), ['2025-12-22T00:00:00.000Z']);
+  assert.deepEqual(meta(b, 'og:image:width'), ['620']);
+  assert.deepEqual(meta(b, 'og:image:height'), ['404']);
+  assert.deepEqual(meta(b, 'og:image:type'), ['image/png']);
+  assert.deepEqual(meta(b, 'article:published_time'), ['2025-09-03T00:00:00.000Z']);
+  assert.doesNotMatch(a + b, /GAFSTAoL|2025-11-24T17:25:07/);
+});
+
+test('renderPost falls back to minis.png without a hero or with an unreadable one', () => {
+  const minis = `${SITE}/wp-content/themes/nellis/assets/img/minis.png`;
+  [undefined, `${UP}/missing.jpg`, `${UP}/2025/07/One-Year-Anniversary-Video-For-Website.mp4`,
+    'https://example.com/x.jpg'].forEach((hero) => {
+    const html = renderPost(TEMPLATE, post({ hero }), '');
+    assert.deepEqual(meta(html, 'og:image'), [minis], hero);
+    assert.deepEqual(meta(html, 'og:image:width'), ['968']);
+    assert.deepEqual(meta(html, 'og:image:height'), ['504']);
+    assert.deepEqual(meta(html, 'og:image:type'), ['image/png']);
+  });
+});
+
+test('every real post renders exactly one og:image that exists on disk', () => {
+  loadPosts(path.join(ROOT, 'content', 'news')).forEach((p) => {
+    const html = renderPost(TEMPLATE, p, '');
+    const urls = meta(html, 'og:image');
+    assert.equal(urls.length, 1, p.slug);
+    ['og:image:width', 'og:image:height', 'og:image:type']
+      .forEach((k) => assert.equal(meta(html, k).length, 1, k));
+    assert.ok(fs.existsSync(path.join(ROOT, urls[0].slice(SITE.length))), urls[0]);
+  });
+});
+
+test('readingTime counts plain-text words at 200 per minute, at least 1 minute', () => {
+  assert.equal(readingTime(''), '1 minutes');
+  assert.equal(readingTime('<p>one <a href="https://x.com/a b c">two</a></p>'), '1 minutes');
+  assert.equal(readingTime(`<p>${'w '.repeat(200)}</p>`), '1 minutes');
+  assert.equal(readingTime(`<p>${'w '.repeat(201)}</p>`), '2 minutes');
+});
+
+test('renderPost writes the reading time and keeps the author', () => {
+  const html = renderPost(TEMPLATE, post({ html: `<p>${'w '.repeat(450)}</p>` }), '');
+  assert.deepEqual(meta(html, 'twitter:data2'), ['3 minutes']);
+  assert.deepEqual(meta(html, 'twitter:data1'), ['Santaclaus']);
+  assert.deepEqual(meta(html, 'author'), ['Santaclaus']);
 });
