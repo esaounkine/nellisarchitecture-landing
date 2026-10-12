@@ -28,7 +28,7 @@ Backlog → To do → Architect BR → In Progress → Test → Dev BR → Revie
 |---|---|---|---|---|
 | Backlog | — | Groom ([grooming.md](grooming.md)). | Operator prioritises. | To do |
 | To do | architect | Duplicate check. Design (only if a decision is needed) and plan, written to the card. | Plan on the card. | Architect BR |
-| Architect BR | bar-raiser | Design review. | PASS **and operator sign-off**. BLOCK → To do. | In Progress |
+| Architect BR | bar-raiser | Design review. Skip it for a `bug` or `debt` card with no open decision. | PASS (or skipped) **and operator sign-off**. BLOCK → To do. | In Progress |
 | In Progress | dev | Implement. Run checks. Local commit. | Green checkpoint commit. | Test |
 | Test | orchestrator | Run checks. | Checks pass. Fail → In Progress. | Dev BR |
 | Dev BR | bar-raiser | Code and test review. | PASS. BLOCK → In Progress. | Review |
