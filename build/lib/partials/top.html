@@ -1,7 +1,6 @@
 
 <body id="body">
   <h1 class="visually-hidden">{{H1}}</h1>
-  <input type="hidden" id="nonce" value="2c68b977e4">
   <div class="modalBG">
     <div class="modalWindow">
       <svg
@@ -41,7 +40,8 @@
 
       <h2 class="formName">{{SKILLS_TITLE}}</h2>
       <div class="formDescr">{{SKILLS_DESCRIPTION}}</div>
-      <form id="yourFormId2" class="projectForm" name="brief" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <form id="yourFormId2" class="projectForm" name="brief" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field">
+        <p hidden><label>Leave empty: <input name="bot-field"></label></p>
         
         <input
           type="text"

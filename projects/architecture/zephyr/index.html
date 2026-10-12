@@ -108,7 +108,6 @@
 
 <body id="body">
   <h1 class="visually-hidden">Zephyr</h1>
-  <input type="hidden" id="nonce" value="2c68b977e4">
   <div class="modalBG">
     <div class="modalWindow">
       <svg
@@ -126,6 +125,7 @@
       <h2 class="formName">Have a project?</h2>
       <div class="formDescr">Please take a moment to complete the form below.</div>
       <form class="projectForm" id="yourFormId" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <p hidden><label>Leave empty: <input name="bot-field"></label></p>
         
         <input
           type="text"
@@ -180,7 +180,8 @@
 
       <h2 class="formName">Got skills?</h2>
       <div class="formDescr">Please take a moment to complete the form below.</div>
-      <form id="yourFormId2" class="projectForm" name="brief" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <form id="yourFormId2" class="projectForm" name="brief" method="POST" enctype="multipart/form-data" data-netlify="true" netlify-honeypot="bot-field">
+        <p hidden><label>Leave empty: <input name="bot-field"></label></p>
         
         <input
           type="text"
@@ -2023,29 +2024,14 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         var formData = new FormData(form);
-        formData.append('action', 'callback_form1'); 
-        // formData.append('security', document.getElementById('nonce').value);
-        console.log('formData:', formData);
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://nellisarchitecture.com/wp-admin/admin-ajax.php', true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        alert(response.data);
-                    } else {
-                        alert(response.data);
-                    }
-                } else {
-                    alert('Error.');
-                }
-            }
-        };
-        xhr.send(formData);
+        formData.append('form-name', form.getAttribute('name'));
+        fetch('/', { method: 'POST', body: formData }).then(function(response) {
+            if (!response.ok) throw new Error(response.status);
+            alert('Thank you. Your message has been sent.');
+            form.reset();
+        }).catch(function() {
+            alert('Error.');
+        });
     });
 });
 </script>
@@ -2058,41 +2044,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingFileLabels = document.querySelectorAll(".loadingFile");
     form.addEventListener('submit', function(event) {
         event.preventDefault();
-        
         var formData = new FormData(form);
-        formData.append('action', 'callback_form2');
-      
-        formData.append('security', document.getElementById('nonce').value);
-        
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://nellisarchitecture.com/wp-admin/admin-ajax.php', true);
-        
-        xhr.upload.onprogress = function(event) {
-            if (event.lengthComputable) {
-                var percentComplete = (event.loaded / event.total) * 100;
-                console.log('loading: ' + Math.round(percentComplete) + '%');
-            }
-        };
-        
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        alert(response.data);
-                        loadingFileLabels.forEach(element => {
-                          element.style.display = 'none';
-                        });
-                    } else {
-                        alert(response.data);
-                    }
-                } else {
-                    alert('Error when submitting the form.');
-                }
-            }
-        };
-        
-        xhr.send(formData);
+        formData.append('form-name', form.getAttribute('name'));
+        fetch('/', { method: 'POST', body: formData }).then(function(response) {
+            if (!response.ok) throw new Error(response.status);
+            alert('Thank you. Your message has been sent.');
+            form.reset();
+            loadingFileLabels.forEach(element => {
+              element.style.display = 'none';
+            });
+        }).catch(function() {
+            alert('Error when submitting the form.');
+        });
     });
 });
 </script>
