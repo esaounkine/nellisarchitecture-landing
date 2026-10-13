@@ -119,6 +119,14 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 
 ### Hosting — Netlify
 
+Netlify is the current binding, not a fixed choice. See [AGENTS.md → Portable hosting](../../AGENTS.md#principles). The host-specific parts and their replacements on other hosts (for example Cloudflare Pages or AWS Amplify):
+
+| Netlify binding | Where | Replace with |
+|---|---|---|
+| Build, headers, redirects, deny rules | [netlify.toml](../../netlify.toml), generated `_redirects` | The new host's config. Cloudflare Pages reads `_redirects` and `_headers`. |
+| Forms | `data-netlify` forms, POST to `/` | A form backend or a serverless function on the new host |
+| CMS login | Netlify Identity + Git Gateway | Another Decap backend (for example GitHub with an OAuth app) |
+
 - Site: **nellis-arch** — <https://app.netlify.com/projects/nellis-arch/overview>.
 - Preview URL: <https://nellis-arch.netlify.app>. Production domain: <https://nellisarchitecture.com> (still on WordPress until the DNS cutover).
 - Deploy: a push to `master` builds and deploys (config in [netlify.toml](../../netlify.toml)).
