@@ -105,6 +105,13 @@
     if (path !== current) show(path, true);
   });
 
+  // A sidebar menu click opens the first project of the new list (index-projects.html).
+  document.addEventListener('nellis:filterpick', (e) => {
+    if (!e.detail.href) return;
+    const path = new URL(e.detail.href, window.location.href).pathname;
+    if (path !== current) show(path, true);
+  });
+
   window.addEventListener('popstate', () => {
     const path = window.location.pathname;
     if (path === current) return;

@@ -164,3 +164,82 @@ test('a project switch marks only the new open project', () => {
   assert.deepEqual(items.map((it) => it.link.attrs.href), [zoya, zephyr, w44]);
   assert.equal(items[2].link.attrs['aria-label'], w44, 'the link keeps its own label');
 });
+
+/* loadFilter with a stub XHR: `reply()` delivers the filtered list. */
+function filter() {
+  const log = [];
+  const first = { getAttribute: () => '/projects/master-planning/evergreens/' };
+  const container = {
+    set innerHTML(v) {
+      log.push(['swap']);
+    },
+  };
+  const Projects = {
+    set scrollTop(v) {
+      log.push(['scrollTop', v]);
+    },
+  };
+  const document = {
+    querySelector: (s) => ({
+      '.center .container': container,
+      '.center .container a.project__link': first,
+      '.allproject': {},
+    })[s] || null,
+    querySelectorAll: () => [],
+    dispatchEvent: (ev) => log.push(['event', ev.type, { ...ev.detail }]),
+  };
+  let xhr;
+  function XMLHttpRequest() {
+    xhr = this;
+    Object.assign(this, { open() {}, setRequestHeader() {}, send() {} });
+  }
+  XMLHttpRequest.DONE = 4;
+  function CustomEvent(type, init) {
+    Object.assign(this, { type, detail: init.detail });
+  }
+  const ctx = {
+    Projects,
+    document,
+    XMLHttpRequest,
+    CustomEvent,
+    currentUrl: 'master planning',
+    currentSub: 1,
+    setTimeout: () => {},
+    saveFilter: () => {},
+    markCurrent: () => log.push(['markCurrent']),
+    showCurrent: () => log.push(['showCurrent']),
+    fitScroll: () => log.push(['fitScroll']),
+  };
+  vm.runInNewContext(`${fnSource('loadFilter')}\nthis.loadFilter = loadFilter;`, ctx);
+  const reply = () => {
+    Object.assign(xhr, { readyState: 4, status: 200, responseText: '' });
+    xhr.onreadystatechange();
+  };
+  return { ...ctx, log, reply };
+}
+
+test('a menu click puts the column at the top and picks the first project', () => {
+  const f = filter();
+  f.loadFilter(true);
+  f.reply();
+  assert.deepEqual(f.log, [
+    ['swap'], ['fitScroll'], ['markCurrent'], ['scrollTop', 0],
+    ['event', 'nellis:filterpick', { href: '/projects/master-planning/evergreens/' }],
+  ]);
+});
+
+test('an empty list picks no project', () => {
+  const f = filter();
+  const { querySelector } = f.document;
+  f.document.querySelector = (s) => (s.endsWith('a.project__link') ? null : querySelector(s));
+  f.loadFilter(true);
+  f.reply();
+  assert.deepEqual(f.log.at(-1), ['event', 'nellis:filterpick', { href: null }]);
+});
+
+test('the saved filter on load keeps the open project in view and picks nothing', () => {
+  const f = filter();
+  f.loadFilter();
+  f.reply();
+  assert.deepEqual(f.log, [['swap'], ['fitScroll'], ['markCurrent'], ['showCurrent']]);
+});

@@ -1849,7 +1849,14 @@ Solari is made to measure, a home built around how this family actually lives, n
           if (!img.complete) img.addEventListener('load', show, { once: true });
         });
       }
-      function loadFilter() {
+      // The theme scroll listeners show the footer at the column end: size the spacer before
+      // the column scrolls, or the short new list counts as the end and lifts the page.
+      function fitScroll() {
+        const scrollelem = document.querySelector('.elscroll');
+        const rect = scrollelem.getBoundingClientRect();
+        scrollelem.style.height = window.innerHeight - rect.top + 250 + 'px';
+      }
+      function loadFilter(picked) {
         saveFilter();
         var xhr = new XMLHttpRequest();
         xhr.open('POST', 'https://nellisarchitecture.com/wp-admin/admin-ajax.php', true);
@@ -1857,13 +1864,17 @@ Solari is made to measure, a home built around how this family actually lives, n
         xhr.onreadystatechange = function() {
           if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
             document.querySelector('.center .container').innerHTML = xhr.responseText + '<div class="elscroll"></div><div class="new--decor"><div class="nd1"></div><div class="nd2"></div></div>';
+            fitScroll();
             markCurrent();
-            showCurrent();
-            setTimeout(() => {
-              const scrollelem = document.querySelector('.elscroll');
-              const rect = scrollelem.getBoundingClientRect();
-              scrollelem.style.height = window.innerHeight - rect.top + 250 + 'px';
-            }, 400);
+            if (picked) {
+              Projects.scrollTop = 0;
+              const first = document.querySelector('.center .container a.project__link');
+              const href = first && first.getAttribute('href');
+              document.dispatchEvent(new CustomEvent('nellis:filterpick', { detail: { href } }));
+            } else {
+              showCurrent();
+            }
+            setTimeout(fitScroll, 400);
             allProject = document.querySelectorAll(".project__item");
             document.querySelector('.allproject').textContent = '(Projects ' + allProject.length + ')';
           }
@@ -1896,7 +1907,7 @@ Solari is made to measure, a home built around how this family actually lives, n
         el.addEventListener("click", () => {
           currentUrl = el.textContent.trim();
           currentSub = 1;
-          loadFilter();
+          loadFilter(true);
           for (let i = 0; i < categoryLink.length; i++) {
             categoryLink[i].classList.remove("categoryActive");
           }
@@ -1907,14 +1918,14 @@ Solari is made to measure, a home built around how this family actually lives, n
       commercialArr.forEach(element => {
         element.addEventListener('click', () => {
           currentSub = 0;
-          loadFilter();
+          loadFilter(true);
         });
       });
       resedentalArr = document.querySelectorAll('.residential');
       resedentalArr.forEach(element => {
         element.addEventListener('click', () => {
           currentSub = 1;
-          loadFilter();
+          loadFilter(true);
         });
       });
     });

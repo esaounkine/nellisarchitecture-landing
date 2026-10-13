@@ -445,3 +445,29 @@ test('the gallery sliders are destroyed and made again with the theme options', 
   assert.equal(params.el, undefined, 'not the theme slider element');
   assert.equal(theme.swiper.passedParams.el, theme, 'the theme slider keeps its options');
 });
+
+test('a menu pick of another project switches to it', async () => {
+  const s = load();
+  s.panel().scrollTop = 600;
+  s.document.on['nellis:filterpick']({ detail: { href: W44 } });
+  await flush();
+  assert.equal(s.shown(), 'w44');
+  assert.equal(s.location.pathname, W44);
+  assert.equal(s.document.title, 'w44 | Nellis');
+  assert.equal(s.panel().scrollTop, 0);
+  assert.deepEqual(s.log, [
+    ['title', 'w44 | Nellis'], ['push', W44], ['event', 'nellis:projectswitch'],
+  ]);
+});
+
+test('a menu pick of the open project or of no project does nothing', async () => {
+  await Promise.all([ZEPHYR, null].map(async (href) => {
+    const s = load();
+    s.panel().scrollTop = 300;
+    s.document.on['nellis:filterpick']({ detail: { href } });
+    await flush();
+    assert.equal(s.panel().scrollTop, 300, String(href));
+    assert.deepEqual(s.fetched, []);
+    assert.deepEqual(s.log, []);
+  }));
+});
