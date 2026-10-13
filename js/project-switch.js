@@ -46,7 +46,10 @@
     panel.querySelectorAll('.swiper').forEach((el) => new Swiper(el, options));
     panel.scrollTop = 0;
     const video = panel.querySelector('.currentProject-heroImg video');
-    if (video) video.play().catch(() => {});
+    if (video) {
+      video.muted = video.defaultMuted;
+      video.play().catch(() => {});
+    }
   }
 
   function swapHead(doc) {

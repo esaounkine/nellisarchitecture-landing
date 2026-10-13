@@ -113,8 +113,13 @@ class El {
     this.on[type] = fn;
   }
 
+  get defaultMuted() {
+    return 'muted' in this.attrs;
+  }
+
   play() {
     this.played = true;
+    this.playedMuted = this.muted === true;
     return Promise.resolve();
   }
 
@@ -142,7 +147,7 @@ function build(p, panel = true) {
   const thumbs = [ZEPHYR, W44, ATHENA].map((href) => new El('div', { class: 'project__item' }, [
     new El('a', { class: 'project__link no-prefetch', href }, [new El('span')]),
   ]));
-  const hero = name === 'zephyr' ? new El('video', { autoplay: '' }) : new El('img');
+  const hero = name === 'zephyr' ? new El('video', { autoplay: '', muted: '' }) : new El('img');
   const body = new El('body', {}, [
     new El('h1', { class: 'visually-hidden' }, [], name),
     new El('div', { class: 'center centerMini' }, [new El('div', { class: 'container' }, thumbs)]),
@@ -396,7 +401,9 @@ test('Back and Forward swap in place without a new history entry', async () => {
   assert.equal(s.shown(), 'zephyr');
   assert.deepEqual(s.fetched, [W44], 'the first page comes from the cache');
   assert.deepEqual(s.log, [['title', 'zephyr | Nellis'], ['event', 'nellis:projectswitch']]);
-  assert.ok(s.panel().querySelector('video').played, 'the hero video plays');
+  const video = s.panel().querySelector('video');
+  assert.ok(video.played, 'the hero video plays');
+  assert.ok(video.playedMuted, 'a cloned video keeps its muted attribute as state');
   s.back(W44);
   await flush();
   assert.equal(s.shown(), 'w44');
