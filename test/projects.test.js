@@ -372,6 +372,19 @@ test('only Home has the early script, before static-backend.js', () => {
   assert.ok(!renderEntry(byName('Zoya')).includes('hashTarget'));
 });
 
+test('only project pages load the project switch, once, before the footer scripts', () => {
+  const tag = '<script src="/js/project-switch.js"></script>';
+  renderPages(ROOT, '/news/x/').forEach((p) => {
+    assert.equal(count(p.html, tag), 0, p.file);
+  });
+  LIST.forEach((e) => {
+    const html = renderEntry(e);
+    assert.equal(count(html, tag), 1, e.name);
+    assert.ok(html.indexOf(tag) > html.indexOf('<div class="currentProject2">'));
+    assert.ok(html.indexOf(tag) < html.indexOf('swiperLib.js'));
+  });
+});
+
 const LINK = new RegExp('<div class="project__item">\\s*'
   + '<a class="project__link no-prefetch" href="([^"]+)" aria-label="([^"]+)"></a>'
   + '[\\s\\S]*?<span class="project__name">([^<]+)</span>', 'g');

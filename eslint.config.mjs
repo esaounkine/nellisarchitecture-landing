@@ -15,6 +15,7 @@ export default [
       '!eslint.config.mjs',
       '!js/',
       '!js/static-backend.js',
+      '!js/project-switch.js',
       '!test/',
       '!test/**',
     ],

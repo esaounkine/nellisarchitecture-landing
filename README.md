@@ -26,6 +26,7 @@ projects/<category>/<slug>/index.html                              # 32 project 
 wp-content/                                                        # theme assets + images
 data/                 # static "backend": projects, search index, filters, news JSON
 js/static-backend.js  # intercepts the theme's old AJAX calls, serves data/ instead
+js/project-switch.js  # project pages: switch the open project in place
 content/news/*.md     # news source of truth (edited via the CMS)
 content/pages/*.json  # page content source of truth (edited via the CMS)
 content/redirects.json # CMS redirects (301), source of truth (edited via the CMS)

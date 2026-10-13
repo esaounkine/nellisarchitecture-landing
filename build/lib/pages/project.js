@@ -192,7 +192,7 @@ function projects(entry) {
   if (html.split(`href="${entry.url}" aria-current="page"`).length !== 2) {
     throw new Error(`${entry.name}: the Home grid must link ${entry.url} exactly once`);
   }
-  return html + SCROLL_TO_CURRENT;
+  return `${html}${SCROLL_TO_CURRENT}\n  <script src="/js/project-switch.js"></script>`;
 }
 
 /* entry: one item of projectList(). */

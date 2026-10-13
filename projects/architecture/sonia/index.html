@@ -1811,21 +1811,24 @@ The formal and family rooms create an ample, versatile space, with versatile fur
          Ceiling: the first grid must link the page. Upgrade: render the filtered lists per page. */
       const gridLinks = [...document.querySelectorAll('.center .container .project__link')];
       const ownLink = gridLinks.find((a) => a.getAttribute('href') === location.pathname);
-      const ownItem = ownLink && ownLink.parentNode;
-      const ownPL = ownItem && ownItem.querySelector('.projectPL').className;
       const otherLink = gridLinks.find((a) => a !== ownLink);
+      const ownClass = ownLink && ownLink.parentNode.className;
       const otherClass = otherLink && otherLink.parentNode.className;
+      const ownPL = ownLink && ownLink.parentNode.querySelector('.projectPL').className;
+      const otherPL = otherLink && otherLink.parentNode.querySelector('.projectPL').className;
+      const otherNames = otherLink ? otherLink.getAttributeNames() : [];
+      const ownMarks = ownLink ? [...ownLink.attributes]
+        .filter((at) => !otherNames.includes(at.name)).map((at) => [at.name, at.value]) : [];
+      document.addEventListener('nellis:projectswitch', markCurrent);
       function markCurrent() {
-        if (!ownItem) return;
+        if (!ownLink) return;
         document.querySelectorAll('.center .container .project__item').forEach((item) => {
           const link = item.querySelector('.project__link');
-          if (link && link.getAttribute('href') === location.pathname) {
-            item.className = ownItem.className;
-            [...ownLink.attributes].forEach((at) => link.setAttribute(at.name, at.value));
-            item.querySelector('.projectPL').className = ownPL;
-          } else {
-            item.className = otherClass;
-          }
+          const own = link && link.getAttribute('href') === location.pathname;
+          item.className = own ? ownClass : otherClass;
+          if (!link) return;
+          ownMarks.forEach(([name, value]) => (own ? link.setAttribute(name, value) : link.removeAttribute(name)));
+          item.querySelector('.projectPL').className = own ? ownPL : otherPL;
         });
       }
       function currentOffset() {
@@ -1942,6 +1945,7 @@ The formal and family rooms create an ample, versatile space, with versatile fur
         - column.querySelector('.project__item').offsetTop;
     }
   </script>
+  <script src="/js/project-switch.js"></script>
 
   <footer class="footer" id="foot">
         <div class="footer__container">

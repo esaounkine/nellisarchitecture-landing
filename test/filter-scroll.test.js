@@ -98,3 +98,69 @@ test('no open project (Home) or a narrow screen: the column starts at the top', 
     assert.equal(p.Projects.scrollTop, 0);
   });
 });
+
+/* The project page marks: from `const gridLinks` to the end of markCurrent. */
+function marksSource() {
+  return PARTIAL.slice(PARTIAL.indexOf('const gridLinks'), PARTIAL.indexOf('function markCurrent('))
+    + fnSource('markCurrent');
+}
+
+function thumb(href, own) {
+  const attrs = { class: 'project__link no-prefetch', href, 'aria-label': href };
+  if (own) attrs['aria-current'] = 'page';
+  const link = {
+    attrs,
+    getAttribute: (n) => (n in attrs ? attrs[n] : null),
+    setAttribute: (n, v) => {
+      attrs[n] = String(v);
+    },
+    removeAttribute: (n) => {
+      delete attrs[n];
+    },
+    getAttributeNames: () => Object.keys(attrs),
+    get attributes() {
+      return Object.entries(attrs).map(([name, value]) => ({ name, value }));
+    },
+  };
+  const pl = { className: own ? 'projectPL PLoppened' : 'projectPL' };
+  const item = {
+    link,
+    pl,
+    className: own ? 'project__item' : 'project__item zeroOpac',
+    querySelector: (s) => ({ '.project__link': link, '.projectPL': pl })[s],
+  };
+  link.parentNode = item;
+  return item;
+}
+
+test('a project switch marks only the new open project', () => {
+  const zephyr = '/projects/architecture/zephyr/';
+  const w44 = '/projects/architecture/w44/';
+  const zoya = '/projects/architecture/zoya/';
+  const items = [thumb(zoya, false), thumb(zephyr, true), thumb(w44, false)];
+  const on = {};
+  const location = { pathname: zephyr };
+  const document = {
+    addEventListener: (type, fn) => {
+      on[type] = fn;
+    },
+    querySelectorAll: (s) => ({
+      '.center .container .project__link': items.map((it) => it.link),
+      '.center .container .project__item': items,
+    })[s] || [],
+  };
+  vm.runInNewContext(`${marksSource()}\nthis.markCurrent = markCurrent;`, { document, location });
+  location.pathname = w44;
+  assert.equal(typeof on['nellis:projectswitch'], 'function', 'markCurrent listens for a switch');
+  on['nellis:projectswitch']();
+  assert.deepEqual(
+    items.map((it) => it.className),
+    ['project__item zeroOpac', 'project__item zeroOpac', 'project__item'],
+  );
+  const pls = items.map((it) => it.pl.className);
+  assert.deepEqual(pls, ['projectPL', 'projectPL', 'projectPL PLoppened']);
+  const marks = items.map((it) => it.link.attrs['aria-current']);
+  assert.deepEqual(marks, [undefined, undefined, 'page']);
+  assert.deepEqual(items.map((it) => it.link.attrs.href), [zoya, zephyr, w44]);
+  assert.equal(items[2].link.attrs['aria-label'], w44, 'the link keeps its own label');
+});
