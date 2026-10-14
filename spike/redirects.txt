@@ -1,0 +1,7 @@
+/feed/ /feed.xml 200
+/feed /feed/ 301
+/spike-old /studio/ 301
+/news/tag/* /news/ 301
+/news/:slug/feed /news/:slug/ 301
+/news/:slug/feed/ /news/:slug/ 301
+/wp-admin/* /404.html 404
