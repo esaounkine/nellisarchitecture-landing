@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {
-  escText, escAttr, fill, lazyImg, loadPartial,
+  escText, escAttr, fill, titleAttr, lazyImg, loadPartial,
 } = require('../build/lib/html');
 const { affiliations } = require('../build/lib/chrome');
 
@@ -42,6 +42,31 @@ test('lazyImg keeps the root-absolute src and escapes attributes', () => {
   });
   assert.ok(html.startsWith('<img data-src="/wp-content/uploads/a.png" alt="A &quot;b&quot;" '));
   assert.ok(html.endsWith('width: 123px; --smush-placeholder-aspect-ratio: 123/54;" />'));
+});
+
+test('titleAttr is empty for no title and escapes a filled title', () => {
+  [undefined, null, '', '   ', '\t\n'].forEach((t) => assert.equal(titleAttr(t), '', String(t)));
+  assert.equal(titleAttr(' A "b" & <c> '), ' title=" A &quot;b&quot; &amp; &lt;c&gt; "');
+});
+
+test('lazyImg puts a filled title after alt and no title attribute when empty', () => {
+  const base = {
+    src: '/a.png', alt: 'A', width: 1, height: 1,
+  };
+  assert.ok(lazyImg({ ...base, title: 'T "q" & <x>' })
+    .startsWith('<img data-src="/a.png" alt="A" title="T &quot;q&quot; &amp; &lt;x&gt;" src='));
+  [undefined, '', '  '].forEach((title) => {
+    const html = lazyImg({ ...base, title });
+    assert.ok(!html.includes('title='), String(title));
+    assert.equal(html, lazyImg(base));
+  });
+});
+
+test('affiliations passes the image title through', () => {
+  const img = {
+    src: '/a.png', alt: '', title: 'Logo', width: 1, height: 1,
+  };
+  assert.ok(affiliations([img], '  ').includes('<img data-src="/a.png" alt="" title="Logo" '));
 });
 
 test('affiliations indents with the page indent level', () => {

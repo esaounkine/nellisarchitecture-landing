@@ -29,11 +29,15 @@ function fill(tpl, tokens) {
   return out;
 }
 
+function titleAttr(title) {
+  return title == null || String(title).trim() === '' ? '' : ` title="${escAttr(title)}"`;
+}
+
 /* Theme lazy-load image. CMS paths are root-absolute. */
 function lazyImg({
-  src, alt, width, height,
+  src, alt, title, width, height,
 }) {
-  return `<img data-src="${escAttr(src)}" alt="${escAttr(alt)}" `
+  return `<img data-src="${escAttr(src)}" alt="${escAttr(alt)}"${titleAttr(title)} `
     + `src="${PLACEHOLDER}" `
     + `class="lazyload" style="--smush-placeholder-width: ${escAttr(width)}px; `
     + `--smush-placeholder-aspect-ratio: ${escAttr(width)}/${escAttr(height)};" />`;
@@ -45,5 +49,5 @@ function loadPartial(name, dir = PARTIALS) {
 }
 
 module.exports = {
-  escText, escAttr, fill, lazyImg, loadPartial,
+  escText, escAttr, fill, titleAttr, lazyImg, loadPartial,
 };

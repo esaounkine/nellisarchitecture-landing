@@ -271,6 +271,29 @@ test('people render works with no people', () => {
   assert.ok(html.includes('<section class="PeopleAccord">'));
 });
 
+test('studio render adds a filled image title and nothing for an empty title', () => {
+  const opts = { site: readSite(), newsHref: 'n', page: { slug: 'x' } };
+  const content = studioFixture();
+  content.founder.photo.title = 'Founder "t"';
+  content.intro.photo.title = 'Photo t';
+  const html = studio.render(content, opts);
+  assert.ok(html.includes('alt="founder &quot;alt&quot;" title="Founder &quot;t&quot;" '
+    + 'class="photo1 lazyload"'));
+  assert.ok(html.includes('alt="photo &quot;alt&quot;" title="Photo t" '));
+  content.founder.photo.title = ' ';
+  assert.ok(studio.render(content, opts)
+    .includes('alt="founder &quot;alt&quot;" class="photo1 lazyload"'));
+  assert.ok(!studio.render(studioFixture(), opts).includes(' title='));
+});
+
+test('people render adds a filled person photo title', () => {
+  const list = [{ ...person(1), photo: { ...img('p1'), title: 'P1 t' } }];
+  const html = people.render(peopleFixture(list), {
+    site: readSite(), newsHref: 'n', page: { slug: 'x' },
+  });
+  assert.ok(html.includes('alt="p1 &quot;alt&quot;" title="P1 t" '));
+});
+
 test('intro renders one <p> per paragraph and escapes text', () => {
   assert.equal(people.intro(['a & b']), '        <p>\n          a &amp; b        </p>');
   assert.equal(

@@ -1,5 +1,5 @@
 const {
-  escText, escAttr, fill, lazyImg, loadPartial,
+  escText, escAttr, fill, titleAttr, lazyImg, loadPartial,
 } = require('../html');
 const {
   head, top, affiliations, footer,
@@ -69,6 +69,7 @@ function render(content, { site, newsHref, page }) {
       FOUNDER_QUOTE: escText(founder.quote),
       FOUNDER_PHOTO_SRC: escAttr(founder.photo.src),
       FOUNDER_PHOTO_ALT: escAttr(founder.photo.alt),
+      FOUNDER_PHOTO_TITLE: titleAttr(founder.photo.title),
       FOUNDER_PHOTO_WIDTH: escAttr(founder.photo.width),
       FOUNDER_PHOTO_HEIGHT: escAttr(founder.photo.height),
       FOUNDER_LABEL: escText(founder.label),

@@ -60,6 +60,7 @@ collections:
             fields:
               - { label: "Logo", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages", hint: *site_hint }
               - { label: "Alt text", name: "alt", widget: "string", required: false, hint: *site_hint }
+              - { label: "Title", name: "title", widget: "string", required: false, hint: *site_hint }
               - { label: "Width (px)", name: "width", widget: "number", value_type: "int", hint: *site_hint }
               - { label: "Height (px)", name: "height", widget: "number", value_type: "int", hint: *site_hint }
           - label: "Forms"
@@ -130,6 +131,7 @@ collections:
                 fields: &page_image
                   - { label: "Image", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages" }
                   - { label: "Alt text", name: "alt", widget: "string", required: false }
+                  - { label: "Title", name: "title", widget: "string", required: false, hint: "Shows when the pointer is on the image. Leave empty for no title." }
                   - { label: "Width (px)", name: "width", widget: "number", value_type: "int" }
                   - { label: "Height (px)", name: "height", widget: "number", value_type: "int" }
               - { label: "Quote", name: "quote", widget: "text", hint: "Plain text, no HTML. Each line shows as a separate line." }
