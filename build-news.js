@@ -296,7 +296,7 @@ function refreshNewsLists(root, list) {
 }
 
 /* Only folders inside projects/ are deleted. Category folders always stay
-   (they hold the category page, card BJf6BWUL); files are never deleted. */
+   (they hold the category page, card PKvQRDwy); files are never deleted. */
 function pruneProjects(root, list) {
   const projRoot = path.join(root, 'projects');
   const keep = new Set(list.map((e) => path.join(e.cat, e.slug)));

@@ -65,23 +65,23 @@ At Review, write a review scenario on the card. The operator uses it to review t
 
 ### Task board — Trello
 
-- Board: **Website** — <https://trello.com/b/9x8aKhpS/website> (board id `64004737063f0377fe13deb7`).
+- Board: **Website** — <https://trello.com/b/jaBEXApc/website> (board id `6acf67111cc66adaf0db8c8a`).
 - API: [Trello REST API](https://developer.atlassian.com/cloud/trello/rest/) with `curl`. Credentials come from the environment: `TRELLO_KEY`, `TRELLO_TOKEN` (set in the operator's shell profile; restart the app after a change). Never print or commit them.
 - A card URL `https://trello.com/c/<shortLink>/...` gives the card id `<shortLink>`.
 
 | List | id |
 |---|---|
-| Backlog | `6400473a362ce2364fccfaaf` |
-| To do | `640047381985397cc43a022b` |
-| Architect BR | `6ac512a0eec4cb36f6c15bad` |
-| Blocked | `640047394b90a0f29ac4a4f7` |
-| In Progress | `6ac4f74d098f74b0d13ede2a` |
-| Test | `6ac4f756e7a572e92255a327` |
-| Dev BR | `6ac4f75f50cdb298296000c8` |
-| Review | `6ac4f766804c0e1b97095e97` |
-| Shipping | `6ac4f76ba15f165757f7fa8d` |
-| Done | `6ac4f7730fcaebe95e620afa` |
-| Closed | `6ac4f7788ffab6a53a6b9f4d` |
+| Backlog | `6acf67111cc66adaf0db8c81` |
+| To do | `6acf67111cc66adaf0db8c7f` |
+| Architect BR | `6acf67111cc66adaf0db8c89` |
+| Blocked | `6acf67111cc66adaf0db8c80` |
+| In Progress | `6acf67111cc66adaf0db8c82` |
+| Test | `6acf67111cc66adaf0db8c83` |
+| Dev BR | `6acf67111cc66adaf0db8c84` |
+| Review | `6acf67111cc66adaf0db8c85` |
+| Shipping | `6acf67111cc66adaf0db8c86` |
+| Done | `6acf67111cc66adaf0db8c87` |
+| Closed | `6acf67111cc66adaf0db8c88` |
 
 Labels: see [grooming.md](grooming.md#labels).
 

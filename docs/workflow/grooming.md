@@ -34,11 +34,11 @@ A card is ready when it has all of these:
 
 | Label | Colour | Use | id |
 |---|---|---|---|
-| `feature` | green | New or changed visitor or editor capability. | `6400473bbebe3015d0fd932b` |
-| `bug` | red | Something does not work as before or as specified. | `6400473e6e7d295da2419833` |
-| `content` | blue | Text, images, news, pages. | `6400473f156f504fcfa23bb1` |
-| `seo` | purple | URLs, redirects, meta tags, sitemap, structured data. | `6400473fdf21f52afef24917` |
-| `infra` | yellow | Netlify, DNS, CMS setup, build, tooling. | `6400473ce6fd5930aa20068a` |
-| `debt` | orange | Clean-up with no visible change. | `6400473d85320705612524e0` |
+| `feature` | green | New or changed visitor or editor capability. | `6acf67111cc66adaf0db8d92` |
+| `bug` | red | Something does not work as before or as specified. | `6acf67111cc66adaf0db8d95` |
+| `content` | blue | Text, images, news, pages. | `6acf67111cc66adaf0db8d94` |
+| `seo` | purple | URLs, redirects, meta tags, sitemap, structured data. | `6acf67111cc66adaf0db8d91` |
+| `infra` | yellow | Netlify, DNS, CMS setup, build, tooling. | `6acf67111cc66adaf0db8d93` |
+| `debt` | orange | Clean-up with no visible change. | `6acf67111cc66adaf0db8d97` |
 
 Add a label: `curl -s -X POST "$T/cards/<shortLink>/idLabels?value=<label-id>&$A"`.

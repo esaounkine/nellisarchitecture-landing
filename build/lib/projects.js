@@ -11,7 +11,7 @@ const CATEGORY_ALIAS = {
   'Master Development': 'master-planning',
 };
 
-/* Operator decision 2026-10-12 (card bIt7J6zk): these projects belong to master planning. */
+/* Operator decision 2026-10-12 (card KLT5tVeZ): these projects belong to master planning. */
 const CATEGORY_OVERRIDE = {
   'Skye Residences': 'master-planning',
   'Evergreens Hotel': 'master-planning',

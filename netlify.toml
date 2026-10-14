@@ -84,7 +84,7 @@
   to = "/privacy/"
   status = 301
 
-# Old WordPress feed URLs (card XP9tXnDS). Netlify matches a "from" with and without the trailing slash.
+# Old WordPress feed URLs (card JVKkKmSe). Netlify matches a "from" with and without the trailing slash.
 [[redirects]]
   from = "/feed"
   to = "/feed.xml"
@@ -115,7 +115,7 @@
   to = "/news/:slug/"
   status = 301
 
-# Old WordPress news archives (card Gn13FGP1): tag, category and author lists go to the news index.
+# Old WordPress news archives (card ujdxD55f): tag, category and author lists go to the news index.
 [[redirects]]
   from = "/news/tag/*"
   to = "/news/"
@@ -131,7 +131,7 @@
   to = "/news/"
   status = 301
 
-# Old WordPress (Yoast) sitemaps (card 6qHCVzaT): search engines still fetch them.
+# Old WordPress (Yoast) sitemaps (card GY8XW5bL): search engines still fetch them.
 [[redirects]]
   from = "/sitemap_index.xml"
   to = "/sitemap.xml"
