@@ -55,6 +55,17 @@ test('js/forms.js posts to /api/message as fetch and keeps the alert texts', () 
   assert.ok(js.includes("data.delete('files[]')"));
 });
 
+test('js/forms.js loads Turnstile on demand with one sitekey constant', () => {
+  const js = read('js/forms.js');
+  const api = "'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'";
+  assert.ok(js.includes(`const TURNSTILE_API = ${api};`));
+  assert.equal(count(js, 'const SITEKEY = '), 1);
+  assert.ok(js.includes("const TEST_SITEKEY = '1x00000000000000000000AA';"));
+  assert.ok(js.includes("appearance: 'interaction-only'"));
+  assert.ok(js.includes("execution: 'execute'"));
+  assert.ok(js.includes("data.set('cf-turnstile-response', value);"));
+});
+
 test('the theme keeps the file input in step with its file list', () => {
   const js = read('wp-content/themes/nellis/assets/JS/modal.js');
   assert.equal(count(js, 'syncInput();'), 2);

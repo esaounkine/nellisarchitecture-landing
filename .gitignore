@@ -4,3 +4,4 @@ node_modules/
 .tool-versions
 .wrangler/
 deployment-logs/
+/.dev.vars

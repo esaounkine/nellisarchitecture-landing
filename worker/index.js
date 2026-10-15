@@ -1,5 +1,6 @@
 import { parse, validate } from './form.js';
 import { send } from './email.js';
+import { verify } from './turnstile.js';
 import { json, html } from './http.js';
 
 const MAX_BYTES = 32768;
@@ -25,9 +26,16 @@ export const handleMessage = async (request, env) => {
 
   const formData = await request.formData().catch(() => null);
   if (!formData) return answer(request, 400, { error: 'bad form data' });
-  const result = validate(parse(formData));
+  const raw = parse(formData);
+  const result = validate(raw);
   if (result.drop) return answer(request, 200, { ok: true });
   if (result.field) return answer(request, 400, { error: 'invalid field', field: result.field });
+
+  if (!env.TURNSTILE_SECRET) return answer(request, 503, { error: 'turnstile not configured' });
+  const ip = request.headers.get('CF-Connecting-IP');
+  const host = new URL(request.url).hostname;
+  const check = await verify(raw.token, ip, host, env.TURNSTILE_SECRET);
+  if (!check.ok) return answer(request, check.status, { error: 'turnstile check failed' });
 
   if (!env.EMAIL) return answer(request, 503, { error: 'email not configured' });
   try {

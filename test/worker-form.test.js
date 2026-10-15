@@ -6,14 +6,20 @@ const base = {
   form: 'contact', name: 'Ann', email: 'ann@example.com', phone: '+971 1', message: 'Hi', bot: null,
 };
 
-test('parse reads the form fields; the message comes from massage', async () => {
+test('parse reads the fields: the message from massage, the Turnstile token', async () => {
   const { parse } = await load();
   const data = new FormData();
   Object.entries({
-    form: 'brief', name: 'A', email: 'a@b.co', phone: '1', massage: 'M', 'bot-field': '',
+    form: 'brief',
+    name: 'A',
+    email: 'a@b.co',
+    phone: '1',
+    massage: 'M',
+    'bot-field': '',
+    'cf-turnstile-response': 'T',
   }).forEach(([k, v]) => data.append(k, v));
   assert.deepEqual(parse(data), {
-    form: 'brief', name: 'A', email: 'a@b.co', phone: '1', message: 'M', bot: '',
+    form: 'brief', name: 'A', email: 'a@b.co', phone: '1', message: 'M', bot: '', token: 'T',
   });
 });
 

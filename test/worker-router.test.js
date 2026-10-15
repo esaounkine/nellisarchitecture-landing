@@ -1,10 +1,22 @@
-const { test, mock } = require('node:test');
+const {
+  test, mock, beforeEach, afterEach,
+} = require('node:test');
 const assert = require('node:assert/strict');
 
 const load = async () => (await import('../worker/index.js')).default;
 const GOOD = {
-  form: 'contact', name: 'Ann', email: 'ann@example.com', phone: '1', massage: 'Hi',
+  form: 'contact',
+  name: 'Ann',
+  email: 'ann@example.com',
+  phone: '1',
+  massage: 'Hi',
+  'cf-turnstile-response': 'tok',
 };
+const HOST = 'x.dev';
+const siteverify = (data) => mock.method(globalThis, 'fetch', async () => Response.json(data));
+
+beforeEach(() => siteverify({ success: true, hostname: HOST }));
+afterEach(() => mock.restoreAll());
 
 const post = (fields = GOOD, headers = {}, url = 'https://x.dev/api/message') => {
   const body = new URLSearchParams(fields).toString();
@@ -23,6 +35,7 @@ const post = (fields = GOOD, headers = {}, url = 'https://x.dev/api/message') =>
 const fakeEnv = (send = async () => {}) => {
   const env = {
     MAIL_FROM: 'website@nellisarchitecture.com',
+    TURNSTILE_SECRET: 'real-secret',
     EMAIL: { send: mock.fn(send) },
     ASSETS: { fetch: mock.fn(async () => new Response('asset', { status: 404 })) },
   };
@@ -130,4 +143,47 @@ test('other paths, other /api/ paths and / go to the static assets', async () =>
   await Promise.all(urls.map((url) => worker.fetch(new Request(url), env)));
   assert.deepEqual(env.ASSETS.fetch.mock.calls.map((c) => c.arguments[0].url), urls);
   assert.equal(env.EMAIL.send.mock.callCount(), 0);
+});
+
+test('the Turnstile check gets the token, the client IP and the request host', async () => {
+  const worker = await load();
+  await worker.fetch(post(GOOD, { 'CF-Connecting-IP': '1.2.3.4' }), fakeEnv());
+  const { body } = globalThis.fetch.mock.calls[0].arguments[1];
+  assert.equal(body.toString(), 'secret=real-secret&response=tok&remoteip=1.2.3.4');
+});
+
+test('a failed Turnstile check answers 403 and sends nothing', async () => {
+  const worker = await load();
+  siteverify({ success: false });
+  const env = fakeEnv();
+  assert.equal((await worker.fetch(post(), env)).status, 403);
+  assert.equal(env.EMAIL.send.mock.callCount(), 0);
+});
+
+test('a token for another host answers 403 and sends nothing', async () => {
+  const worker = await load();
+  siteverify({ success: true, hostname: 'evil.example' });
+  const env = fakeEnv();
+  assert.equal((await worker.fetch(post(), env)).status, 403);
+  assert.equal(env.EMAIL.send.mock.callCount(), 0);
+});
+
+test('no token answers 400 and sends nothing', async () => {
+  const worker = await load();
+  const { 'cf-turnstile-response': _, ...fields } = GOOD;
+  const env = fakeEnv();
+  assert.equal((await worker.fetch(post(fields), env)).status, 400);
+  assert.equal(env.EMAIL.send.mock.callCount(), 0);
+  assert.equal(globalThis.fetch.mock.callCount(), 0);
+});
+
+test('no TURNSTILE_SECRET answers 503 and sends nothing', async () => {
+  const worker = await load();
+  const env = fakeEnv();
+  delete env.TURNSTILE_SECRET;
+  const res = await worker.fetch(post(), env);
+  assert.equal(res.status, 503);
+  assert.deepEqual(await res.json(), { error: 'turnstile not configured' });
+  assert.equal(env.EMAIL.send.mock.callCount(), 0);
+  assert.equal(globalThis.fetch.mock.callCount(), 0);
 });

@@ -125,6 +125,7 @@ Netlify is the current binding, not a fixed choice. See [AGENTS.md → Portable 
 |---|---|---|
 | Build, headers, redirects, deny rules | [netlify.toml](../../netlify.toml) (build, deny rules), [_headers](../../_headers) (headers), generated `_redirects` (from [build/redirects.txt](../../build/redirects.txt) and `content/redirects.json`) | The new host's config. Cloudflare Pages reads `_redirects` and `_headers`. |
 | Forms | Worker `POST /api/message` ([worker/](../../worker/)) + [Cloudflare Email Service](https://developers.cloudflare.com/email-service/) | Any serverless function + an email API |
+| Form spam check | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) ([js/forms.js](../../js/forms.js), [worker/turnstile.js](../../worker/turnstile.js)) | Any captcha + a server check |
 | CMS login | Netlify Identity + Git Gateway | Another Decap backend (for example GitHub with an OAuth app) |
 
 - Site: **nellis-arch** — <https://app.netlify.com/projects/nellis-arch/overview>.
@@ -146,18 +147,20 @@ The migration target. Netlify stays the production host until the DNS cutover.
 - Build settings: [infra/cloudflare.js](../../infra/cloudflare.js). See [Setup as code](#setup-as-code).
 - Forms: the Worker ([worker/index.js](../../worker/index.js)) answers `POST /api/message`. `assets.run_worker_first: ["/api/*"]` sends `/api/*` to the Worker first. All other requests go to the static assets. Other `/api/*` paths get the 404 page.
 - Email: the Worker sends each form with the `EMAIL` binding ([Cloudflare Email Service](https://developers.cloudflare.com/email-service/)). The sender is the `MAIL_FROM` variable in `wrangler.jsonc`. Card 8 adds the `send_email` binding, when the zone is on Cloudflare. Until then, the endpoint answers 503 `email not configured`.
-- Local test: `npx wrangler dev`, then post a form to <http://localhost:8787/api/message>.
+- Spam check: each form gets a [Turnstile](https://developers.cloudflare.com/turnstile/) token. The Worker checks the token with the `TURNSTILE_SECRET` secret before it sends. No secret: the endpoint answers 503. `npm run infra` manages the widget and the secret.
+- Local test: put `TURNSTILE_SECRET=1x0000000000000000000000000000000AA` (a [Turnstile test secret](https://developers.cloudflare.com/turnstile/troubleshooting/testing/)) in `.dev.vars` (git ignores it). Run `npx wrangler dev`, then open <http://localhost:8787/>. On `localhost`, `js/forms.js` uses the test sitekey.
 
 #### Setup as code
 
-`npm run infra` sets the [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) settings of the Worker through the [Builds API](https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/). It sets the production trigger (branch, build command, deploy command, root directory, build cache) and the build variables. It deletes all other triggers and build variables. You can run it again: it changes only what is different.
+`npm run infra` sets the [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) settings of the Worker through the [Builds API](https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/). It sets the production trigger (branch, build command, deploy command, root directory, build cache) and the build variables. It deletes all other triggers and build variables. It creates or updates the [Turnstile widget](https://developers.cloudflare.com/api/resources/turnstile/subresources/widgets/) `landing` (domains and mode), prints its sitekey and sets the Worker secret `TURNSTILE_SECRET` from the widget secret. You can run it again: it changes only what is different. It sets the secret on each run.
 
 Bootstrap (one time, operator):
 
 1. Get a Cloudflare account. Write down the account ID.
 2. Dashboard → Workers → Import a repository. Use the name `landing`. This step installs the Cloudflare GitHub App. The API can also do this step; the dashboard is the chosen bootstrap.
-3. Create a **user** API token: My Profile → [API Tokens](https://dash.cloudflare.com/profile/api-tokens). Permissions: Workers Builds Configuration: Edit, and Workers Scripts: Read. Do not use an account token: the Builds API returns "Invalid token" for it. Put `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in your shell profile.
+3. Create a **user** API token: My Profile → [API Tokens](https://dash.cloudflare.com/profile/api-tokens). Permissions: Workers Builds Configuration: Edit, Workers Scripts: Edit, Turnstile Sites: Write and Workers R2 Storage: Edit. Do not use an account token: the Builds API returns "Invalid token" for it. Put `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in your shell profile.
 4. Run `npm run infra`. Operator only.
+5. After the first run, put the printed sitekey in `SITEKEY` in [js/forms.js](../../js/forms.js). Until then, `SITEKEY` is the test sitekey and the deployed forms fail the check.
 
 Rules:
 

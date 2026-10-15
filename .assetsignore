@@ -23,3 +23,4 @@
 /deployment-logs/
 /infra/
 /worker/
+/.dev.vars

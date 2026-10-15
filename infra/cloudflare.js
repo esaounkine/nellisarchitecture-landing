@@ -15,6 +15,11 @@ const DESIRED = {
     build_caching_enabled: true,
   },
   variables: { SKIP_DEPENDENCY_INSTALL: '1' },
+  turnstile: {
+    name: 'landing',
+    domains: ['landing.nellisarchitecture.workers.dev', 'nellisarchitecture.com'],
+    mode: 'managed',
+  },
 };
 
 // wrangler.jsonc has no comments, so JSON.parse reads it. Upgrade: strip comments if one is added.
@@ -41,6 +46,15 @@ const varsPlan = (live, desired) => {
   });
   const remove = Object.keys(live).filter((key) => !(key in desired));
   return { set, remove };
+};
+
+const widgetPlan = (list, desired) => {
+  const live = list.find((w) => w.name === desired.name);
+  if (!live) return 'create';
+  const same = live.mode === desired.mode
+    && live.domains.length === desired.domains.length
+    && desired.domains.every((d) => live.domains.includes(d));
+  return same ? 'none' : 'update';
 };
 
 const api = async (urlPath, { method = 'GET', body } = {}) => {
@@ -96,10 +110,33 @@ const main = async () => {
     console.log(`variables: deleted ${key}${note}`);
   }), Promise.resolve());
   console.log('Cloudflare build settings are up to date.');
+
+  const want = DESIRED.turnstile;
+  const widgetsPath = `/accounts/${acct}/challenges/widgets`;
+  const widgets = await api(widgetsPath);
+  const plan = widgetPlan(widgets, want);
+  const current = widgets.find((w) => w.name === want.name);
+  const widgetPath = current && `${widgetsPath}/${current.sitekey}`;
+  const widget = await {
+    create: () => api(widgetsPath, { method: 'POST', body: want }),
+    update: () => api(widgetPath, { method: 'PUT', body: want }),
+    none: () => api(widgetPath),
+  }[plan]();
+  console.log(`turnstile: ${plan}; sitekey ${widget.sitekey} (SITEKEY in js/forms.js)`);
+  if (!widget.secret) {
+    console.log('turnstile: the API answer has no secret.');
+    console.log('Set it by hand: npx wrangler secret put TURNSTILE_SECRET');
+    return;
+  }
+  await api(`/accounts/${acct}/workers/scripts/${name}/secrets`, {
+    method: 'PUT',
+    body: { name: 'TURNSTILE_SECRET', text: widget.secret, type: 'secret_text' },
+  });
+  console.log(`Worker ${name}: secret TURNSTILE_SECRET set`);
 };
 
 module.exports = {
-  DESIRED, workerName, pickProduction, extraTriggers, varsPlan, api,
+  DESIRED, workerName, pickProduction, extraTriggers, varsPlan, widgetPlan, api,
 };
 
 if (require.main === module) {

@@ -14,6 +14,7 @@ export const parse = (formData) => ({
   phone: formData.get('phone'),
   message: formData.get('massage'),
   bot: formData.get('bot-field'),
+  token: formData.get('cf-turnstile-response'),
 });
 
 /* Returns { drop: true } for a bot, { field } for a bad field, else { fields }. */

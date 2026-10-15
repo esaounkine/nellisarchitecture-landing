@@ -122,3 +122,9 @@ test('.assetsignore and .gitignore list deployment-logs/', () => {
   assert.ok(ignores.includes('/deployment-logs/'));
   assert.ok(gitignore.includes('deployment-logs/'));
 });
+
+test('.assetsignore and .gitignore list /.dev.vars', () => {
+  const gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8').split('\n');
+  assert.ok(ignores.includes('/.dev.vars'));
+  assert.ok(gitignore.includes('/.dev.vars'));
+});

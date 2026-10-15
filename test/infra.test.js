@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const {
-  DESIRED, workerName, pickProduction, extraTriggers, varsPlan,
+  DESIRED, workerName, pickProduction, extraTriggers, varsPlan, widgetPlan,
 } = require('../infra/cloudflare');
 const pkg = require('../package.json');
 
@@ -65,4 +65,30 @@ test('DESIRED commands are package.json scripts', () => {
 
 test('workerName reads the name from wrangler.jsonc', () => {
   assert.equal(workerName(path.join(__dirname, '..')), 'landing');
+});
+
+const want = { name: 'landing', domains: ['a.dev', 'b.com'], mode: 'managed' };
+
+test('widgetPlan: no widget with the name creates one', () => {
+  assert.equal(widgetPlan([], want), 'create');
+  assert.equal(widgetPlan([{ ...want, name: 'other' }], want), 'create');
+});
+
+test('widgetPlan: same domains in any order and same mode is none', () => {
+  assert.equal(widgetPlan([{ ...want, domains: ['b.com', 'a.dev'], sitekey: 'k' }], want), 'none');
+});
+
+test('widgetPlan: other domains or another mode updates', () => {
+  assert.equal(widgetPlan([{ ...want, domains: ['a.dev'] }], want), 'update');
+  assert.equal(widgetPlan([{ ...want, domains: ['a.dev', 'b.com', 'c.org'] }], want), 'update');
+  assert.equal(widgetPlan([{ ...want, domains: ['a.dev', 'x.com'] }], want), 'update');
+  assert.equal(widgetPlan([{ ...want, mode: 'invisible' }], want), 'update');
+});
+
+test('DESIRED.turnstile allows the workers.dev host and the production domain', () => {
+  assert.deepEqual(DESIRED.turnstile, {
+    name: 'landing',
+    domains: ['landing.nellisarchitecture.workers.dev', 'nellisarchitecture.com'],
+    mode: 'managed',
+  });
 });
