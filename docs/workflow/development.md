@@ -8,7 +8,7 @@ Driver: `/ticket <card-url>` ([.claude/commands/ticket.md](../../.claude/command
 
 | Role | Does | Agent |
 |---|---|---|
-| Operator | Prioritises, signs off designs, reviews, pushes, closes cards. | the person |
+| Operator | Prioritises, answers open decisions, reviews, pushes, closes cards. | the person |
 | Orchestrator | Reads the card state, starts the hat for that state, moves the card. | main session |
 | Architect | Checks for duplicates, writes the design and the plan. No code. | [architect](../../.claude/agents/architect.md) |
 | Bar-raiser | Reviews the design (Architect BR) and the code (Dev BR). PASS or BLOCK. | [bar-raiser](../../.claude/agents/bar-raiser.md) |
@@ -28,7 +28,7 @@ Backlog → To do → Architect BR → In Progress → Test → Dev BR → Revie
 |---|---|---|---|---|
 | Backlog | — | Groom ([grooming.md](grooming.md)). | Operator prioritises. | To do |
 | To do | architect | Duplicate check. Design (only if a decision is needed) and plan, written to the card. | Plan on the card. | Architect BR |
-| Architect BR | bar-raiser | Design review. Skip it for a `bug` or `debt` card with no open decision. | PASS (or skipped) **and operator sign-off**. BLOCK → To do. | In Progress |
+| Architect BR | bar-raiser | Design review. Skip it for a `bug` or `debt` card with no open decision. | PASS (or skipped). Operator sign-off only for a serious open decision or an unknown effort or outcome (AGENTS.md → Decisions). BLOCK → To do. | In Progress |
 | In Progress | dev | Implement. Run checks. Local commit. | Green checkpoint commit. | Test |
 | Test | orchestrator | Run checks. | Checks pass. Fail → In Progress. | Dev BR |
 | Dev BR | bar-raiser | Code and test review. | PASS. BLOCK → In Progress. | Review |
@@ -38,7 +38,7 @@ Backlog → To do → Architect BR → In Progress → Test → Dev BR → Revie
 | Blocked | — | Report the blocker. Ask the operator. | — | previous state |
 | Closed | — | Not done, not needed. Terminal. | — | — |
 
-Human gates: Architect BR sign-off, Review sign-off, push, Done, Closed. Agents never pass these gates.
+Human gates: Review sign-off, push, Done, Closed, and an Architect BR sign-off only when AGENTS.md → Decisions asks for one. Agents never pass these gates.
 
 ## Board conventions
 

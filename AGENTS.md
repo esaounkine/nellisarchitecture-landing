@@ -23,7 +23,7 @@ Durable working agreements. Hold to these agreements regardless of tools.
 
 Discuss every decision.
 Record each decision on its Trello card (description or comment). Do not create separate decision files.
-The operator (human stakeholder) signs off the design at **Architect BR**. If the operator does not sign off, do not proceed.
+The operator (human stakeholder) does not sign off each design. After a bar-raiser PASS at **Architect BR**, move the card on to **In Progress** and continue to **Review** without a stop. Stop and ask the operator only when a serious decision is open, or when the work brings an effort or an outcome that the operator does not know about (for example a change to content, a public URL, cost or scope).
 
 ## Task execution
 
