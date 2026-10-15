@@ -63,6 +63,7 @@ test('js/forms.js loads Turnstile on demand with one sitekey constant', () => {
   assert.ok(js.includes("const TEST_SITEKEY = '1x00000000000000000000AA';"));
   assert.ok(js.includes("appearance: 'interaction-only'"));
   assert.ok(js.includes("execution: 'execute'"));
+  assert.ok(js.includes("'timeout-callback': () => settle('reject')"));
   assert.ok(js.includes("data.set('cf-turnstile-response', value);"));
 });
 

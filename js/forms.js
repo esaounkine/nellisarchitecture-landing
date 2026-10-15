@@ -50,6 +50,7 @@
             settle('reject')(new Error('Turnstile failed'));
             return true;
           },
+          'timeout-callback': () => settle('reject')(new Error('Turnstile timeout')),
         });
       });
       id.catch(() => widgets.delete(form));
