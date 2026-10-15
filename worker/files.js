@@ -1,4 +1,4 @@
-// js/forms.js has the same limits (test/forms.test.js checks them).
+// js/forms.js has the same limits (test/worker-files.test.js checks them).
 export const MAX_FILES = 5;
 export const MAX_FILE_BYTES = 5000000;
 export const EXTENSIONS = ['.gif', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf'];

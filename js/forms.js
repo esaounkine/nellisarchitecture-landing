@@ -5,7 +5,7 @@
 
   const ENDPOINT = '/api/message';
   const SENT = 'Thank you. Your message has been sent.';
-  // worker/files.js has the same limits (test/forms.test.js checks them).
+  // worker/files.js has the same limits (test/worker-files.test.js checks them).
   const MAX_FILES = 5;
   const MAX_FILE_BYTES = 5000000;
   const EXTENSIONS = ['.gif', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.pdf'];
