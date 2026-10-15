@@ -53,9 +53,8 @@ test/                 # unit tests (npm test)
 2. Netlify → Add new site → Import from Git → pick the repo.
    Build command and publish dir come from `netlify.toml` automatically.
 3. Point the DNS for nellisarchitecture.com to Netlify.
-4. In Netlify: **Site configuration → Forms** is already enabled by the
-   `data-netlify` attributes — the two contact forms deliver submissions to
-   Netlify (add email notifications under Forms → Notifications).
+4. Forms do not use Netlify. They post to the Cloudflare Worker, see
+   [Hosting — Cloudflare Workers](docs/workflow/development.md#hosting--cloudflare-workers-migration).
 5. For the news admin: **Identity → Enable Identity**, then
    **Identity → Services → Git Gateway → Enable**. Invite the SEO team under
    **Identity → Invite users**.
