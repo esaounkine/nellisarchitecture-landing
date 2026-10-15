@@ -123,7 +123,7 @@ Netlify is the current binding, not a fixed choice. See [AGENTS.md → Portable 
 
 | Netlify binding | Where | Replace with |
 |---|---|---|
-| Build, headers, redirects, deny rules | [netlify.toml](../../netlify.toml) (build, headers, deny rules), generated `_redirects` (from [build/redirects.txt](../../build/redirects.txt) and `content/redirects.json`) | The new host's config. Cloudflare Pages reads `_redirects` and `_headers`. |
+| Build, headers, redirects, deny rules | [netlify.toml](../../netlify.toml) (build, deny rules), [_headers](../../_headers) (headers), generated `_redirects` (from [build/redirects.txt](../../build/redirects.txt) and `content/redirects.json`) | The new host's config. Cloudflare Pages reads `_redirects` and `_headers`. |
 | Forms | `data-netlify` forms, POST to `/` | A form backend or a serverless function on the new host |
 | CMS login | Netlify Identity + Git Gateway | Another Decap backend (for example GitHub with an OAuth app) |
 

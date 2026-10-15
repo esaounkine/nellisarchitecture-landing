@@ -7,7 +7,7 @@ const { tomlFroms } = require('../build/lib/redirects');
 
 const SITE = [
   'admin', 'contact', 'data', 'js', 'news', 'people', 'privacy', 'projects', 'studio', 'wp-content',
-  'robots.txt', 'sitemap.xml', 'feed.xml', '_redirects',
+  'robots.txt', 'sitemap.xml', 'feed.xml', '_redirects', '_headers',
   'netlify.toml', // Netlify never serves it, no rule needed
 ];
 const isSite = (entry) => entry.endsWith('.html') || SITE.includes(entry);
