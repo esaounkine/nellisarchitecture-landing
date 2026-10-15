@@ -9,14 +9,16 @@
     "lint": "eslint .",
     "format": "eslint . --fix",
     "test": "node --test",
-    "cms": "decap-server"
+    "cms": "decap-server",
+    "deploy": "npx --yes wrangler@4.151.0 deploy"
   },
   "devDependencies": {
     "decap-server": "^3.11.3",
     "eslint": "^9.39.5",
     "eslint-config-airbnb-extended": "^3.3.0",
     "globals": "^17.13.0",
-    "serve": "^14.2.6"
+    "serve": "^14.2.6",
+    "wrangler": "4.151.0"
   },
   "engines": {
     "node": ">=20"

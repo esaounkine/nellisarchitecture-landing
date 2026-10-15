@@ -46,3 +46,47 @@ test('netlify.toml leaves the page folders to Netlify', () => {
 test('netlify.toml has no /projects* rule: Netlify serves the hub and the category pages', () => {
   assert.deepEqual([...froms].filter((f) => f.startsWith('/projects')), []);
 });
+
+const ignores = fs.readFileSync(path.join(root, '.assetsignore'), 'utf8')
+  .split('\n').map((line) => line.trim()).filter((line) => line && !line.startsWith('#'));
+const ignored = (entry, isDir) => ignores.some((line) => {
+  if (line.endsWith('/')) return isDir && line === `/${entry}/`;
+  return line === `/${entry}` || line === entry;
+});
+const disk = fs.readdirSync(root, { withFileTypes: true })
+  .map((dirent) => ({ name: dirent.name, isDir: dirent.isDirectory() }));
+// netlify.toml is in SITE only because Netlify hides it; Cloudflare would serve it.
+const isPublic = (entry) => entry !== 'netlify.toml' && isSite(entry);
+
+test('every internal root entry on disk is in .assetsignore', () => {
+  disk.filter(({ name }) => !isPublic(name)).forEach(({ name, isDir }) => {
+    assert.ok(ignored(name, isDir), `.assetsignore: missing /${name}${isDir ? '/' : ''}`);
+  });
+});
+
+test('no public root entry is in .assetsignore', () => {
+  disk.filter(({ name }) => isPublic(name)).forEach(({ name, isDir }) => {
+    assert.ok(!ignored(name, isDir), `.assetsignore: public entry "${name}" is ignored`);
+  });
+  SITE.filter(isPublic).forEach((entry) => {
+    const hit = ignored(entry, true) || ignored(entry, false);
+    assert.ok(!hit, `.assetsignore: "${entry}" is ignored`);
+  });
+});
+
+test('.assetsignore lists .DS_Store unanchored', () => {
+  assert.ok(ignores.includes('.DS_Store'));
+});
+
+test('wrangler is pinned to one exact version in devDependencies and the deploy script', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+  const version = pkg.devDependencies.wrangler;
+  assert.match(version, /^\d+\.\d+\.\d+$/);
+  assert.ok(pkg.scripts.deploy.includes(`wrangler@${version}`), `deploy: wrangler@${version}`);
+});
+
+test('.assetsignore and .gitignore list deployment-logs/', () => {
+  const gitignore = fs.readFileSync(path.join(root, '.gitignore'), 'utf8').split('\n');
+  assert.ok(ignores.includes('/deployment-logs/'));
+  assert.ok(gitignore.includes('deployment-logs/'));
+});

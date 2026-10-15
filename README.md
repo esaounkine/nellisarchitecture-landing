@@ -40,6 +40,8 @@ feed.xml              # RSS feed, served at /feed/ (generated)
 robots.txt            # crawl rules (generated from content/robots.json, edited in the CMS)
 admin/                # Decap CMS (news and page editing UI)
 netlify.toml          # build + 404 deny rules
+wrangler.jsonc        # Cloudflare Worker config (static assets)
+.assetsignore         # files the Cloudflare Worker does not publish
 eslint.config.mjs     # lint rules (npm run lint)
 test/                 # unit tests (npm test)
 ```

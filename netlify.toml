@@ -62,6 +62,12 @@
   force = true
 
 [[redirects]]
+  from = "/wrangler.jsonc"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
   from = "/test/*"
   to = "/404.html"
   status = 404

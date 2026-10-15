@@ -134,6 +134,17 @@ Netlify is the current binding, not a fixed choice. See [AGENTS.md → Portable 
 - CMS: `/admin` (Decap CMS, Netlify Identity + Git Gateway, editorial workflow).
 - Forms: Netlify Forms (`data-netlify` attributes).
 
+### Hosting — Cloudflare Workers (migration)
+
+The migration target. Netlify stays the production host until the DNS cutover.
+
+- Worker: **landing** — <https://landing.nellisarchitecture.workers.dev>. It serves the repo root as [static assets](https://developers.cloudflare.com/workers/static-assets/).
+- Config: [wrangler.jsonc](../../wrangler.jsonc). [.assetsignore](../../.assetsignore) lists the root entries that the Worker does not publish.
+- Deploy: [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) deploys a push to the branch `spike/cloudflare`.
+- Manual deploy: `npm run deploy` ([Wrangler](https://developers.cloudflare.com/workers/wrangler/), version pinned in `package.json`).
+- Rollback: `npx wrangler rollback`. Operator only.
+- The build settings are in the Cloudflare dashboard. Card 5.1 (u2CMENvO) moves them into the code.
+
 ### Netlify credits
 
 Netlify bills in credits ([how credits work](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/how-credits-work/), [plans](https://www.netlify.com/pricing/)). Builds and serving both use credits:
