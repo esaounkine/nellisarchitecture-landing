@@ -4,4 +4,3 @@
 /news/tag/* /news/ 301
 /news/:slug/feed /news/:slug/ 301
 /news/:slug/feed/ /news/:slug/ 301
-/wp-admin/* /404.html 404
