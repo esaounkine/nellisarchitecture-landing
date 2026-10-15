@@ -13,8 +13,7 @@
   const ERRORS = { contact: 'Error.', brief: 'Error when submitting the form.' };
   const TURNSTILE_API = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
   const TEST_SITEKEY = '1x00000000000000000000AA';
-  // Replace with the sitekey that npm run infra prints.
-  const SITEKEY = '1x00000000000000000000AA';
+  const SITEKEY = document.currentScript.dataset.sitekey;
   const LOCAL = ['localhost', '127.0.0.1'].includes(window.location.hostname);
   const widgets = new Map();
   const pending = new Map();

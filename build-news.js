@@ -33,6 +33,7 @@ const { rss } = require('./build/lib/feed');
 const { robots } = require('./build/lib/robots');
 const { imageSize } = require('./build/lib/image-size');
 const { escAttr } = require('./build/lib/html');
+const { sitekey } = require('./build/lib/chrome');
 const { heroPath, FALLBACK_SRC } = require('./build/lib/pages/news');
 
 const ROOT = __dirname;
@@ -230,7 +231,8 @@ function renderPost(template, p, list) {
     .replaceAll('{{DATE}}', p.date || '')
     .replaceAll('{{CONTENT}}', `\n${p.html}\n        `)
     .replaceAll('{{NEWS_BTN}}', newsBtn)
-    .replaceAll('{{NEWSLIST}}', list);
+    .replaceAll('{{NEWSLIST}}', list)
+    .replaceAll('{{TURNSTILE_SITEKEY}}', sitekey());
 }
 
 function newsJsonEntry(p) {

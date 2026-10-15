@@ -114,29 +114,6 @@ const main = async () => {
     console.log(`Worker ${name}: secret LINK_SECRET exists, not changed`);
   }
 
-  const body = DESIRED.production;
-  await api(`/accounts/${acct}/builds/triggers/${uuid}`, { method: 'PATCH', body });
-  console.log(`trigger ${uuid}: set ${JSON.stringify(body)}`);
-
-  await extraTriggers(list, prod).reduce((chain, t) => chain.then(async () => {
-    await api(`/accounts/${acct}/builds/triggers/${t.trigger_uuid}`, { method: 'DELETE' });
-    console.log(`trigger ${t.trigger_uuid}: deleted`);
-  }), Promise.resolve());
-
-  const varsPath = `/accounts/${acct}/builds/triggers/${uuid}/environment_variables`;
-  const live = await api(varsPath) || {};
-  const { set, remove } = varsPlan(live, DESIRED.variables);
-  if (Object.keys(set).length) {
-    await api(varsPath, { method: 'PATCH', body: set });
-    console.log(`variables: set ${Object.keys(set).join(', ')}`);
-  }
-  await remove.reduce((chain, key) => chain.then(async () => {
-    await api(`${varsPath}/${encodeURIComponent(key)}`, { method: 'DELETE' });
-    const note = live[key].is_secret ? ' (secret, value is lost)' : '';
-    console.log(`variables: deleted ${key}${note}`);
-  }), Promise.resolve());
-  console.log('Cloudflare build settings are up to date.');
-
   const want = DESIRED.turnstile;
   const widgetsPath = `/accounts/${acct}/challenges/widgets`;
   const widgets = await api(widgetsPath);
@@ -148,17 +125,41 @@ const main = async () => {
     update: () => api(widgetPath, { method: 'PUT', body: want }),
     none: () => api(widgetPath),
   }[plan]();
-  console.log(`turnstile: ${plan}; sitekey ${widget.sitekey} (SITEKEY in js/forms.js)`);
-  if (!widget.secret) {
+  console.log(`turnstile: ${plan}; sitekey ${widget.sitekey}`);
+  if (widget.secret) {
+    await api(secretsPath, {
+      method: 'PUT',
+      body: { name: 'TURNSTILE_SECRET', text: widget.secret, type: 'secret_text' },
+    });
+    console.log(`Worker ${name}: secret TURNSTILE_SECRET set`);
+  } else {
     console.log('turnstile: the API answer has no secret.');
     console.log('Set it by hand: npx wrangler secret put TURNSTILE_SECRET');
-    return;
   }
-  await api(secretsPath, {
-    method: 'PUT',
-    body: { name: 'TURNSTILE_SECRET', text: widget.secret, type: 'secret_text' },
-  });
-  console.log(`Worker ${name}: secret TURNSTILE_SECRET set`);
+
+  const body = DESIRED.production;
+  await api(`/accounts/${acct}/builds/triggers/${uuid}`, { method: 'PATCH', body });
+  console.log(`trigger ${uuid}: set ${JSON.stringify(body)}`);
+
+  await extraTriggers(list, prod).reduce((chain, t) => chain.then(async () => {
+    await api(`/accounts/${acct}/builds/triggers/${t.trigger_uuid}`, { method: 'DELETE' });
+    console.log(`trigger ${t.trigger_uuid}: deleted`);
+  }), Promise.resolve());
+
+  const varsPath = `/accounts/${acct}/builds/triggers/${uuid}/environment_variables`;
+  const live = await api(varsPath) || {};
+  const vars = { ...DESIRED.variables, TURNSTILE_SITEKEY: widget.sitekey };
+  const { set, remove } = varsPlan(live, vars);
+  if (Object.keys(set).length) {
+    await api(varsPath, { method: 'PATCH', body: set });
+    console.log(`variables: set ${Object.keys(set).join(', ')}`);
+  }
+  await remove.reduce((chain, key) => chain.then(async () => {
+    await api(`${varsPath}/${encodeURIComponent(key)}`, { method: 'DELETE' });
+    const note = live[key].is_secret ? ' (secret, value is lost)' : '';
+    console.log(`variables: deleted ${key}${note}`);
+  }), Promise.resolve());
+  console.log('Cloudflare build settings are up to date.');
 };
 
 module.exports = {

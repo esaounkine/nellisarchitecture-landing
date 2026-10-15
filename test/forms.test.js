@@ -3,7 +3,10 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
+const { sitekey } = require('../build/lib/chrome');
+
 const ROOT = path.join(__dirname, '..');
+const FORMS_TAG = /<script src="\/js\/forms\.js" data-sitekey="[^"]+" defer><\/script>/g;
 const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8');
 const pagesIn = (dir) => fs.readdirSync(path.join(ROOT, dir), { recursive: true })
   .filter((f) => path.basename(f) === 'index.html')
@@ -25,7 +28,7 @@ test('no page or source posts a form to WordPress', () => {
 test('every page loads js/forms.js once and has no inline form script', () => {
   [...SOURCES, ...PAGES].forEach((file) => {
     const html = read(file);
-    assert.equal(count(html, '<script src="/js/forms.js" defer></script>'), 1, file);
+    assert.equal((html.match(FORMS_TAG) || []).length, 1, file);
     assert.ok(!html.includes("fetch('/'"), file);
     assert.ok(!html.includes("getElementById('yourFormId"), file);
   });
@@ -55,11 +58,11 @@ test('js/forms.js posts to /api/message as fetch and keeps the alert texts', () 
   assert.ok(js.includes("data.delete('files[]')"));
 });
 
-test('js/forms.js loads Turnstile on demand with one sitekey constant', () => {
+test('js/forms.js loads Turnstile on demand with the sitekey from its script tag', () => {
   const js = read('js/forms.js');
   const api = "'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'";
   assert.ok(js.includes(`const TURNSTILE_API = ${api};`));
-  assert.equal(count(js, 'const SITEKEY = '), 1);
+  assert.ok(js.includes('const SITEKEY = document.currentScript.dataset.sitekey;'));
   assert.ok(js.includes("const TEST_SITEKEY = '1x00000000000000000000AA';"));
   assert.ok(js.includes("appearance: 'interaction-only'"));
   assert.ok(js.includes("execution: 'execute'"));
@@ -71,4 +74,14 @@ test('the theme keeps the file input in step with its file list', () => {
   const js = read('wp-content/themes/nellis/assets/JS/modal.js');
   assert.equal(count(js, 'syncInput();'), 2);
   assert.ok(js.includes("fileInput.form.addEventListener('reset'"));
+});
+
+test('the build writes TURNSTILE_SITEKEY into the script tag, or the test key', () => {
+  const saved = process.env.TURNSTILE_SITEKEY;
+  delete process.env.TURNSTILE_SITEKEY;
+  assert.equal(sitekey(), '1x00000000000000000000AA');
+  process.env.TURNSTILE_SITEKEY = '0x4AAA"<x>';
+  assert.equal(sitekey(), '0x4AAA&quot;&lt;x&gt;');
+  if (saved === undefined) delete process.env.TURNSTILE_SITEKEY;
+  else process.env.TURNSTILE_SITEKEY = saved;
 });

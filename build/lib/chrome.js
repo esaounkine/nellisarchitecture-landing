@@ -47,10 +47,17 @@ function affiliations(items, indent, level = 7) {
     + `${pad(level)}</div>`).join('\n');
 }
 
+const TEST_SITEKEY = '1x00000000000000000000AA';
+
+/* The Cloudflare build sets TURNSTILE_SITEKEY (npm run infra). Local builds use the test key. */
+function sitekey() {
+  return escAttr(process.env.TURNSTILE_SITEKEY || TEST_SITEKEY);
+}
+
 function footer() {
-  return loadPartial('footer');
+  return fill(loadPartial('footer'), { TURNSTILE_SITEKEY: sitekey() });
 }
 
 module.exports = {
-  head, top, contactForm, affiliations, footer,
+  head, top, contactForm, affiliations, footer, sitekey,
 };
