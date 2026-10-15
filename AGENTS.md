@@ -56,8 +56,8 @@ The site replaces a live WordPress site. Search ranking must survive the migrati
 - Never edit generated files by hand: `news/index.html`, `news/<slug>/index.html`, `projects/index.html`, `projects/<category>/index.html`, `projects/<category>/<slug>/index.html`, `data/news.json`, `sitemap.xml`, `feed.xml`, `robots.txt`, `index.html`, `studio/index.html`, `people/index.html`, `privacy/index.html`, `contact/index.html` and `_redirects`. Change `build-news.js`, `build/news-template.html` or `build/lib/`, then run the build.
 - `data/filters/*.html` are hand-kept, not generated. Each project item in them carries a link to its project page.
 - To change the project grid on Home and on the project pages, edit `build/lib/partials/index-projects.html`. To change the open project panel of a project page, edit `build/lib/partials/current-project.html`.
-- Keep every public URL of the old site. If a URL must change, add a 301 redirect in `content/redirects.json` (or in `netlify.toml` for a wildcard rule).
-- CMS redirects → `content/redirects.json`. Wildcard or fixed rules → `netlify.toml`. Netlify reads `_redirects` first.
+- Keep every public URL of the old site. If a URL must change, add a 301 redirect in `content/redirects.json` (or in `build/redirects.txt` for a wildcard or fixed rule).
+- CMS redirects → `content/redirects.json`. Wildcard or fixed rules → `build/redirects.txt` (never status 404). Deny rules (404) → `netlify.toml`. Netlify reads `_redirects` first.
 - Keep titles, meta descriptions, canonical URLs, Open Graph tags and schema.org data correct. Absolute URLs use the production domain `https://nellisarchitecture.com`.
 - Never delete or rename files in `wp-content/uploads/`. Pages and external sites link to them.
 - Netlify publishes the repo root. A new internal root file or folder needs a 404 deny rule in `netlify.toml`. A new public root file or folder needs an entry in the `SITE` allow-list in `test/netlify-deny.test.js`, and no deny rule. Root `*.html` pages and dotfiles need neither.

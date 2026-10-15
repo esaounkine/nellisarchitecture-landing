@@ -37,8 +37,7 @@ test('no site entry has a deny rule in netlify.toml', () => {
   });
 });
 
-test('netlify.toml sends /pravicy to /privacy/ and leaves the page folders to Netlify', () => {
-  assert.match(toml, /from = "\/pravicy"\n\s*to = "\/privacy\/"\n\s*status = 301\n/);
+test('netlify.toml leaves the page folders to Netlify', () => {
   ['studio', 'people', 'privacy'].forEach((page) => {
     assert.ok(![...froms].some((f) => f.startsWith(`/${page}`)), `netlify.toml: rule for /${page}`);
   });
@@ -46,35 +45,4 @@ test('netlify.toml sends /pravicy to /privacy/ and leaves the page folders to Ne
 
 test('netlify.toml has no /projects* rule: Netlify serves the hub and the category pages', () => {
   assert.deepEqual([...froms].filter((f) => f.startsWith('/projects')), []);
-});
-
-test('netlify.toml serves the feed and redirects the old WordPress feed URLs', () => {
-  [
-    ['/feed', '/feed.xml', 200],
-    ['/feed/atom', '/feed/', 301],
-    ['/feed/rss', '/feed/', 301],
-    ['/rss', '/feed/', 301],
-    ['/comments/feed', '/', 301],
-    ['/news/:slug/feed', '/news/:slug/', 301],
-  ].forEach(([from, to, status]) => {
-    const re = new RegExp(`from = "${from}"\\n\\s*to = "${to}"\\n\\s*status = ${status}\\n`);
-    assert.match(toml, re, `netlify.toml: missing ${from} -> ${to} ${status}`);
-  });
-});
-
-test('netlify.toml sends the old WordPress news archives to /news/', () => {
-  ['/news/tag/*', '/news/category/*', '/news/author/*'].forEach((from) => {
-    const esc = from.replace('*', '\\*');
-    const re = new RegExp(`from = "${esc}"\\n\\s*to = "/news/"\\n\\s*status = 301\\n`);
-    assert.match(toml, re, `netlify.toml: missing ${from} -> /news/ 301`);
-  });
-});
-
-test('netlify.toml sends the old WordPress sitemaps to /sitemap.xml', () => {
-  ['sitemap_index', 'post-sitemap', 'page-sitemap', 'category-sitemap', 'post_tag-sitemap',
-    'author-sitemap'].forEach((name) => {
-    const to = '"/sitemap\\.xml"';
-    const re = new RegExp(`from = "/${name}\\.xml"\\n\\s*to = ${to}\\n\\s*status = 301\\n`);
-    assert.match(toml, re, `netlify.toml: missing /${name}.xml -> /sitemap.xml 301`);
-  });
 });

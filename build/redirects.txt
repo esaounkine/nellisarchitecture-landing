@@ -1,0 +1,43 @@
+# Fixed redirects. build-news.js copies them into _redirects (format: from to status).
+# Static rules go first, rules with * or :name go after the CMS rules.
+# Only status 200 or 301. Deny rules (404) stay in netlify.toml.
+# Each rule has both forms: /x and /x/, or /x/* and /x. Not all hosts ignore the trailing slash.
+
+/pravicy /privacy/ 301
+/pravicy/ /privacy/ 301
+
+# Old WordPress feed URLs (card JVKkKmSe). /feed/ must come before /feed.
+/feed/ /feed.xml 200
+/feed /feed/ 301
+/feed/atom /feed/ 301
+/feed/atom/ /feed/ 301
+/feed/rss /feed/ 301
+/feed/rss/ /feed/ 301
+/rss /feed/ 301
+/rss/ /feed/ 301
+/comments/feed / 301
+/comments/feed/ / 301
+/news/:slug/feed /news/:slug/ 301
+/news/:slug/feed/ /news/:slug/ 301
+
+# Old WordPress news archives (card ujdxD55f): tag, category and author lists go to the news index.
+/news/tag/* /news/ 301
+/news/tag /news/ 301
+/news/category/* /news/ 301
+/news/category /news/ 301
+/news/author/* /news/ 301
+/news/author /news/ 301
+
+# Old WordPress (Yoast) sitemaps (card GY8XW5bL): search engines still fetch them.
+/sitemap_index.xml /sitemap.xml 301
+/sitemap_index.xml/ /sitemap.xml 301
+/post-sitemap.xml /sitemap.xml 301
+/post-sitemap.xml/ /sitemap.xml 301
+/page-sitemap.xml /sitemap.xml 301
+/page-sitemap.xml/ /sitemap.xml 301
+/category-sitemap.xml /sitemap.xml 301
+/category-sitemap.xml/ /sitemap.xml 301
+/post_tag-sitemap.xml /sitemap.xml 301
+/post_tag-sitemap.xml/ /sitemap.xml 301
+/author-sitemap.xml /sitemap.xml 301
+/author-sitemap.xml/ /sitemap.xml 301

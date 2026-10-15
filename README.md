@@ -30,14 +30,15 @@ js/project-switch.js  # project pages: switch the open project in place
 content/news/*.md     # news source of truth (edited via the CMS)
 content/pages/*.json  # page content source of truth (edited via the CMS)
 content/redirects.json # CMS redirects (301), source of truth (edited via the CMS)
-_redirects            # Netlify redirects (generated from content/redirects.json + news slugs)
+_redirects            # redirects (generated from build/redirects.txt + content/redirects.json + news slugs)
+build/redirects.txt   # fixed redirects (200 and 301, hand-kept)
 build/news-template.html
 build/lib/            # page generator: helpers, page modules, partials/*.html
 build-news.js         # regenerates news pages, generated pages, sitemap + feed.xml
 feed.xml              # RSS feed, served at /feed/ (generated)
 robots.txt            # crawl rules (generated from content/robots.json, edited in the CMS)
 admin/                # Decap CMS (news and page editing UI)
-netlify.toml          # build + headers + caching + redirects + 404 deny rules
+netlify.toml          # build + headers + caching + 404 deny rules
 eslint.config.mjs     # lint rules (npm run lint)
 test/                 # unit tests (npm test)
 ```

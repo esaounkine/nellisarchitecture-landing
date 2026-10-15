@@ -16,8 +16,8 @@
  *   6. Regenerates sitemap.xml
  *   7. Builds projects/<category>/<slug>/index.html from data/projects.json
  *   8. Deletes news/<dir>/ and projects/ folders that no post or project owns
- *   9. Writes _redirects from content/redirects.json and changed news slugs
- *  10. Writes feed.xml (RSS 2.0, 10 newest posts; netlify.toml serves it at /feed/)
+ *   9. Writes _redirects from build/redirects.txt, content/redirects.json and changed news slugs
+ *  10. Writes feed.xml (RSS 2.0, 10 newest posts; build/redirects.txt serves it at /feed/)
  *  11. Writes robots.txt from content/robots.json (plus the Sitemap line)
  */
 const fs = require('node:fs');
@@ -330,10 +330,13 @@ function writeRedirects(root, posts) {
   const json = fs.readFileSync(path.join(root, 'content', 'redirects.json'), 'utf8');
   const manual = redirects.parseRules(json);
   const rules = redirects.mergeRules(manual, redirects.autoNewsRules(posts), exists);
-  const tomlFroms = redirects.tomlFroms(fs.readFileSync(path.join(root, 'netlify.toml'), 'utf8'));
-  const errors = redirects.validate(rules, { exists, tomlFroms });
+  const fixedText = fs.readFileSync(path.join(root, redirects.FIXED_FILE), 'utf8');
+  const fixed = redirects.parseFixed(fixedText);
+  const toml = fs.readFileSync(path.join(root, 'netlify.toml'), 'utf8');
+  const fixedFroms = redirects.fixedFroms(toml, fixed);
+  const errors = redirects.validate(rules, { exists, fixedFroms });
   if (errors.length) throw new Error(`content/redirects.json:\n${errors.join('\n')}`);
-  fs.writeFileSync(path.join(root, '_redirects'), redirects.render(rules));
+  fs.writeFileSync(path.join(root, '_redirects'), redirects.render(rules, fixed));
   return rules;
 }
 
