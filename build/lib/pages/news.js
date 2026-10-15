@@ -76,7 +76,6 @@ function render(content, {
   const seo = content.seo || {};
   const headHtml = head({
     BEFORE: '',
-    IDENTITY: '',
     OG_TYPE: 'website',
     MODIFIED_TIME: '',
     SCHEMA: schema(pageUrl(page.slug), seo.title || content.h1, seo.description || ''),

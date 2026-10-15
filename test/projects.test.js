@@ -220,7 +220,6 @@ const OLD_OG = [
 test('head without OG_IMAGE renders exactly the old head', () => {
   const values = {
     BEFORE: '',
-    IDENTITY: '',
     TITLE: 'T',
     ROBOTS: 'R',
     DESCRIPTION: 'D',

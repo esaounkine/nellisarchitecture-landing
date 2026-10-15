@@ -113,7 +113,6 @@ function render(content, {
   const seo = content.seo || {};
   const headHtml = head({
     BEFORE: '',
-    IDENTITY: '',
     OG_IMAGE: `  <meta property="og:image" content="${escAttr(DOMAIN + thumb[list[0].name])}">`,
     OG_TYPE: 'website',
     MODIFIED_TIME: '',

@@ -24,7 +24,7 @@ Driver: `/incident <alert>` ([.claude/commands/incident.md](../../.claude/comman
 
 - Site: `curl -sI https://nellis-arch.netlify.app/` (production domain after the DNS cutover).
 - Deploys and build logs: Netlify → Deploys.
-- CMS: `/admin/` loads and the editor can log in (Netlify Identity, Git Gateway).
+- CMS: `/admin/` loads and the editor can log in with GitHub (`/api/auth`, `/api/callback` on the Worker).
 - Forms: Netlify → Forms.
 - Recent changes: `git log origin/master` (includes CMS commits).
 
@@ -32,5 +32,5 @@ Driver: `/incident <alert>` ([.claude/commands/incident.md](../../.claude/comman
 
 - **Bad deploy** (site broken after a push or CMS publish): Netlify → Deploys → last good deploy → **Publish deploy**. Then fix forward on a card.
 - **Build fails** (`build-news.js` error, often bad front matter from the CMS): read the Netlify build log. Find the bad file in `content/news/`. Fix the file in a commit. The last good deploy stays live meanwhile.
-- **CMS login fails**: check Netlify → Identity is on, and Identity → Services → Git Gateway is on. Check the editor's invite.
+- **CMS login fails**: check that the callback URL of the GitHub OAuth App is `<site>/api/callback`. Check that the Worker has the secrets `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` (a 503 on `/api/auth` means they are missing): set them and run `npm run infra`. Check that the editor has write access to the repo. See [CMS login](development.md#hosting--cloudflare-workers-migration).
 - **Forms do not arrive**: check Netlify → Forms and the notification settings.

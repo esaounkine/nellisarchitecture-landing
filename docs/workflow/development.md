@@ -102,7 +102,7 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 ### Repository
 
 - GitHub: <https://github.com/esaounkine/nellisarchitecture-landing> (private). Branch: `master`. CLI: `gh`.
-- Decap CMS commits to `master` on the remote. Before work: `git pull --rebase`.
+- Decap CMS commits to the `backend.branch` of [admin/config.yml](../../admin/config.yml) on the remote (`spike/cloudflare` until the cutover). Before work: `git pull --rebase`.
 
 ### Commands
 
@@ -126,13 +126,13 @@ Netlify is the current binding, not a fixed choice. See [AGENTS.md → Portable 
 | Build, headers, redirects, deny rules | [netlify.toml](../../netlify.toml) (build, deny rules), [_headers](../../_headers) (headers), generated `_redirects` (from [build/redirects.txt](../../build/redirects.txt) and `content/redirects.json`) | The new host's config. Cloudflare Pages reads `_redirects` and `_headers`. |
 | Forms | Worker `POST /api/message` ([worker/](../../worker/)) + [Cloudflare Email Service](https://developers.cloudflare.com/email-service/) | Any serverless function + an email API |
 | Form spam check | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) ([js/forms.js](../../js/forms.js), [worker/turnstile.js](../../worker/turnstile.js)) | Any captcha + a server check |
-| CMS login | Netlify Identity + Git Gateway | Another Decap backend (for example GitHub with an OAuth app) |
+| CMS login | Not on Netlify: the Cloudflare Worker ([worker/oauth.js](../../worker/oauth.js)) | Any serverless function that does the GitHub OAuth flow |
 
 - Site: **nellis-arch** — <https://app.netlify.com/projects/nellis-arch/overview>.
 - Preview URL: <https://nellis-arch.netlify.app>. Production domain: <https://nellisarchitecture.com> (still on WordPress until the DNS cutover).
 - Deploy: a push to `master` builds and deploys (config in [netlify.toml](../../netlify.toml)).
 - Rollback: Netlify → Deploys → pick the last good deploy → **Publish deploy**. Operator only.
-- CMS: `/admin` (Decap CMS, Netlify Identity + Git Gateway, editorial workflow).
+- CMS: `/admin` (Decap CMS, GitHub backend, editorial workflow). The login runs in the Cloudflare Worker, see [CMS login](#hosting--cloudflare-workers-migration).
 - Forms: the forms post to the Cloudflare Worker. On Netlify, `/api/message` answers 404.
 
 ### Hosting — Cloudflare Workers (migration)
@@ -151,11 +151,12 @@ The migration target. Netlify stays the production host until the DNS cutover.
 - Spam check: each form gets a [Turnstile](https://developers.cloudflare.com/turnstile/) token. The Worker checks the token with the `TURNSTILE_SECRET` secret before it sends. No secret: the endpoint answers 503. `npm run infra` manages the widget and the secret.
 - Brief form files: the form sends the message first. With files, the Worker keeps the message in `pending/<id>.json` and answers with one signed upload link per file (no more than 5 files, 5 MB each, the types in the file input). The page uploads each file to `PUT /api/upload/<key>`, then calls `POST /api/message/<id>/send`. The Worker then sends the email with one download link per file (`GET /api/file/<key>`). The files go to the [R2](https://developers.cloudflare.com/r2/) bucket `landing-forms` through the `FILES` binding in `wrangler.jsonc` ([worker/uploads.js](../../worker/uploads.js)). The upload and send links stop after 30 minutes. The download links stay until R2 deletes the file (see File retention).
 - Link signatures: the Worker signs each link with HMAC-SHA-256 and the Worker secret `LINK_SECRET`. `npm run infra` sets it only when it is missing. **Never rotate `LINK_SECRET`**: a new value breaks the download links in all sent emails. No `FILES` binding or no secret: a brief with files answers 503.
+- CMS login: [Decap CMS](https://decapcms.org/docs/github-backend/) uses the GitHub backend with `base_url` = the Worker and `auth_endpoint: api/auth` ([admin/config.yml](../../admin/config.yml)). `GET /api/auth?provider=github` sends the editor to the [GitHub OAuth App](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps) (scope `repo`). The Worker keeps a random state in the cookie `__Host-cms_oauth_state` (10 minutes). `GET /api/callback` checks the state, gets the token from GitHub and gives it to the CMS window on the same origin ([worker/oauth.js](../../worker/oauth.js)). The Worker secrets are `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`. No secrets: both routes answer 503. The CMS branch is `spike/cloudflare` until the cutover.
 - Local test: put `TURNSTILE_SECRET=1x0000000000000000000000000000000AA` (a [Turnstile test secret](https://developers.cloudflare.com/turnstile/troubleshooting/testing/)) and `LINK_SECRET=<any text>` in `.dev.vars` (git ignores it). Run `npx wrangler dev`, then open <http://localhost:8787/>. On `localhost`, `js/forms.js` uses the test sitekey. The build writes `TURNSTILE_SITEKEY` into the `data-sitekey` attribute of the `js/forms.js` script tag. Without the variable (local builds), it writes the test sitekey.
 
 #### Setup as code
 
-`npm run infra` sets the [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) settings of the Worker through the [Builds API](https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/). It sets the production trigger (branch, build command, deploy command, root directory, build cache) and the build variables. It deletes all other triggers and build variables. It creates or updates the [Turnstile widget](https://developers.cloudflare.com/api/resources/turnstile/subresources/widgets/) `landing` (domains and mode), sets the Worker secret `TURNSTILE_SECRET` from the widget secret, and sets the build variable `TURNSTILE_SITEKEY` to the widget sitekey. You can run it again: it changes only what is different. It sets the secret on each run. It creates the R2 bucket of `wrangler.jsonc` when it is missing. It sets the Worker secret `LINK_SECRET` (32 random bytes) only when it is missing; it never changes it.
+`npm run infra` sets the [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) settings of the Worker through the [Builds API](https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/). It sets the production trigger (branch, build command, deploy command, root directory, build cache) and the build variables. It deletes all other triggers and build variables. It creates or updates the [Turnstile widget](https://developers.cloudflare.com/api/resources/turnstile/subresources/widgets/) `landing` (domains and mode), sets the Worker secret `TURNSTILE_SECRET` from the widget secret, and sets the build variable `TURNSTILE_SITEKEY` to the widget sitekey. You can run it again: it changes only what is different. It sets the secret on each run. It creates the R2 bucket of `wrangler.jsonc` when it is missing. It sets the Worker secret `LINK_SECRET` (32 random bytes) only when it is missing; it never changes it. It sets the Worker secrets `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` from your shell on each run. Without the two values, it keeps the secrets of the Worker; when the Worker does not have them, it shows a warning and continues (the CMS login answers 503). With only one of the two values, it stops.
 
 Bootstrap (one time, operator):
 
@@ -163,7 +164,8 @@ Bootstrap (one time, operator):
 2. Dashboard → Workers → Import a repository. Use the name `landing`. This step installs the Cloudflare GitHub App. The API can also do this step; the dashboard is the chosen bootstrap.
 3. Create a **user** API token: My Profile → [API Tokens](https://dash.cloudflare.com/profile/api-tokens). Permissions: Workers Builds Configuration: Edit, Workers Scripts: Edit, Turnstile Sites: Write and Workers R2 Storage: Edit. Do not use an account token: the Builds API returns "Invalid token" for it. Put `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in your shell profile.
 4. Dashboard → R2 → enable R2 on the account (one time; the API cannot do it).
-5. Run `npm run infra`. Operator only.
+5. Create a [GitHub OAuth App](https://github.com/settings/applications/new). Homepage URL: <https://landing.nellisarchitecture.workers.dev>. Authorization callback URL: <https://landing.nellisarchitecture.workers.dev/api/callback>. Generate a client secret. Put `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in your shell profile.
+6. Run `npm run infra`. Operator only.
 
 Rules:
 

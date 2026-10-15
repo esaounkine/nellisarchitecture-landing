@@ -69,7 +69,6 @@ function render(content, { site, newsHref, page }) {
   const { email } = site.forms.contact;
   const headHtml = head({
     BEFORE: '',
-    IDENTITY: '',
     OG_TYPE: 'website',
     MODIFIED_TIME: '',
     SCHEMA: schema(pageUrl(page.slug), seo.title || content.h1, seo.description || '', email),

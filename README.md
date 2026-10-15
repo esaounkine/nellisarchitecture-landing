@@ -55,13 +55,15 @@ test/                 # unit tests (npm test)
 3. Point the DNS for nellisarchitecture.com to Netlify.
 4. Forms do not use Netlify. They post to the Cloudflare Worker, see
    [Hosting — Cloudflare Workers](docs/workflow/development.md#hosting--cloudflare-workers-migration).
-5. For the news admin: **Identity → Enable Identity**, then
-   **Identity → Services → Git Gateway → Enable**. Invite the SEO team under
-   **Identity → Invite users**.
+5. The news admin does not use Netlify. For the CMS login, do the
+   [Cloudflare bootstrap](docs/workflow/development.md#setup-as-code).
 
 ## Updating news (SEO team)
 
-1. Go to `nellisarchitecture.com/admin` and log in (Netlify Identity invite).
+1. Open `<site>/admin/` and click **Login with GitHub**. Before the cutover, `<site>` is <https://landing.nellisarchitecture.workers.dev>.
+   Each editor needs a [GitHub](https://github.com/) account with write access to the repo `esaounkine/nellisarchitecture-landing` (decision D5).
+   The operator adds each editor as a [collaborator](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository) of the repo.
+   On a shared computer, log out after you work: the login gives access to the full repo (`repo` scope).
 2. News → New article. Fill title, date, meta description, hero image, body.
 3. Publish → the site rebuilds automatically in ~1 minute:
    new article page, refreshed sidebar on all 58 articles, the /news/ list,

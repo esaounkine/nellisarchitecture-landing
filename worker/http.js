@@ -1,4 +1,4 @@
-const HEADERS = {
+export const HEADERS = {
   'Cache-Control': 'no-store',
   'X-Content-Type-Options': 'nosniff',
   'X-Robots-Tag': 'noindex',

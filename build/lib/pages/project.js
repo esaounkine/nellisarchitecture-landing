@@ -203,7 +203,6 @@ function render(entry, { site, newsHref }) {
   const url = DOMAIN + entry.url;
   const headHtml = head({
     BEFORE: '',
-    IDENTITY: '',
     OG_IMAGE: ogImage(p),
     TITLE: escText(pageTitle),
     ROBOTS: INDEX,

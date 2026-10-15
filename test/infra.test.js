@@ -2,7 +2,8 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const {
-  DESIRED, workerName, bucketName, bucketPlan, linkSecretPlan, pickProduction, extraTriggers,
+  DESIRED, workerName, bucketName, bucketPlan, linkSecretPlan, oauthSecretPlan, pickProduction,
+  extraTriggers,
   varsPlan, widgetPlan,
 } = require('../infra/cloudflare');
 const pkg = require('../package.json');
@@ -108,4 +109,27 @@ test('linkSecretPlan: sets LINK_SECRET only when missing, never overwrites it', 
   assert.equal(linkSecretPlan([]), 'create');
   assert.equal(linkSecretPlan([{ name: 'TURNSTILE_SECRET', type: 'secret_text' }]), 'create');
   assert.equal(linkSecretPlan([{ name: 'LINK_SECRET', type: 'secret_text' }]), 'none');
+});
+
+test('oauthSecretPlan: both values in env set both secrets every run', () => {
+  const env = { GITHUB_CLIENT_ID: 'id', GITHUB_CLIENT_SECRET: 'secret' };
+  assert.equal(oauthSecretPlan([], env), 'set');
+  assert.equal(oauthSecretPlan(['GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET'], env), 'set');
+});
+
+test('oauthSecretPlan: no values keep the secrets of the Worker', () => {
+  const names = ['LINK_SECRET', 'GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET'];
+  assert.equal(oauthSecretPlan(names, {}), 'keep');
+});
+
+test('oauthSecretPlan: no values and a missing secret is missing', () => {
+  assert.equal(oauthSecretPlan([], {}), 'missing');
+  assert.equal(oauthSecretPlan(['GITHUB_CLIENT_ID'], {}), 'missing');
+  assert.equal(oauthSecretPlan(['GITHUB_CLIENT_SECRET'], { GITHUB_CLIENT_ID: '' }), 'missing');
+});
+
+test('oauthSecretPlan: only one value throws', () => {
+  assert.throws(() => oauthSecretPlan([], { GITHUB_CLIENT_ID: 'id' }), /GITHUB_CLIENT_SECRET/);
+  const names = ['GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET'];
+  assert.throws(() => oauthSecretPlan(names, { GITHUB_CLIENT_SECRET: 's' }), /or neither/);
 });

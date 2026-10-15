@@ -35,7 +35,7 @@ const hmacKey = (secret, use) => crypto.subtle.importKey(
   [use],
 );
 
-const toBase64url = (buffer) => btoa(String.fromCharCode(...new Uint8Array(buffer)))
+export const toBase64url = (buffer) => btoa(String.fromCharCode(...new Uint8Array(buffer)))
   .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
 const fromBase64url = (text) => {

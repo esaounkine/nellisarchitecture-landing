@@ -6,6 +6,7 @@ import { parseFiles } from './files.js';
 import {
   startUpload, handleUpload, handleSend, handleFile,
 } from './uploads.js';
+import { handleAuth, handleCallback } from './oauth.js';
 
 const MAX_BYTES = 32768;
 const SENT = 'Thank you. Your message has been sent.';
@@ -61,6 +62,8 @@ const ROUTES = [
   [/^\/api\/message\/([^/]+)\/send$/, handleSend],
   [/^\/api\/upload\/([^/]+)$/, handleUpload],
   [/^\/api\/file\/([^/]+)$/, handleFile],
+  [/^\/api\/auth$/, handleAuth],
+  [/^\/api\/callback$/, handleCallback],
 ];
 
 export default {

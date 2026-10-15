@@ -34,6 +34,16 @@ const bucketPlan = (list, name) => (list.some((b) => b.name === name) ? 'none' :
 const linkSecretPlan = (secrets) => (
   secrets.some((s) => s.name === 'LINK_SECRET') ? 'none' : 'create');
 
+const OAUTH = ['GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET'];
+
+// Values come from the shell (bootstrap). Without them, keep what the Worker has.
+const oauthSecretPlan = (secretNames, env) => {
+  const given = OAUTH.filter((key) => env[key]);
+  if (given.length === OAUTH.length) return 'set';
+  if (given.length) throw new Error(`Set both ${OAUTH.join(' and ')}, or neither. See ${DOCS}.`);
+  return OAUTH.every((key) => secretNames.includes(key)) ? 'keep' : 'missing';
+};
+
 const pickProduction = (list, branch) => {
   const match = list.find((t) => (t.branch_includes || []).includes(branch));
   if (match) return match;
@@ -105,13 +115,28 @@ const main = async () => {
   const uuid = prod.trigger_uuid;
 
   const secretsPath = `/accounts/${acct}/workers/scripts/${name}/secrets`;
-  if (linkSecretPlan(await api(secretsPath)) === 'create') {
+  const secrets = await api(secretsPath);
+  if (linkSecretPlan(secrets) === 'create') {
     const text = crypto.randomBytes(32).toString('base64url');
     const secret = { name: 'LINK_SECRET', text, type: 'secret_text' };
     await api(secretsPath, { method: 'PUT', body: secret });
     console.log(`Worker ${name}: secret LINK_SECRET set`);
   } else {
     console.log(`Worker ${name}: secret LINK_SECRET exists, not changed`);
+  }
+
+  const oauth = oauthSecretPlan(secrets.map((s) => s.name), process.env);
+  if (oauth === 'set') {
+    await OAUTH.reduce((chain, key) => chain.then(async () => {
+      const secret = { name: key, text: process.env[key], type: 'secret_text' };
+      await api(secretsPath, { method: 'PUT', body: secret });
+      console.log(`Worker ${name}: secret ${key} set`);
+    }), Promise.resolve());
+  } else if (oauth === 'keep') {
+    console.log(`Worker ${name}: secrets ${OAUTH.join(', ')} exist, not changed`);
+  } else {
+    console.log(`WARNING: Worker ${name} has no ${OAUTH.join(' / ')}. The CMS login answers 503.`);
+    console.log(`Create the GitHub OAuth App and set both values: ${DOCS} → Bootstrap.`);
   }
 
   const want = DESIRED.turnstile;
@@ -168,6 +193,7 @@ module.exports = {
   bucketName,
   bucketPlan,
   linkSecretPlan,
+  oauthSecretPlan,
   pickProduction,
   extraTriggers,
   varsPlan,

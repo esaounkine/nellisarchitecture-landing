@@ -187,3 +187,15 @@ test('no TURNSTILE_SECRET answers 503 and sends nothing', async () => {
   assert.equal(env.EMAIL.send.mock.callCount(), 0);
   assert.equal(globalThis.fetch.mock.callCount(), 0);
 });
+
+test('/api/auth and /api/callback go to the CMS login; /api/authx goes to the assets', async () => {
+  const worker = await load();
+  const env = fakeEnv();
+  const auth = await worker.fetch(new Request('https://x.dev/api/auth?provider=github'), env);
+  const back = await worker.fetch(new Request('https://x.dev/api/callback'), env);
+  assert.equal(auth.status, 503);
+  assert.equal(back.status, 503);
+  await worker.fetch(new Request('https://x.dev/api/authx'), env);
+  const urls = env.ASSETS.fetch.mock.calls.map((c) => c.arguments[0].url);
+  assert.deepEqual(urls, ['https://x.dev/api/authx']);
+});

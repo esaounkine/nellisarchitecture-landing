@@ -1,15 +1,17 @@
 # Decap CMS configuration — Nellis Architecture news
-# Auth: Netlify Identity + Git Gateway (enable both in the Netlify dashboard,
-# then invite the SEO team under Identity > Invite users).
+# The branch is spike/cloudflare until the cutover (card 9 sets master and the apex base_url).
 
 backend:
-  name: git-gateway
-  branch: master
+  name: github
+  repo: esaounkine/nellisarchitecture-landing
+  branch: spike/cloudflare
+  base_url: https://landing.nellisarchitecture.workers.dev
+  auth_endpoint: api/auth
 
 publish_mode: editorial_workflow
 
 # Local editing: run `npm run cms` with `npm run serve`, then open http://localhost:8000/admin/.
-# Decap uses this only on localhost; the live site keeps git-gateway.
+# Decap uses this only on localhost.
 local_backend: true
 
 media_folder: "wp-content/uploads/news"
