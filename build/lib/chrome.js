@@ -23,7 +23,7 @@ function formTokens(prefix, form) {
   };
 }
 
-/* formId: ' id="yourFormId"' in the modal (theme JS hooks it); '' on /contact/ (native post). */
+/* formId: ' id="yourFormId"' in the modal (theme markup); '' on /contact/. */
 function contactForm(formId, form) {
   return fill(loadPartial('contact-form'), { FORM_ID: formId, BUTTON: escText(form.button) });
 }

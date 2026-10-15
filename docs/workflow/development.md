@@ -124,7 +124,7 @@ Netlify is the current binding, not a fixed choice. See [AGENTS.md → Portable 
 | Netlify binding | Where | Replace with |
 |---|---|---|
 | Build, headers, redirects, deny rules | [netlify.toml](../../netlify.toml) (build, deny rules), [_headers](../../_headers) (headers), generated `_redirects` (from [build/redirects.txt](../../build/redirects.txt) and `content/redirects.json`) | The new host's config. Cloudflare Pages reads `_redirects` and `_headers`. |
-| Forms | `data-netlify` forms, POST to `/` | A form backend or a serverless function on the new host |
+| Forms | Worker `POST /api/message` ([worker/](../../worker/)) + [Cloudflare Email Service](https://developers.cloudflare.com/email-service/) | Any serverless function + an email API |
 | CMS login | Netlify Identity + Git Gateway | Another Decap backend (for example GitHub with an OAuth app) |
 
 - Site: **nellis-arch** — <https://app.netlify.com/projects/nellis-arch/overview>.
@@ -132,7 +132,7 @@ Netlify is the current binding, not a fixed choice. See [AGENTS.md → Portable 
 - Deploy: a push to `master` builds and deploys (config in [netlify.toml](../../netlify.toml)).
 - Rollback: Netlify → Deploys → pick the last good deploy → **Publish deploy**. Operator only.
 - CMS: `/admin` (Decap CMS, Netlify Identity + Git Gateway, editorial workflow).
-- Forms: Netlify Forms (`data-netlify` attributes).
+- Forms: the forms post to the Cloudflare Worker. On Netlify, `/api/message` answers 404.
 
 ### Hosting — Cloudflare Workers (migration)
 
@@ -144,6 +144,9 @@ The migration target. Netlify stays the production host until the DNS cutover.
 - Manual deploy: `npm run deploy` ([Wrangler](https://developers.cloudflare.com/workers/wrangler/), version pinned in `package.json`).
 - Rollback: `npx wrangler rollback`. Operator only.
 - Build settings: [infra/cloudflare.js](../../infra/cloudflare.js). See [Setup as code](#setup-as-code).
+- Forms: the Worker ([worker/index.js](../../worker/index.js)) answers `POST /api/message`. `assets.run_worker_first: ["/api/*"]` sends `/api/*` to the Worker first. All other requests go to the static assets. Other `/api/*` paths get the 404 page.
+- Email: the Worker sends each form with the `EMAIL` binding ([Cloudflare Email Service](https://developers.cloudflare.com/email-service/)). The sender is the `MAIL_FROM` variable in `wrangler.jsonc`. Card 8 adds the `send_email` binding, when the zone is on Cloudflare. Until then, the endpoint answers 503 `email not configured`.
+- Local test: `npx wrangler dev`, then post a form to <http://localhost:8787/api/message>.
 
 #### Setup as code
 

@@ -20,8 +20,11 @@ export default [
       '!js/',
       '!js/static-backend.js',
       '!js/project-switch.js',
+      '!js/forms.js',
       '!test/',
       '!test/**',
+      '!worker/',
+      '!worker/**',
     ],
   },
   plugins.stylistic,
@@ -52,6 +55,29 @@ export default [
     rules: {
       'no-underscore-dangle': 'off',
       strict: ['error', 'function'],
+    },
+  },
+  {
+    files: ['worker/**/*.js'],
+    languageOptions: {
+      sourceType: 'module',
+      globals: { ...globals.serviceworker, ...globals.browser },
+    },
+    rules: {
+      'import-x/extensions': ['error', 'always', { ignorePackages: true }],
+      'no-console': 'off',
+    },
+  },
+  {
+    files: ['test/**/*.js', 'worker/**/*.js'],
+    languageOptions: { ecmaVersion: 2022, parserOptions: { ecmaVersion: 2022 } },
+  },
+  {
+    files: ['test/worker-*.test.js'],
+    rules: {
+      'import-x/extensions': ['error', 'always', { ignorePackages: true }],
+      'import-x/no-useless-path-segments': 'off',
+      'n/no-unsupported-features/node-builtins': 'off',
     },
   },
 ];

@@ -32,12 +32,12 @@ test('the /contact/ page has its own title, description, canonical and Open Grap
   assert.ok(!html.includes('{{'));
 });
 
-test('the page form posts natively to Netlify; only the modal form keeps the theme id', () => {
+test('the page form posts natively to the Worker; only the modal form keeps the theme id', () => {
   const html = render();
   assert.equal(count(html, 'id="yourFormId"'), 1);
-  assert.equal(count(html, 'name="contact" method="POST" data-netlify="true"'), 2);
+  assert.equal(count(html, 'name="contact" action="/api/message" method="post"'), 2);
   const pageForm = html.slice(html.indexOf('<div class="contactForm">'));
-  assert.ok(pageForm.includes('<form class="projectForm" name="contact" method="POST"'));
+  assert.ok(pageForm.includes('<form class="projectForm" name="contact" action="/api/message"'));
 });
 
 test('the page shows the address, a Google Maps link and the email, and loads no map frame', () => {

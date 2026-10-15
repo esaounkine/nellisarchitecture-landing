@@ -93,59 +93,7 @@ var smushLazyLoadOptions = {"autoResizingEnabled":false,"autoResizeOptions":{"pr
 
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('yourFormId');
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        var formData = new FormData(form);
-        formData.append('form-name', form.getAttribute('name'));
-        fetch('/', { method: 'POST', body: formData }).then(function(response) {
-            if (!response.ok) throw new Error(response.status);
-            alert('Thank you. Your message has been sent.');
-            form.reset();
-        }).catch(function() {
-            alert('Error.');
-        });
-    });
-});
-</script>
-
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('yourFormId2');
-    const loadingFileLabels = document.querySelectorAll(".loadingFile");
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        var files = Array.prototype.slice.call(document.getElementById('file-input').files).slice(0, 5);
-        var total = files.reduce(function(sum, file) { return sum + file.size; }, 0);
-        if (total > 8 * 1000 * 1000) {
-            alert('Files are too large (8 MB total).');
-            return;
-        }
-        var formData = new FormData(form);
-        formData.append('form-name', form.getAttribute('name'));
-        ['files[]', 'file1', 'file2', 'file3', 'file4', 'file5'].forEach(function(name) {
-            formData.delete(name);
-        });
-        files.forEach(function(file, i) {
-            formData.append('file' + (i + 1), file);
-        });
-        fetch('/', { method: 'POST', body: formData }).then(function(response) {
-            if (!response.ok) throw new Error(response.status);
-            alert('Thank you. Your message has been sent.');
-            form.reset();
-            loadingFileLabels.forEach(element => {
-              element.style.display = 'none';
-            });
-        }).catch(function() {
-            alert('Error when submitting the form.');
-        });
-    });
-});
-</script>
+<script src="/js/forms.js" defer></script>
 
     <script>
 Fancybox.bind("[data-fancybox]", {

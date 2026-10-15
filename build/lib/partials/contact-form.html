@@ -1,5 +1,6 @@
-      <form class="projectForm"{{FORM_ID}} name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <form class="projectForm"{{FORM_ID}} name="contact" action="/api/message" method="post">
         <p hidden><label>Leave empty: <input name="bot-field"></label></p>
+        <input type="hidden" name="form" value="contact">
         
         <input
           type="text"

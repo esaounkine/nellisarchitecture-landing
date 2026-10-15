@@ -12,7 +12,7 @@ const PAGES = ['index.html', 'studio/index.html', 'people/index.html', 'privacy/
   'contact/index.html', ...pagesIn('news'), ...pagesIn('projects')];
 const SOURCES = ['build/lib/partials/footer.html', 'build/news-template.html'];
 const count = (s, sub) => s.split(sub).length - 1;
-const forms = (html) => html.match(/<form[^>]*data-netlify="true"[\s\S]*?<\/form>/g) || [];
+const forms = (html) => html.match(/<form[\s\S]*?<\/form>/g) || [];
 
 test('no page or source posts a form to WordPress', () => {
   [...SOURCES, ...PAGES].forEach((file) => {
@@ -22,43 +22,37 @@ test('no page or source posts a form to WordPress', () => {
   });
 });
 
-test('the modal form scripts post to Netlify Forms with the form name', () => {
-  SOURCES.forEach((file) => {
+test('every page loads js/forms.js once and has no inline form script', () => {
+  [...SOURCES, ...PAGES].forEach((file) => {
     const html = read(file);
-    assert.equal(count(html, "formData.append('form-name', form.getAttribute('name'));"), 2, file);
-    assert.equal(count(html, "fetch('/', { method: 'POST', body: formData })"), 2, file);
+    assert.equal(count(html, '<script src="/js/forms.js" defer></script>'), 1, file);
+    assert.ok(!html.includes("fetch('/'"), file);
+    assert.ok(!html.includes("getElementById('yourFormId"), file);
   });
 });
 
-test('every Netlify form has a honeypot field; the brief form sends files', () => {
+test('every form posts to the Worker with its form name and a honeypot field', () => {
   PAGES.forEach((file) => {
     const found = forms(read(file));
     assert.ok(found.length >= 2, file);
     found.forEach((form) => {
-      assert.ok(form.includes('netlify-honeypot="bot-field"'), file);
+      const kind = form.match(/ name="(contact|brief)"/)[1];
+      assert.ok(form.includes(` name="${kind}" action="/api/message" method="post">`), file);
+      assert.ok(form.includes(`<input type="hidden" name="form" value="${kind}">`), file);
       assert.ok(form.includes('<input name="bot-field">'), file);
-      if (form.includes('name="brief"')) {
-        assert.ok(form.includes('enctype="multipart/form-data"'), file);
-      }
+      assert.ok(form.includes('name="massage"'), file);
+      assert.ok(!/data-netlify|netlify-honeypot|enctype|name="file\d"/.test(form), file);
     });
   });
 });
 
-test('the brief form sends each attachment in its own field', () => {
-  const inputs = [1, 2, 3, 4, 5].map((i) => `<input type="file" name="file${i}">`).join('');
-  const hidden = `<div hidden>${inputs}</div>`;
-  PAGES.forEach((file) => {
-    const brief = forms(read(file)).find((f) => f.includes('name="brief"'));
-    assert.ok(brief.replace(/\s+/g, '').includes(hidden.replace(/\s+/g, '')), file);
-  });
-  SOURCES.forEach((file) => {
-    const html = read(file);
-    assert.ok(html.includes("['files[]', 'file1', 'file2', 'file3', 'file4', 'file5']"), file);
-    assert.ok(html.includes('formData.delete(name);'), file);
-    assert.ok(html.includes("formData.append('file' + (i + 1), file);"), file);
-    assert.ok(html.includes('.slice(0, 5)'), file);
-    assert.ok(html.includes("alert('Files are too large (8 MB total).');"), file);
-  });
+test('js/forms.js posts to /api/message as fetch and keeps the alert texts', () => {
+  const js = read('js/forms.js');
+  assert.ok(js.includes("const ENDPOINT = '/api/message';"));
+  assert.ok(js.includes("'X-Requested-With': 'fetch'"));
+  assert.ok(js.includes("'Thank you. Your message has been sent.'"));
+  assert.ok(js.includes("contact: 'Error.', brief: 'Error when submitting the form.'"));
+  assert.ok(js.includes("data.delete('files[]')"));
 });
 
 test('the theme keeps the file input in step with its file list', () => {
