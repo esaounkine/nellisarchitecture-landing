@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
+const os = require('node:os');
 const { tomlFroms } = require('../build/lib/redirects');
 
 const SITE = [
@@ -53,8 +54,16 @@ const ignored = (entry, isDir) => ignores.some((line) => {
   if (line.endsWith('/')) return isDir && line === `/${entry}/`;
   return line === `/${entry}` || line === entry;
 });
-const disk = fs.readdirSync(root, { withFileTypes: true })
-  .map((dirent) => ({ name: dirent.name, isDir: dirent.isDirectory() }));
+// Wrangler stats each entry: a symlink to a folder counts as a folder, a broken link as a file.
+const entryOf = (dir, name) => {
+  try {
+    return { name, isDir: fs.statSync(path.join(dir, name)).isDirectory() };
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+    return { name, isDir: false };
+  }
+};
+const disk = fs.readdirSync(root).map((name) => entryOf(root, name));
 // netlify.toml is in SITE only because Netlify hides it; Cloudflare would serve it.
 const isPublic = (entry) => entry !== 'netlify.toml' && isSite(entry);
 
@@ -71,6 +80,29 @@ test('no public root entry is in .assetsignore', () => {
   SITE.filter(isPublic).forEach((entry) => {
     const hit = ignored(entry, true) || ignored(entry, false);
     assert.ok(!hit, `.assetsignore: "${entry}" is ignored`);
+  });
+});
+
+test('a symlink to a folder counts as a folder', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'assetsignore-'));
+  fs.mkdirSync(path.join(dir, 'real'));
+  fs.symlinkSync(path.join(dir, 'real'), path.join(dir, 'link'));
+  fs.writeFileSync(path.join(dir, 'file'), '');
+  try {
+    assert.deepEqual(['real', 'link', 'file'].map((n) => entryOf(dir, n)), [
+      { name: 'real', isDir: true },
+      { name: 'link', isDir: true },
+      { name: 'file', isDir: false },
+    ]);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('each .assetsignore line is an exact root entry: /name, /name/ or .DS_Store', () => {
+  ignores.forEach((line) => {
+    const exact = /^(\/[^/*?![\]]+\/?|\.DS_Store)$/;
+    assert.match(line, exact, `.assetsignore: "${line}" is not an exact root entry`);
   });
 });
 
