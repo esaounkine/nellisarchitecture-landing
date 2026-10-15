@@ -33,6 +33,7 @@ const extraTriggers = (list, prod) => list.filter((t) => t.trigger_uuid !== prod
 
 // live: the API result, a map { KEY: { value, is_secret, created_on } }. Secret values are null.
 const varsPlan = (live, desired) => {
+  if (Array.isArray(live)) throw new Error('environment_variables: expected a map, got an array');
   const set = {};
   Object.entries(desired).forEach(([key, value]) => {
     const now = live[key];
@@ -83,14 +84,16 @@ const main = async () => {
   }), Promise.resolve());
 
   const varsPath = `/accounts/${acct}/builds/triggers/${uuid}/environment_variables`;
-  const { set, remove } = varsPlan(await api(varsPath) || {}, DESIRED.variables);
+  const live = await api(varsPath) || {};
+  const { set, remove } = varsPlan(live, DESIRED.variables);
   if (Object.keys(set).length) {
     await api(varsPath, { method: 'PATCH', body: set });
     console.log(`variables: set ${Object.keys(set).join(', ')}`);
   }
   await remove.reduce((chain, key) => chain.then(async () => {
     await api(`${varsPath}/${encodeURIComponent(key)}`, { method: 'DELETE' });
-    console.log(`variables: deleted ${key}`);
+    const note = live[key].is_secret ? ' (secret, value is lost)' : '';
+    console.log(`variables: deleted ${key}${note}`);
   }), Promise.resolve());
   console.log('Cloudflare build settings are up to date.');
 };

@@ -48,6 +48,10 @@ test('varsPlan: sets missing and changed variables, removes extra ones', () => {
   });
 });
 
+test('varsPlan: an array answer stops the run', () => {
+  assert.throws(() => varsPlan([{ name: 'A' }], { A: '1' }), /expected a map/);
+});
+
 test('varsPlan: nothing to do when equal', () => {
   const live = { A: { value: '1', is_secret: false, created_on: 'x' } };
   assert.deepEqual(varsPlan(live, { A: '1' }), { set: {}, remove: [] });
