@@ -10,7 +10,8 @@
     "format": "eslint . --fix",
     "test": "node --test",
     "cms": "decap-server",
-    "deploy": "npx --yes wrangler@4.151.0 deploy"
+    "deploy": "npx --yes wrangler@4.151.0 deploy",
+    "infra": "node infra/cloudflare.js"
   },
   "devDependencies": {
     "decap-server": "^3.11.3",

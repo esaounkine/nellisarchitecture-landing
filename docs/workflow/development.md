@@ -143,7 +143,23 @@ The migration target. Netlify stays the production host until the DNS cutover.
 - Deploy: [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) deploys a push to the branch `spike/cloudflare`.
 - Manual deploy: `npm run deploy` ([Wrangler](https://developers.cloudflare.com/workers/wrangler/), version pinned in `package.json`).
 - Rollback: `npx wrangler rollback`. Operator only.
-- The build settings are in the Cloudflare dashboard. Card 5.1 (u2CMENvO) moves them into the code.
+- Build settings: [infra/cloudflare.js](../../infra/cloudflare.js). See [Setup as code](#setup-as-code).
+
+#### Setup as code
+
+`npm run infra` sets the [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) settings of the Worker through the [Builds API](https://developers.cloudflare.com/workers/ci-cd/builds/api-reference/). It sets the production trigger (branch, build command, deploy command, root directory, build cache) and the build variables. It deletes all other triggers and build variables. You can run it again: it changes only what is different.
+
+Bootstrap (one time, operator):
+
+1. Get a Cloudflare account. Write down the account ID.
+2. Dashboard → Workers → Import a repository. Use the name `landing`. This step installs the Cloudflare GitHub App. The API can also do this step; the dashboard is the chosen bootstrap.
+3. Create a **user** API token: My Profile → [API Tokens](https://dash.cloudflare.com/profile/api-tokens). Permissions: Workers Builds Configuration: Edit, and Workers Scripts: Read. Do not use an account token: the Builds API returns "Invalid token" for it. Put `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in your shell profile.
+4. Run `npm run infra`. Operator only.
+
+Rules:
+
+- Run `npm run infra` only after the deployed branch has the `deploy` script in `package.json`.
+- Do not change the build settings in the dashboard. Change `infra/cloudflare.js` or `wrangler.jsonc`, then run `npm run infra`.
 
 ### Netlify credits
 
