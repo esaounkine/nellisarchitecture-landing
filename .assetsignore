@@ -24,3 +24,4 @@
 /infra/
 /worker/
 /.dev.vars
+/.env
