@@ -2,7 +2,8 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
 const {
-  DESIRED, workerName, pickProduction, extraTriggers, varsPlan, widgetPlan,
+  DESIRED, workerName, bucketName, bucketPlan, linkSecretPlan, pickProduction, extraTriggers,
+  varsPlan, widgetPlan,
 } = require('../infra/cloudflare');
 const pkg = require('../package.json');
 
@@ -91,4 +92,20 @@ test('DESIRED.turnstile allows the workers.dev host and the production domain', 
     domains: ['landing.nellisarchitecture.workers.dev', 'nellisarchitecture.com'],
     mode: 'managed',
   });
+});
+
+test('bucketName reads the R2 bucket from wrangler.jsonc', () => {
+  assert.equal(bucketName(path.join(__dirname, '..')), 'landing-forms');
+});
+
+test('bucketPlan: creates the bucket only when it is missing', () => {
+  assert.equal(bucketPlan([], 'landing-forms'), 'create');
+  assert.equal(bucketPlan([{ name: 'other' }], 'landing-forms'), 'create');
+  assert.equal(bucketPlan([{ name: 'other' }, { name: 'landing-forms' }], 'landing-forms'), 'none');
+});
+
+test('linkSecretPlan: sets LINK_SECRET only when missing, never overwrites it', () => {
+  assert.equal(linkSecretPlan([]), 'create');
+  assert.equal(linkSecretPlan([{ name: 'TURNSTILE_SECRET', type: 'secret_text' }]), 'create');
+  assert.equal(linkSecretPlan([{ name: 'LINK_SECRET', type: 'secret_text' }]), 'none');
 });

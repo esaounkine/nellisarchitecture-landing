@@ -34,3 +34,11 @@ test('send uses MAIL_FROM, a fixed subject and replyTo the sender', async () => 
     text: body({ ...fields, form: 'contact' }),
   }]);
 });
+
+test('body lists one link for each file after the message', async () => {
+  const { body } = await load();
+  const links = [{ name: 'a.pdf', url: 'https://x.dev/api/file/1?sig=s' }];
+  const want = 'Form: brief\nName: Ann\nEmail: ann@example.com\nPhone: 1\n\nHello\nthere\n\n'
+    + 'Files:\na.pdf: https://x.dev/api/file/1?sig=s\n';
+  assert.equal(body(fields, links), want);
+});

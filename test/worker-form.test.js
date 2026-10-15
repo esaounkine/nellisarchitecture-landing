@@ -17,9 +17,17 @@ test('parse reads the fields: the message from massage, the Turnstile token', as
     massage: 'M',
     'bot-field': '',
     'cf-turnstile-response': 'T',
+    files: 'F',
   }).forEach(([k, v]) => data.append(k, v));
   assert.deepEqual(parse(data), {
-    form: 'brief', name: 'A', email: 'a@b.co', phone: '1', message: 'M', bot: '', token: 'T',
+    form: 'brief',
+    name: 'A',
+    email: 'a@b.co',
+    phone: '1',
+    message: 'M',
+    bot: '',
+    token: 'T',
+    files: 'F',
   });
 });
 

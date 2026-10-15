@@ -1,3 +1,4 @@
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -23,9 +24,15 @@ const DESIRED = {
 };
 
 // wrangler.jsonc has no comments, so JSON.parse reads it. Upgrade: strip comments if one is added.
-const workerName = (root = ROOT) => JSON.parse(
-  fs.readFileSync(path.join(root, 'wrangler.jsonc'), 'utf8'),
-).name;
+const wrangler = (root) => JSON.parse(fs.readFileSync(path.join(root, 'wrangler.jsonc'), 'utf8'));
+const workerName = (root = ROOT) => wrangler(root).name;
+const bucketName = (root = ROOT) => wrangler(root).r2_buckets[0].bucket_name;
+
+const bucketPlan = (list, name) => (list.some((b) => b.name === name) ? 'none' : 'create');
+
+// Never rotate LINK_SECRET: a new value breaks the file links in sent emails.
+const linkSecretPlan = (secrets) => (
+  secrets.some((s) => s.name === 'LINK_SECRET') ? 'none' : 'create');
 
 const pickProduction = (list, branch) => {
   const match = list.find((t) => (t.branch_includes || []).includes(branch));
@@ -80,6 +87,15 @@ const main = async () => {
   if (!token || !acct) {
     throw new Error(`Set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID. See ${DOCS}.`);
   }
+  const bucket = bucketName();
+  const { buckets } = await api(`/accounts/${acct}/r2/buckets`);
+  if (bucketPlan(buckets, bucket) === 'create') {
+    await api(`/accounts/${acct}/r2/buckets`, { method: 'POST', body: { name: bucket } });
+    console.log(`r2: bucket ${bucket} created`);
+  } else {
+    console.log(`r2: bucket ${bucket} exists`);
+  }
+
   const name = workerName();
   const scripts = await api(`/accounts/${acct}/workers/scripts`);
   const script = scripts.find((s) => s.id === name);
@@ -87,6 +103,16 @@ const main = async () => {
   const list = await api(`/accounts/${acct}/builds/workers/${script.tag}/triggers`);
   const prod = pickProduction(list, DESIRED.production.branch_includes[0]);
   const uuid = prod.trigger_uuid;
+
+  const secretsPath = `/accounts/${acct}/workers/scripts/${name}/secrets`;
+  if (linkSecretPlan(await api(secretsPath)) === 'create') {
+    const text = crypto.randomBytes(32).toString('base64url');
+    const secret = { name: 'LINK_SECRET', text, type: 'secret_text' };
+    await api(secretsPath, { method: 'PUT', body: secret });
+    console.log(`Worker ${name}: secret LINK_SECRET set`);
+  } else {
+    console.log(`Worker ${name}: secret LINK_SECRET exists, not changed`);
+  }
 
   const body = DESIRED.production;
   await api(`/accounts/${acct}/builds/triggers/${uuid}`, { method: 'PATCH', body });
@@ -128,7 +154,7 @@ const main = async () => {
     console.log('Set it by hand: npx wrangler secret put TURNSTILE_SECRET');
     return;
   }
-  await api(`/accounts/${acct}/workers/scripts/${name}/secrets`, {
+  await api(secretsPath, {
     method: 'PUT',
     body: { name: 'TURNSTILE_SECRET', text: widget.secret, type: 'secret_text' },
   });
@@ -136,7 +162,16 @@ const main = async () => {
 };
 
 module.exports = {
-  DESIRED, workerName, pickProduction, extraTriggers, varsPlan, widgetPlan, api,
+  DESIRED,
+  workerName,
+  bucketName,
+  bucketPlan,
+  linkSecretPlan,
+  pickProduction,
+  extraTriggers,
+  varsPlan,
+  widgetPlan,
+  api,
 };
 
 if (require.main === module) {
