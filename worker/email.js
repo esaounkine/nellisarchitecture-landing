@@ -1,7 +1,10 @@
-const TO = 'hello@nellisarchitecture.com';
+const TO = {
+  contact: 'hello@nellisarchitecture.com',
+  brief: 'people@nellisarchitecture.com',
+};
+const SUBJECT = 'Form submitted on the website';
 
-export const subject = (fields) => `Website form: ${fields.form} — ${fields.name || fields.email}`
-  .slice(0, 150);
+export const recipient = (fields) => TO[fields.form];
 
 export const body = (fields) => [
   `Form: ${fields.form}`,
@@ -15,8 +18,8 @@ export const body = (fields) => [
 
 export const send = (env, fields) => env.EMAIL.send({
   from: env.MAIL_FROM,
-  to: TO,
+  to: recipient(fields),
   replyTo: fields.email,
-  subject: subject(fields),
+  subject: SUBJECT,
   text: body(fields),
 });

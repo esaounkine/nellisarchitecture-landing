@@ -6,15 +6,10 @@ const fields = {
   form: 'brief', name: 'Ann', email: 'ann@example.com', phone: '1', message: 'Hello\nthere',
 };
 
-test('subject names the form and the sender', async () => {
-  const { subject } = await load();
-  assert.equal(subject(fields), 'Website form: brief — Ann');
-  assert.equal(subject({ ...fields, name: '' }), 'Website form: brief — ann@example.com');
-});
-
-test('subject is 150 characters or less', async () => {
-  const { subject } = await load();
-  assert.equal(subject({ ...fields, name: 'a'.repeat(200) }).length, 150);
+test('the brief (job) form goes to people@, the contact (client) form to hello@', async () => {
+  const { recipient } = await load();
+  assert.equal(recipient(fields), 'people@nellisarchitecture.com');
+  assert.equal(recipient({ ...fields, form: 'contact' }), 'hello@nellisarchitecture.com');
 });
 
 test('body lists the fields, then the message', async () => {
@@ -23,19 +18,19 @@ test('body lists the fields, then the message', async () => {
   assert.equal(body(fields), want);
 });
 
-test('send uses the EMAIL binding with MAIL_FROM and replyTo the sender', async () => {
-  const { send, subject, body } = await load();
+test('send uses MAIL_FROM, a fixed subject and replyTo the sender', async () => {
+  const { send, body } = await load();
   const calls = [];
   const env = {
-    MAIL_FROM: 'website@nellisarchitecture.com',
+    MAIL_FROM: 'noreply@nellisarchitecture.com',
     EMAIL: { send: async (m) => calls.push(m) },
   };
-  await send(env, fields);
+  await send(env, { ...fields, form: 'contact' });
   assert.deepEqual(calls, [{
-    from: 'website@nellisarchitecture.com',
+    from: 'noreply@nellisarchitecture.com',
     to: 'hello@nellisarchitecture.com',
     replyTo: 'ann@example.com',
-    subject: subject(fields),
-    text: body(fields),
+    subject: 'Form submitted on the website',
+    text: body({ ...fields, form: 'contact' }),
   }]);
 });
