@@ -84,3 +84,9 @@
   to = "/404.html"
   status = 404
   force = true
+
+[[redirects]]
+  from = "/spike/*"
+  to = "/404.html"
+  status = 404
+  force = true
