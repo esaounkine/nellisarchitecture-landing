@@ -31,6 +31,7 @@
       "description": "Please take a moment to complete the form below.",
       "button": "Send message",
       "email": "people@nellisarchitecture.com"
-    }
+    },
+    "file_days": 90
   }
 }

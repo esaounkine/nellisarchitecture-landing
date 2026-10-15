@@ -143,6 +143,7 @@ The migration target. Netlify stays the production host until the DNS cutover.
 - Config: [wrangler.jsonc](../../wrangler.jsonc). [.assetsignore](../../.assetsignore) lists the root entries that the Worker does not publish.
 - Deploy: [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) deploys a push to the branch `spike/cloudflare`.
 - Manual deploy: `npm run deploy` ([Wrangler](https://developers.cloudflare.com/workers/wrangler/), version pinned in `package.json`).
+- File retention: `npm run deploy` first runs [infra/lifecycle.js](../../infra/lifecycle.js). It sets the [R2 lifecycle rules](https://developers.cloudflare.com/r2/buckets/object-lifecycles/) of the bucket in `wrangler.jsonc`: form files are deleted after `forms.file_days` days (`content/pages/site.json`, CMS: Shared → Forms; no value: 90), `pending/` objects after 1 day, incomplete multipart uploads after 7 days. A bad value (not a whole number from 1 to 365) stops the deploy. The Workers Builds API token needs Workers R2 Storage: Edit.
 - Rollback: `npx wrangler rollback`. Operator only.
 - Build settings: [infra/cloudflare.js](../../infra/cloudflare.js). See [Setup as code](#setup-as-code).
 - Forms: the Worker ([worker/index.js](../../worker/index.js)) answers `POST /api/message`. `assets.run_worker_first: ["/api/*"]` sends `/api/*` to the Worker first. All other requests go to the static assets. Other `/api/*` paths get the 404 page.

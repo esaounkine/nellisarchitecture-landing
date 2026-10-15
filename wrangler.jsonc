@@ -10,6 +10,12 @@
   "vars": {
     "MAIL_FROM": "noreply@nellisarchitecture.com"
   },
+  "r2_buckets": [
+    {
+      "binding": "FILES",
+      "bucket_name": "landing-forms"
+    }
+  ],
   "assets": {
     "directory": ".",
     "binding": "ASSETS",

@@ -82,6 +82,7 @@ collections:
                 widget: "object"
                 hint: *site_hint
                 fields: *form_fields
+              - { label: "Delete uploaded files after (days)", name: "file_days", widget: "number", value_type: "int", min: 1, max: 365, hint: "Days before uploaded files are deleted. Change the Privacy page text too." }
       - name: "index"
         label: "Home"
         file: "content/pages/index.json"
