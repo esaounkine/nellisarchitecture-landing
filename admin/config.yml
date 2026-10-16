@@ -41,10 +41,11 @@ collections:
       - { label: "SEO title", name: "seo_title", widget: "string", required: false, hint: "Browser tab / Google result title. Leave empty to use the article title." }
       - { label: "Meta description", name: "description", widget: "text", required: false, hint: "150–160 characters shown under the title in Google. Also shows as the excerpt on /news/." }
       - { label: "Hide from search (noindex)", name: "noindex", widget: "boolean", default: false, required: false, hint: "On: Google does not show the article, and the sitemap does not list it. The article stays on the site and in the news list." }
-      - { label: "Hero image", name: "hero", widget: "image", required: false }
+      # Cloudflare allows 25 MiB per asset; Decap refuses a file with size > max_file_size.
+      - { label: "Hero image", name: "hero", widget: "image", required: false, media_library: &upload_limit { config: { max_file_size: 26214399 } }, hint: "Files must be smaller than 25 MB (26214 kB)." }
       - { label: "Hero image alt text", name: "hero_alt", widget: "string", required: false }
       - { label: "External link (optional)", name: "link", widget: "string", required: false, hint: "If set, a MORE INFO button appears under the article pointing here." }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Body", name: "body", widget: "markdown", media_library: *upload_limit, hint: "Files must be smaller than 25 MB (26214 kB)." }
 
   - name: "pages"
     label: "Pages"
@@ -60,7 +61,7 @@ collections:
             widget: "list"
             hint: &site_hint "Changes show on Home, Studio, People, Privacy, Contact, the News index and the project and category pages. News articles keep the old values."
             fields:
-              - { label: "Logo", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages", hint: *site_hint }
+              - { label: "Logo", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages", media_library: *upload_limit, hint: "Changes show on Home, Studio, People, Privacy, Contact, the News index and the project and category pages. News articles keep the old values. Files must be smaller than 25 MB (26214 kB)." }
               - { label: "Alt text", name: "alt", widget: "string", required: false, hint: *site_hint }
               - { label: "Title", name: "title", widget: "string", required: false, hint: *site_hint }
               - { label: "Width (px)", name: "width", widget: "number", value_type: "int", hint: *site_hint }
@@ -132,7 +133,7 @@ collections:
                 name: "photo"
                 widget: "object"
                 fields: &page_image
-                  - { label: "Image", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages" }
+                  - { label: "Image", name: "src", widget: "image", media_folder: "/wp-content/uploads/pages", public_folder: "/wp-content/uploads/pages", media_library: *upload_limit, hint: "Files must be smaller than 25 MB (26214 kB)." }
                   - { label: "Alt text", name: "alt", widget: "string", required: false }
                   - { label: "Title", name: "title", widget: "string", required: false, hint: "Shows when the pointer is on the image. Leave empty for no title." }
                   - { label: "Width (px)", name: "width", widget: "number", value_type: "int" }

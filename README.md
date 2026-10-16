@@ -59,6 +59,8 @@ test/                 # unit tests (npm test)
    The operator adds each editor as a [collaborator](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository) of the repo.
    On a shared computer, log out after you work: the login gives access to the full repo (`repo` scope).
 2. News → New article. Fill title, date, meta description, hero image, body.
+   Each upload must be smaller than 25 MB.
+   Upload through the image field or the body. The top **Media** page has no size limit.
 3. Publish → the site rebuilds automatically in ~1 minute:
    new article page, refreshed sidebar on all 58 articles, the /news/ list,
    sitemap.xml, the RSS feed (feed.xml), and the in-page switcher data.
