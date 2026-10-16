@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const {
-  walk, readManifest, rewriteImages, smallSrc, toUploadPath,
+  walk, readManifest, rewriteImages, smallSrc, toUploadPath, SLOTS,
 } = require('../build/lib/images');
 
 const ROOT = path.join(__dirname, '..');
@@ -67,5 +67,18 @@ test('the hand-kept image markup is current: npm run images changes nothing', ()
   });
   JSON.parse(read('data/search.json')).forEach((s) => {
     assert.equal(smallSrc(s.minImg, manifest), s.minImg, s.title);
+  });
+});
+
+test('project page grids use the thumb sizes, not the card sizes', () => {
+  const pages = walk(path.join(ROOT, 'projects')).map(rel)
+    .filter((f) => f.split('/').length === 4 && f.endsWith('index.html'));
+  assert.ok(pages.length > 0);
+  const esc = (s) => s.replaceAll('"', '&quot;');
+  pages.forEach((f) => {
+    const html = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    const grid = html.slice(html.indexOf('centerMini'));
+    assert.ok(grid.includes(`sizes="${esc(SLOTS.thumb)}"`), f);
+    assert.ok(!grid.includes(`sizes="${esc(SLOTS.card)}"`), f);
   });
 });

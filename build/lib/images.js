@@ -4,7 +4,7 @@ const os = require('node:os');
 const crypto = require('node:crypto');
 const { createRequire } = require('node:module');
 const { execFileSync } = require('node:child_process');
-const { escAttr } = require('./html');
+const { escAttr, titleAttr } = require('./html');
 const { imageSize } = require('./image-size');
 const { decodeEntities } = require('./projects');
 
@@ -283,10 +283,10 @@ function picture({
   const p = originalOf(src, manifest);
   const e = p && manifest[p];
   const classAttr = cls ? ` class="${escAttr(cls)}"` : '';
-  const titleAttr = String(title || '').trim() ? ` title="${escAttr(title)}"` : '';
   const zoom = fancybox
     ? ` data-fancybox="${escAttr(fancybox)}" data-src="${escAttr(zoomSrc(src, manifest))}"` : '';
-  const tail = ` alt="${escAttr(alt)}"${titleAttr} decoding="async"${priority ? PRIORITY : LAZY}`
+  const tail = ` alt="${escAttr(alt)}"${titleAttr(title)} decoding="async"`
+    + `${priority ? PRIORITY : LAZY}`
     + `${zoom} data-overlay-added="true">`;
   if (!e) {
     const size = p && imageSize(path.join(ROOT, p));
