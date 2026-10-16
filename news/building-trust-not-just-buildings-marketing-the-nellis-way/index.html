@@ -69,9 +69,12 @@
 <style id="nellis-images-css">
 	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
 	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   width 100% and the inline max-width (the file width) give the box of the old wrapper,
+	   min(container, file width), before the image loads: no layout shift.
 	   height: auto: the width and height attributes give only the aspect ratio. */
 	picture {
 		display: inline-block;
+		width: 100%;
 		line-height: 0;
 		background-position: center;
 	}
@@ -526,7 +529,7 @@
       <div class="NewsCenter">
 
                   <div class="NewsImg">
-            <picture style="background-image:url(data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADQAQCdASoQAAwAA4BaJQBWABbswVHb0AD+7e43lpH7t1iesFX8Eg+VxJOtE7suQiVU4Z+ljMw9Q0fIW/htf40UJVQHgK0neOJHyteyK1w/w1hHhm6AAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-320.avif 320w, /wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-640.avif 640w, /wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-960.avif 960w, /wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-1030.avif 1030w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-1030.jpg" srcset="/wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-640.jpg 640w, /wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-1030.jpg 1030w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="1030" height="780" alt="Building Trust Not Just Buildings: Marketing the Nellis Way" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
+            <picture style="max-width:1030px;background-image:url(data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADQAQCdASoQAAwAA4BaJQBWABbswVHb0AD+7e43lpH7t1iesFX8Eg+VxJOtE7suQiVU4Z+ljMw9Q0fIW/htf40UJVQHgK0neOJHyteyK1w/w1hHhm6AAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-320.avif 320w, /wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-640.avif 640w, /wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-960.avif 960w, /wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-1030.avif 1030w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-1030.jpg" srcset="/wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-640.jpg 640w, /wp-content/variants/2025/06/Screenshot-2025-07-25-at-09.52.02-827216ef-1030.jpg 1030w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="1030" height="780" alt="Building Trust Not Just Buildings: Marketing the Nellis Way" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
           </div>
 
         

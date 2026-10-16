@@ -64,9 +64,12 @@
 <style id="nellis-images-css">
 	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
 	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   width 100% and the inline max-width (the file width) give the box of the old wrapper,
+	   min(container, file width), before the image loads: no layout shift.
 	   height: auto: the width and height attributes give only the aspect ratio. */
 	picture {
 		display: inline-block;
+		width: 100%;
 		line-height: 0;
 		background-position: center;
 	}

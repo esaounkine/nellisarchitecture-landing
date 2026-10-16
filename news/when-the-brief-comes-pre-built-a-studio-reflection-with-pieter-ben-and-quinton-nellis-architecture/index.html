@@ -69,9 +69,12 @@
 <style id="nellis-images-css">
 	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
 	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   width 100% and the inline max-width (the file width) give the box of the old wrapper,
+	   min(container, file width), before the image loads: no layout shift.
 	   height: auto: the width and height attributes give only the aspect ratio. */
 	picture {
 		display: inline-block;
+		width: 100%;
 		line-height: 0;
 		background-position: center;
 	}
@@ -526,7 +529,7 @@
       <div class="NewsCenter">
 
                   <div class="NewsImg">
-            <picture style="background-image:url(data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwAgCdASoQAAsAA4BaJZwAD5CPu0R75/i2AAD+1PrBFfk3l6rkMLlM9UO9eJvymX3T9cNwL/Lm5gNTDr78z8Oj+sRaX+vLKnLTSZ72MNO+ifk1sg3Lhcn7AIwuEAAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/07/DSC_0388-scaled-cc563168-320.avif 320w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-640.avif 640w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-960.avif 960w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-1600.avif 1600w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-2400.avif 2400w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2025/07/DSC_0388-scaled-cc563168-1600.jpg" srcset="/wp-content/variants/2025/07/DSC_0388-scaled-cc563168-640.jpg 640w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-1600.jpg 1600w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-2400.jpg 2400w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="2560" height="1707" alt="When the Brief Comes Pre-Built. A studio reflection with Pieter, Ben and Quinton | Nellis Architecture" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
+            <picture style="max-width:2560px;background-image:url(data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwAgCdASoQAAsAA4BaJZwAD5CPu0R75/i2AAD+1PrBFfk3l6rkMLlM9UO9eJvymX3T9cNwL/Lm5gNTDr78z8Oj+sRaX+vLKnLTSZ72MNO+ifk1sg3Lhcn7AIwuEAAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/07/DSC_0388-scaled-cc563168-320.avif 320w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-640.avif 640w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-960.avif 960w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-1600.avif 1600w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-2400.avif 2400w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2025/07/DSC_0388-scaled-cc563168-1600.jpg" srcset="/wp-content/variants/2025/07/DSC_0388-scaled-cc563168-640.jpg 640w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-1600.jpg 1600w, /wp-content/variants/2025/07/DSC_0388-scaled-cc563168-2400.jpg 2400w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="2560" height="1707" alt="When the Brief Comes Pre-Built. A studio reflection with Pieter, Ben and Quinton | Nellis Architecture" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
           </div>
 
         

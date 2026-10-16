@@ -67,7 +67,7 @@ test('each item shows the hero, else minis.png, with the hero alt or the title',
     post({ slug: 'c', hero: `${UP}/c.mp4`, title: 'C & D' }),
     post({ slug: 'd' }),
   ]);
-  const imgs = [...html.matchAll(/<img src="([^"]+)" alt="([^"]*)" decoding="async"/g)]
+  const imgs = [...html.matchAll(/<img src="([^"]+)"(?: width="\d+" height="\d+")? alt="([^"]*)"/g)]
     .map((m) => [m[1], m[2]]);
   assert.deepEqual(imgs, [
     ['/wp-content/uploads/a.jpg', 'Alt &quot;q&quot;'],

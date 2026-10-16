@@ -29,8 +29,8 @@ test('parseFrontMatter throws on a missing front matter block', () => {
   assert.throws(() => parseFrontMatter('no front matter', 'x.md'), /bad front matter: x\.md/);
 });
 
-const FALLBACK = (src, alt) => `<img src="${src}" alt="${alt}" decoding="async" `
-  + 'loading="lazy" data-overlay-added="true">';
+const FALLBACK = (src, alt) => `<picture><img src="${src}" alt="${alt}" decoding="async" `
+  + 'loading="lazy" data-overlay-added="true"></picture>';
 
 test('inlineMd renders images before links, bold before italics', () => {
   assert.equal(inlineMd('![alt](/a.jpg)'), FALLBACK('/a.jpg', 'alt'));
@@ -266,9 +266,9 @@ test('newsImg renders a video, an image or a hidden div', () => {
   assert.equal(newsImg({ hero: '/v.MP4' }), VIDEO_IMG('/v.MP4'));
   assert.equal(newsImg({ hero: '/a"b&c.mp4' }), VIDEO_IMG('/a&quot;b&amp;c.mp4'));
   const img = newsImg({ hero: '/a.jpg', hero_alt: 'Alt', title: 'T' });
-  assert.equal(img, '<div class="NewsImg">\n            <img src="/a.jpg" alt="Alt" '
+  assert.equal(img, '<div class="NewsImg">\n            <picture><img src="/a.jpg" alt="Alt" '
     + 'decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true">'
-    + '\n          </div>');
+    + '</picture>\n          </div>');
   assert.doesNotMatch(img, /<video/);
   assert.equal(newsImg({}), '<div class="NewsImg" style="display: none;">\n          </div>');
 });
@@ -282,7 +282,7 @@ const imageHero = (p) => Boolean(p.hero) && !/\.mp4$/i.test(p.hero);
 
 test('inlineMd and mdToHtml: an upload image becomes a lazy picture with local variants', () => {
   const html = inlineMd(`![A "b"](${BODY})`, MANIFEST);
-  assert.match(html, /^<picture style="background-image:url\(data:image\/webp;base64,/);
+  assert.match(html, /^<picture style="max-width:1024px;background-image:url\(data:image\/webp;/);
   assert.match(html, /<img src="\/wp-content\/variants\/2026\/07\/Zoya6-1024x576-\w{8}-1024\.jpg"/);
   assert.ok(html.includes(`sizes="${escAttr(SLOTS.post)}"`));
   assert.ok(html.includes('alt="A &quot;b&quot;"'));
@@ -293,7 +293,7 @@ test('inlineMd and mdToHtml: an upload image becomes a lazy picture with local v
   assert.match(mdToHtml(`text ![a](${BODY})`, MANIFEST), /^<p>text <picture /);
 });
 
-test('inlineMd: an upload without a manifest entry is the plain img of the original', () => {
+test('inlineMd: an upload without a manifest entry is the img of the original in a picture', () => {
   const html = inlineMd(`![a](${UP}/2026/07/none.jpg)`, MANIFEST);
   assert.equal(html, FALLBACK('/wp-content/uploads/2026/07/none.jpg', 'a'));
 });

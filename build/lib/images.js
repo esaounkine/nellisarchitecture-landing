@@ -11,6 +11,7 @@ const { decodeEntities } = require('./projects');
 const MANIFEST = 'build/images.json';
 const UPLOADS = 'wp-content/uploads/';
 const VARIANTS = 'wp-content/variants/';
+const THEME = 'wp-content/themes/';
 const AVIF = [320, 640, 960, 1600, 2400];
 const FALLBACK = [640, 1600, 2400];
 const FORMATS = {
@@ -274,7 +275,8 @@ const srcset = (p, e, ext) => e.widths[ext]
   .map((w) => `${uploadUrl(variantName(p, e.hash, w, ext))} ${w}w`).join(', ');
 
 /* A content image. fancybox: the gallery name; Fancybox reads data-src (the largest variant).
-   No manifest entry: a plain <img> of the original, with its size when the file is readable. */
+   No manifest entry: the img of the original (an upload or a theme file) in a <picture>,
+   sized when the file is readable. */
 function picture({
   src, alt = '', slot, priority = false, cls = '', title = '', fancybox = '',
 }, manifest = {}) {
@@ -289,15 +291,19 @@ function picture({
     + `${priority ? PRIORITY : LAZY}`
     + `${zoom} data-overlay-added="true">`;
   if (!e) {
-    const size = p && imageSize(path.join(ROOT, p));
+    const file = p || (inside(src.slice(1), THEME) ? src.slice(1) : null);
+    const size = file && imageSize(path.join(ROOT, file));
     const wh = size ? ` width="${size.width}" height="${size.height}"` : '';
-    return `<img${classAttr} src="${escAttr(p ? uploadUrl(p) : src)}"${wh}${tail}`;
+    const max = size ? ` style="max-width:${size.width}px"` : '';
+    return `<picture${max}><img${classAttr} src="${escAttr(p ? uploadUrl(p) : src)}"${wh}${tail}`
+      + '</picture>';
   }
   const ext = fallbackOf(e);
   const main = e.widths[ext].filter((w) => w <= 1600).at(-1) || e.widths[ext][0];
-  /* No placeholder behind a transparent image: it would show through. */
-  const style = e.alpha ? ''
-    : ` style="background-image:url(${escAttr(e.lqip)});background-size:cover"`;
+  /* max-width: the file width, as the old <img> of the original. No placeholder behind a
+     transparent image: it would show through. */
+  const style = ` style="max-width:${e.width}px${e.alpha ? ''
+    : `;background-image:url(${escAttr(e.lqip)});background-size:cover`}"`;
   return `<picture${style}>`
     + `<source type="image/avif" srcset="${escAttr(srcset(p, e, 'avif'))}" sizes="${sizes}">`
     + `<img${classAttr} src="${escAttr(uploadUrl(variantName(p, e.hash, main, ext)))}"`

@@ -69,9 +69,12 @@
 <style id="nellis-images-css">
 	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
 	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   width 100% and the inline max-width (the file width) give the box of the old wrapper,
+	   min(container, file width), before the image loads: no layout shift.
 	   height: auto: the width and height attributes give only the aspect ratio. */
 	picture {
 		display: inline-block;
+		width: 100%;
 		line-height: 0;
 		background-position: center;
 	}
@@ -526,7 +529,7 @@
       <div class="NewsCenter">
 
                   <div class="NewsImg">
-            <picture style="background-image:url(data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAwAgCdASoQAAsAA4BaJYwC7AYtfaZLrn3GgAD+94BP6uh44SYwPw7LzBzGObYlOVkdp7txTVKXIBCX9RwYkvrL6ADc5RjPa1a4QaF2K5nzZcbJfTQ+bAt1kwvtivLWgAHzBrdKAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-320.avif 320w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-640.avif 640w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-960.avif 960w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-1600.avif 1600w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-2400.avif 2400w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-1600.jpg" srcset="/wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-640.jpg 640w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-1600.jpg 1600w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-2400.jpg 2400w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="8173" height="5451" alt="Lee Nellis: A Journey Through Architecture" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
+            <picture style="max-width:8173px;background-image:url(data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAwAgCdASoQAAsAA4BaJYwC7AYtfaZLrn3GgAD+94BP6uh44SYwPw7LzBzGObYlOVkdp7txTVKXIBCX9RwYkvrL6ADc5RjPa1a4QaF2K5nzZcbJfTQ+bAt1kwvtivLWgAHzBrdKAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-320.avif 320w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-640.avif 640w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-960.avif 960w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-1600.avif 1600w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-2400.avif 2400w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-1600.jpg" srcset="/wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-640.jpg 640w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-1600.jpg 1600w, /wp-content/variants/2025/07/Sasha-Lee-025-e45cf5f4-2400.jpg 2400w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="8173" height="5451" alt="Lee Nellis: A Journey Through Architecture" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
           </div>
 
         

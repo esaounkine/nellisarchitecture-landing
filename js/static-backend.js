@@ -10,12 +10,22 @@
   const realFetch = window.fetch ? window.fetch.bind(window) : null;
   const cache = {};
   let homeGrid = null;
+  let columnSizes = null;
 
   /* WordPress answers "all" with an empty list; keep Home's own grid for it. */
   document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.center .container');
     if (grid && grid.querySelector('.project__item')) homeGrid = grid.innerHTML;
+    const thumb = document.querySelector('.centerMini .project__item img[sizes]');
+    if (thumb) {
+      columnSizes = thumb.getAttribute('sizes').replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    }
   });
+
+  /* data/filters/*.html carry the Home card sizes; the project page column has thumbs. */
+  function fitSizes(html) {
+    return columnSizes ? html.replace(/ sizes="[^"]*"/g, ` sizes="${columnSizes}"`) : html;
+  }
 
   function getJSON(url) {
     if (!cache[url]) {
@@ -49,7 +59,8 @@
       if (!key) key = 'all';
       if (key === 'all' && homeGrid) return Promise.resolve(homeGrid);
       return getText(`/data/filters/${key}_${rc}.html`)
-        .catch(() => getText('/data/filters/all_1.html'));
+        .catch(() => getText('/data/filters/all_1.html'))
+        .then(fitSizes);
     }
 
     if (action === 'get_post_by_field') {

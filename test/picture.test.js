@@ -41,8 +41,8 @@ test('picture: AVIF and JPEG ladders in width order, 1600 fallback src, size and
   assert.ok(!html.includes('fetchpriority'));
   assert.ok(!html.includes('lazyload'));
   assert.ok(!html.includes('data-src'));
-  assert.ok(html.startsWith('<picture style="background-image:url(data:image/webp;base64,AAA+/=);'
-    + 'background-size:cover"><source'));
+  assert.ok(html.startsWith('<picture style="max-width:3840px;'
+    + 'background-image:url(data:image/webp;base64,AAA+/=);background-size:cover"><source'));
   assert.ok(html.endsWith('></picture>'));
 });
 
@@ -66,7 +66,7 @@ test('picture: a small original is the largest step and the fallback src', () =>
 
 test('picture: a transparent image gets PNG variants and no placeholder background', () => {
   const html = picture({ src: `/${PNG}`, slot: 'card' }, MANIFEST);
-  assert.ok(html.startsWith('<picture><source'));
+  assert.ok(html.startsWith('<picture style="max-width:2000px"><source'));
   assert.equal(attr(html, 'src'), `${V}Logo-cccccccc-1600.png`);
   assert.match(attr(html, 'srcset'), /-640\.png 640w, .*-2000\.png 2000w$/);
 });
@@ -89,17 +89,30 @@ test('picture: priority is eager with fetchpriority; fancybox adds the largest v
   assert.ok(!html.includes('loading="lazy"'));
 });
 
-test('picture: no manifest entry gives a plain img of the original, sized when readable', () => {
+test('picture: no manifest entry gives the original img in a picture, sized when readable', () => {
   const real = 'wp-content/uploads/2024/01/Orel1.png';
   assert.equal(
     picture({ src: `/${real}`, alt: 'O', slot: 'card' }, {}),
-    `<img src="/${real}" width="1536" height="1024" alt="O" decoding="async" loading="lazy" `
-      + 'data-overlay-added="true">',
+    `<picture style="max-width:1536px"><img src="/${real}" width="1536" height="1024" alt="O" `
+      + 'decoding="async" loading="lazy" data-overlay-added="true"></picture>',
   );
   assert.equal(
     picture({ src: '/wp-content/uploads/none.jpg', slot: 'card', fancybox: 'g' }, {}),
-    '<img src="/wp-content/uploads/none.jpg" alt="" decoding="async" loading="lazy" '
-      + 'data-fancybox="g" data-src="/wp-content/uploads/none.jpg" data-overlay-added="true">',
+    '<picture><img src="/wp-content/uploads/none.jpg" alt="" decoding="async" loading="lazy" '
+      + 'data-fancybox="g" data-src="/wp-content/uploads/none.jpg" data-overlay-added="true">'
+      + '</picture>',
+  );
+});
+
+test('picture: a theme file without a manifest entry gets its size; others do not', () => {
+  const minis = '/wp-content/themes/nellis/assets/img/minis.png';
+  assert.match(
+    picture({ src: minis, slot: 'teaser' }, {}),
+    /^<picture style="max-width:1452px"><img src="[^"]+" width="1452" height="756" /,
+  );
+  assert.match(
+    picture({ src: '/wp-content/themes/../uploads/2024/01/Orel1.png', slot: 'teaser' }, {}),
+    /^<picture><img src="[^"]+" alt=/,
   );
 });
 
@@ -145,8 +158,8 @@ test('rewriteImages turns the upload images into picture() and is idempotent', (
   assert.equal(once, `<div>${picture({
     src: `/${JPG}`, alt: 'Zo & "ya"', cls: 'project__item-img', slot: 'card',
   }, MANIFEST)}\n<img src="" alt="" /><img src="/wp-content/themes/nellis/a.png" alt="">\n`
-    + '<img class="project__item-img" src="/wp-content/uploads/none.jpg" alt="N" '
-    + 'decoding="async" loading="lazy" data-overlay-added="true"></div>');
+    + '<picture><img class="project__item-img" src="/wp-content/uploads/none.jpg" alt="N" '
+    + 'decoding="async" loading="lazy" data-overlay-added="true"></picture></div>');
   assert.equal(rewriteImages(once, MANIFEST, 'card'), once);
 });
 

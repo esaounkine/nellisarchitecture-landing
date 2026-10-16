@@ -82,3 +82,21 @@ test('project page grids use the thumb sizes, not the card sizes', () => {
     assert.ok(!grid.includes(`sizes="${esc(SLOTS.card)}"`), f);
   });
 });
+
+/* CLS: an inline-block picture is 0 px wide until its lazy image loads. width 100% and a
+   max-width of the file width give it the final box, min(container, file width), at once. */
+test('each picture has its final box before the image loads', () => {
+  const css = read('build/lib/partials/images-css.html');
+  const rule = css.match(/\bpicture \{([^}]*)\}/)[1];
+  assert.match(rule, /display: inline-block;/);
+  assert.match(rule, /\bwidth: 100%;/);
+  [...PAGES, ...NEWS, ...HAND_KEPT, 'data/news.json'].forEach((file) => {
+    const text = read(file).replace(/\\"/g, '"').replace(/\\\//g, '/');
+    (text.match(/<picture\b[^>]*>[\s\S]*?<img\b[^>]*>/g) || []).forEach((tag) => {
+      const img = tag.match(/<img\b[^>]*>/)[0];
+      const width = attr(img, 'width');
+      assert.ok(width && attr(img, 'height'), `${file}: no size ${img}`);
+      assert.match(tag, new RegExp(`^<picture style="max-width:${width}px[;"]`), `${file}: ${tag}`);
+    });
+  });
+});

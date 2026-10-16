@@ -69,9 +69,12 @@
 <style id="nellis-images-css">
 	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
 	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   width 100% and the inline max-width (the file width) give the box of the old wrapper,
+	   min(container, file width), before the image loads: no layout shift.
 	   height: auto: the width and height attributes give only the aspect ratio. */
 	picture {
 		display: inline-block;
+		width: 100%;
 		line-height: 0;
 		background-position: center;
 	}
@@ -526,7 +529,7 @@
       <div class="NewsCenter">
 
                   <div class="NewsImg">
-            <picture style="background-image:url(data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAQCdASoQAAkAA4BaJZQAAudfMmqDUAD9eBYDtehjUqxcSh6TC5ybkKtVwA+kMVU4PN8cjsYQOOK/bCTn1hI6WcK7s58z3ARThIQA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-320.avif 320w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-640.avif 640w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-960.avif 960w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-1366.avif 1366w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-1366.jpg" srcset="/wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-640.jpg 640w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-1366.jpg 1366w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="1366" height="768" alt="Nellis Architecture X Bauhaus: The Power of Collaboration in Property Projects" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
+            <picture style="max-width:1366px;background-image:url(data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAQCdASoQAAkAA4BaJZQAAudfMmqDUAD9eBYDtehjUqxcSh6TC5ybkKtVwA+kMVU4PN8cjsYQOOK/bCTn1hI6WcK7s58z3ARThIQA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-320.avif 320w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-640.avif 640w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-960.avif 960w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-1366.avif 1366w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-1366.jpg" srcset="/wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-640.jpg 640w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-1366.jpg 1366w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="1366" height="768" alt="Nellis Architecture X Bauhaus: The Power of Collaboration in Property Projects" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
           </div>
 
         
