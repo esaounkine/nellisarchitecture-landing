@@ -694,17 +694,5 @@
       "link": "",
       "slug": "how-dubais-climate-shapes-every-decision-a-luxury-architect-makes"
     }
-  },
-  "mdtest1": {
-    "success": true,
-    "data": {
-      "title": "test1",
-      "content": "<p>this is a test article new</p>",
-      "data": "October 16, 2026",
-      "img": "",
-      "imgalt": "test1",
-      "link": "",
-      "slug": "test1"
-    }
   }
 }

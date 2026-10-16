@@ -374,7 +374,7 @@ function build() {
   const pages = writePages(ROOT, newsHref, projects, posts);
   writeProjects(ROOT, projects, newsHref);
 
-  fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson));
+  fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson, null, 2));
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts, pages, projects));
   fs.writeFileSync(path.join(ROOT, 'feed.xml'), rss(posts));
   const robotsJson = fs.readFileSync(path.join(ROOT, 'content', 'robots.json'), 'utf8');
