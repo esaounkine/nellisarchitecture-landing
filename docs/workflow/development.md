@@ -46,6 +46,7 @@ Human gates: Review sign-off, push, Done, Closed, and an Architect BR sign-off o
 - A design or a decision goes on the card (description or comment). No separate decision files.
 - A BLOCK comment lists each finding on one line: `location · what to change · why`.
 - One card, one change. Split big cards in grooming.
+- Tick the boxes. QA ticks each met acceptance criterion in the card description at Review. When a card moves to Done, tick its item in the epic checklist.
 
 ## Review scenario
 
