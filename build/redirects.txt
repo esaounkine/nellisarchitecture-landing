@@ -1,6 +1,6 @@
 # Fixed redirects. build-news.js copies them into _redirects (format: from to status).
 # Static rules go first, rules with * or :name go after the CMS rules.
-# Only status 200 or 301. Deny rules (404) stay in netlify.toml.
+# Only status 200 or 301. Deny rules (404) go in .assetsignore: an ignored path answers 404.
 # Each rule has both forms: /x and /x/, or /x/* and /x. Not all hosts ignore the trailing slash.
 
 /pravicy /privacy/ 301

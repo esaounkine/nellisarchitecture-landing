@@ -8,7 +8,7 @@ const DOCS = 'docs/workflow/development.md → Hosting — Cloudflare Workers �
 
 const DESIRED = {
   production: {
-    branch_includes: ['spike/cloudflare'],
+    branch_includes: ['master'],
     branch_excludes: [],
     build_command: 'npm run build',
     deploy_command: 'npm run deploy',

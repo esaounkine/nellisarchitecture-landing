@@ -1,6 +1,6 @@
 /*
  * build-news.js — regenerates news pages from content/news/*.md
- * Runs automatically on Netlify after every CMS publish (see netlify.toml).
+ * Runs on Cloudflare Workers Builds after every push (npm run build, see infra/cloudflare.js).
  * Zero dependencies: plain Node 20+.
  *
  *   node build-news.js
@@ -334,8 +334,7 @@ function writeRedirects(root, posts) {
   const rules = redirects.mergeRules(manual, redirects.autoNewsRules(posts), exists);
   const fixedText = fs.readFileSync(path.join(root, redirects.FIXED_FILE), 'utf8');
   const fixed = redirects.parseFixed(fixedText);
-  const toml = fs.readFileSync(path.join(root, 'netlify.toml'), 'utf8');
-  const fixedFroms = redirects.fixedFroms(toml, fixed);
+  const fixedFroms = redirects.fixedFroms(fixed);
   const errors = redirects.validate(rules, { exists, fixedFroms });
   if (errors.length) throw new Error(`content/redirects.json:\n${errors.join('\n')}`);
   fs.writeFileSync(path.join(root, '_redirects'), redirects.render(rules, fixed));

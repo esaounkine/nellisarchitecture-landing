@@ -8,25 +8,25 @@ const {
 } = require('../infra/cloudflare');
 const pkg = require('../package.json');
 
-const prod = { trigger_uuid: 'p', branch_includes: ['spike/cloudflare'] };
+const prod = { trigger_uuid: 'p', branch_includes: ['master'] };
 const preview = { trigger_uuid: 'v', branch_includes: ['*'] };
 
 test('pickProduction: matches the branch', () => {
-  assert.equal(pickProduction([preview, prod], 'spike/cloudflare'), prod);
+  assert.equal(pickProduction([preview, prod], 'master'), prod);
 });
 
 test('pickProduction: one trigger with another branch is the production trigger', () => {
-  const only = { trigger_uuid: 'm', branch_includes: ['master'] };
-  assert.equal(pickProduction([only], 'spike/cloudflare'), only);
+  const only = { trigger_uuid: 'm', branch_includes: ['spike/cloudflare'] };
+  assert.equal(pickProduction([only], 'master'), only);
 });
 
 test('pickProduction: two or more triggers and no match throws', () => {
-  const other = { trigger_uuid: 'o', branch_includes: ['master'] };
-  assert.throws(() => pickProduction([preview, other], 'spike/cloudflare'), /none for branch/);
+  const other = { trigger_uuid: 'o', branch_includes: ['spike/cloudflare'] };
+  assert.throws(() => pickProduction([preview, other], 'master'), /none for branch/);
 });
 
 test('pickProduction: no trigger throws', () => {
-  assert.throws(() => pickProduction([], 'spike/cloudflare'), /0 triggers/);
+  assert.throws(() => pickProduction([], 'master'), /0 triggers/);
 });
 
 test('extraTriggers: all triggers except production', () => {
@@ -57,6 +57,10 @@ test('varsPlan: an array answer stops the run', () => {
 test('varsPlan: nothing to do when equal', () => {
   const live = { A: { value: '1', is_secret: false, created_on: 'x' } };
   assert.deepEqual(varsPlan(live, { A: '1' }), { set: {}, remove: [] });
+});
+
+test('DESIRED production builds master only', () => {
+  assert.deepEqual(DESIRED.production.branch_includes, ['master']);
 });
 
 test('DESIRED commands are package.json scripts', () => {

@@ -52,7 +52,7 @@ Human gates: Review sign-off, push, Done, Closed, and an Architect BR sign-off o
 At Review, write a review scenario on the card. The operator uses it to review the change.
 
 1. Write a table. Each row is one test: what to do, where to check, and the expected result.
-   - Where: local preview, the Netlify preview URL, the CMS, or the live site for comparison.
+   - Where: local preview, <https://landing.nellisarchitecture.workers.dev> (after the push), the CMS, or the live site for comparison.
    - Cover each acceptance criterion. Include the failing and edge cases, not only the happy path.
 2. Run each test that you can run before the push. Write the result for each test on the card.
 3. Attach evidence:
@@ -102,7 +102,7 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 ### Repository
 
 - GitHub: <https://github.com/esaounkine/nellisarchitecture-landing> (private). Branch: `master`. CLI: `gh`.
-- Decap CMS commits to the `backend.branch` of [admin/config.yml](../../admin/config.yml) on the remote (`spike/cloudflare` until the cutover). Before work: `git pull --rebase`.
+- Decap CMS commits to the `backend.branch` of [admin/config.yml](../../admin/config.yml) on the remote (`master`). Before work: `git pull --rebase`.
 
 ### Commands
 
@@ -117,31 +117,24 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 - Screenshots (review scenario): a headless Chromium browser, for example [Brave](https://brave.com/) or Chrome: `"<browser>" --headless=new --hide-scrollbars --window-size=1440,900 --virtual-time-budget=8000 --screenshot=<file>.png <url>`. Make the file small before you attach it: `sips -s format jpeg -s formatOptions 40 -Z 1000 <file>.png --out <file>.jpg` (macOS).
 - Attach a file to a card: `POST /1/cards/<shortLink>/attachments` with `-F file=@<path>` ([Trello REST API](https://developer.atlassian.com/cloud/trello/rest/api-group-cards/#api-cards-id-attachments-post)).
 
-### Hosting — Netlify
+### Hosting — Cloudflare Workers
 
-Netlify is the current binding, not a fixed choice. See [AGENTS.md → Portable hosting](../../AGENTS.md#principles). The host-specific parts and their replacements on other hosts (for example Cloudflare Pages or AWS Amplify):
+Cloudflare Workers is the current binding, not a fixed choice. See [AGENTS.md → Portable hosting](../../AGENTS.md#principles). The host-specific parts and their replacements on other hosts (for example Netlify or AWS Amplify):
 
-| Netlify binding | Where | Replace with |
+| Cloudflare binding | Where | Replace with |
 |---|---|---|
-| Build, headers, redirects, deny rules | [netlify.toml](../../netlify.toml) (build, deny rules), [_headers](../../_headers) (headers), generated `_redirects` (from [build/redirects.txt](../../build/redirects.txt) and `content/redirects.json`) | The new host's config. Cloudflare Pages reads `_redirects` and `_headers`. |
+| Build, headers, redirects, deny rules | [wrangler.jsonc](../../wrangler.jsonc), [_headers](../../_headers), generated `_redirects` (from [build/redirects.txt](../../build/redirects.txt) and `content/redirects.json`), [.assetsignore](../../.assetsignore) (deny: an ignored path answers 404) | The new host's config. Netlify and Cloudflare Pages read `_redirects` and `_headers`. |
+| Build settings | [infra/cloudflare.js](../../infra/cloudflare.js) ([Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/)) | The new host's build config |
 | Forms | Worker `POST /api/message` ([worker/](../../worker/)) + [Cloudflare Email Service](https://developers.cloudflare.com/email-service/) | Any serverless function + an email API |
+| Form files | [R2](https://developers.cloudflare.com/r2/) bucket ([worker/uploads.js](../../worker/uploads.js)) | Any S3-compatible bucket |
 | Form spam check | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) ([js/forms.js](../../js/forms.js), [worker/turnstile.js](../../worker/turnstile.js)) | Any captcha + a server check |
-| CMS login | Not on Netlify: the Cloudflare Worker ([worker/oauth.js](../../worker/oauth.js)) | Any serverless function that does the GitHub OAuth flow |
+| CMS login | Worker `GET /api/auth`, `GET /api/callback` ([worker/oauth.js](../../worker/oauth.js)) | Any serverless function that does the GitHub OAuth flow |
 
-- Site: **nellis-arch** — <https://app.netlify.com/projects/nellis-arch/overview>.
-- Preview URL: <https://nellis-arch.netlify.app>. Production domain: <https://nellisarchitecture.com> (still on WordPress until the DNS cutover).
-- Deploy: a push to `master` builds and deploys (config in [netlify.toml](../../netlify.toml)).
-- Rollback: Netlify → Deploys → pick the last good deploy → **Publish deploy**. Operator only.
-- CMS: `/admin` (Decap CMS, GitHub backend, editorial workflow). The login runs in the Cloudflare Worker, see [CMS login](#hosting--cloudflare-workers-migration).
-- Forms: the forms post to the Cloudflare Worker. On Netlify, `/api/message` answers 404.
-
-### Hosting — Cloudflare Workers (migration)
-
-The migration target. Netlify stays the production host until the DNS cutover.
+The production domain <https://nellisarchitecture.com> stays on WordPress until the DNS cutover (card 9).
 
 - Worker: **landing** — <https://landing.nellisarchitecture.workers.dev>. It serves the repo root as [static assets](https://developers.cloudflare.com/workers/static-assets/).
 - Config: [wrangler.jsonc](../../wrangler.jsonc). [.assetsignore](../../.assetsignore) lists the root entries that the Worker does not publish.
-- Deploy: [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) deploys a push to the branch `spike/cloudflare`.
+- Deploy: [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) deploys a push to the branch `master`.
 - Manual deploy: `npm run deploy` ([Wrangler](https://developers.cloudflare.com/workers/wrangler/), version pinned in `package.json`).
 - File retention: `npm run deploy` first runs [infra/lifecycle.js](../../infra/lifecycle.js). It sets the [R2 lifecycle rules](https://developers.cloudflare.com/r2/buckets/object-lifecycles/) of the bucket in `wrangler.jsonc`: form files are deleted after `forms.file_days` days (`content/pages/site.json`, CMS: Shared → Forms; no value: 90), `pending/` objects after 1 day, incomplete multipart uploads after 7 days. A bad value (not a whole number from 1 to 365) stops the deploy. The Workers Builds API token needs Workers R2 Storage: Edit.
 - Rollback: `npx wrangler rollback`. Operator only.
@@ -151,7 +144,7 @@ The migration target. Netlify stays the production host until the DNS cutover.
 - Spam check: each form gets a [Turnstile](https://developers.cloudflare.com/turnstile/) token. The Worker checks the token with the `TURNSTILE_SECRET` secret before it sends. No secret: the endpoint answers 503. `npm run infra` manages the widget and the secret.
 - Brief form files: the form sends the message first. With files, the Worker keeps the message in `pending/<id>.json` and answers with one signed upload link per file (no more than 5 files, 5 MB each, the types in the file input). The page uploads each file to `PUT /api/upload/<key>`, then calls `POST /api/message/<id>/send`. The Worker then sends the email with one download link per file (`GET /api/file/<key>`). The files go to the [R2](https://developers.cloudflare.com/r2/) bucket `landing-forms` through the `FILES` binding in `wrangler.jsonc` ([worker/uploads.js](../../worker/uploads.js)). The upload and send links stop after 30 minutes. The download links stay until R2 deletes the file (see File retention).
 - Link signatures: the Worker signs each link with HMAC-SHA-256 and the Worker secret `LINK_SECRET`. `npm run infra` sets it only when it is missing. **Never rotate `LINK_SECRET`**: a new value breaks the download links in all sent emails. No `FILES` binding or no secret: a brief with files answers 503.
-- CMS login: [Decap CMS](https://decapcms.org/docs/github-backend/) uses the GitHub backend with `base_url` = the Worker and `auth_endpoint: api/auth` ([admin/config.yml](../../admin/config.yml)). `GET /api/auth?provider=github` sends the editor to the [GitHub OAuth App](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps) (scope `repo`). The Worker keeps a random state in the cookie `__Host-cms_oauth_state` (10 minutes). `GET /api/callback` checks the state, gets the token from GitHub and gives it to the CMS window on the same origin ([worker/oauth.js](../../worker/oauth.js)). The Worker secrets are `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`. No secrets: both routes answer 503. The CMS branch is `spike/cloudflare` until the cutover.
+- CMS login: [Decap CMS](https://decapcms.org/docs/github-backend/) uses the GitHub backend with `base_url` = the Worker and `auth_endpoint: api/auth` ([admin/config.yml](../../admin/config.yml)). `GET /api/auth?provider=github` sends the editor to the [GitHub OAuth App](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps) (scope `repo`). The Worker keeps a random state in the cookie `__Host-cms_oauth_state` (10 minutes). `GET /api/callback` checks the state, gets the token from GitHub and gives it to the CMS window on the same origin ([worker/oauth.js](../../worker/oauth.js)). The Worker secrets are `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`. No secrets: both routes answer 503. The CMS branch is `master`.
 - Local test: put `TURNSTILE_SECRET=1x0000000000000000000000000000000AA` (a [Turnstile test secret](https://developers.cloudflare.com/turnstile/troubleshooting/testing/)) and `LINK_SECRET=<any text>` in `.dev.vars` (git ignores it). Run `npx wrangler dev`, then open <http://localhost:8787/>. On `localhost`, `js/forms.js` uses the test sitekey. The build writes `TURNSTILE_SITEKEY` into the `data-sitekey` attribute of the `js/forms.js` script tag. Without the variable (local builds), it writes the test sitekey.
 
 #### Setup as code
@@ -172,30 +165,18 @@ Rules:
 - Run `npm run infra` only after the deployed branch has the `deploy` script in `package.json`.
 - Do not change the build settings in the dashboard. Change `infra/cloudflare.js` or `wrangler.jsonc`, then run `npm run infra`.
 
-### Netlify credits
+### Cloudflare limits
 
-Netlify bills in credits ([how credits work](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/how-credits-work/), [plans](https://www.netlify.com/pricing/)). Builds and serving both use credits:
-
-| Item | Credits |
-|---|---|
-| Production deploy (each push to `master`, and each CMS publish) | 15 |
-| Deploy Preview, branch deploy, failed deploy, rollback | 0 |
-| Bandwidth | 20 per GB |
-| Web requests | 2 per 10,000 |
-| Forms | 0 |
-
-The Free plan has 300 credits each month and a hard limit. When the credits run out, Netlify pauses the site. Personal (1,000 credits) and Pro (3,000 credits) can buy more.
+The Worker uses the Free plan. See [Workers limits](https://developers.cloudflare.com/workers/platform/limits/) and [Workers Builds limits](https://developers.cloudflare.com/workers/ci-cd/builds/limits-and-pricing/).
 
 Rules:
 
-- Push to `master` in batches. One push is one production deploy, whatever the number of commits. Do not push for docs or test changes alone.
-- Do the checks that need a deploy on a free branch deploy or Deploy Preview, when one is set up. Then push to `master` once.
-- CMS editors: one publish is one production deploy. Publish changes together.
-- Page weight costs credits after the DNS cutover. A first view of Home, Studio or People is about 5 MB (measured 2026-10-12); about 200 such views use 1 GB (20 credits). Check the credit use in Netlify → Usage before and after the cutover.
+- Push to `master` in batches. One push is one build. Do not push for docs or test changes alone.
+- CMS editors: one publish is one build. Publish changes together.
 
 ### Deploy check (Shipping)
 
-- Netlify deploy for the pushed commit is **Published**.
-- Changed pages, `/`, `/news/<newest-slug>/` and `/sitemap.xml` return 200 on the preview URL (or production after cutover).
+- The [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) build of the pushed `master` commit is green (Dashboard → Workers → landing → Deployments).
+- Changed pages, `/`, `/news/<newest-slug>/` and `/sitemap.xml` return 200 on <https://landing.nellisarchitecture.workers.dev> (production after the cutover). Example: `curl -sI https://landing.nellisarchitecture.workers.dev/`.
 - `/admin/` loads.
 - The pending tests of the [review scenario](#review-scenario) pass. Write the results on the card.

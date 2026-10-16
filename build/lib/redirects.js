@@ -17,10 +17,6 @@ function parseRules(json) {
   return (JSON.parse(json).redirects || []).map((r) => ({ from: r.from, to: r.to }));
 }
 
-function tomlFroms(toml) {
-  return [...toml.matchAll(/^\s*from\s*=\s*"([^"]+)"/gm)].map((m) => m[1]);
-}
-
 function parseFixed(text) {
   return text.split('\n').flatMap((raw, i) => {
     const line = raw.trim();
@@ -37,16 +33,13 @@ function parseFixed(text) {
 
 const isDynamic = (r) => /[*:]/.test(r.from);
 
-function fixedFroms(toml, fixed) {
-  return [
-    ...tomlFroms(toml).map((from) => ({ from, file: 'netlify.toml' })),
-    ...fixed.map((r) => ({ from: r.from, file: FIXED_FILE })),
-  ];
+function fixedFroms(fixed) {
+  return fixed.map((r) => ({ from: r.from, file: FIXED_FILE }));
 }
 
 /* A file at <p>, or <p>/index.html. */
-// ponytail: macOS finds files in any case, Netlify (Linux) does not.
-// A case-only typo in `to` passes locally and fails the Netlify build (fail-safe).
+// ponytail: macOS finds files in any case, the Linux build does not.
+// A case-only typo in `to` passes locally and fails the Cloudflare build (fail-safe).
 function onDisk(root) {
   return (p) => {
     const f = path.join(root, p);
@@ -123,7 +116,6 @@ function render(rules, fixed = []) {
 module.exports = {
   FIXED_FILE,
   parseRules,
-  tomlFroms,
   parseFixed,
   fixedFroms,
   onDisk,

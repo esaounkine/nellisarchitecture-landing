@@ -13,7 +13,6 @@ function deadLinks() {
   const froms = new Set([
     ...redirects.parseRules(fs.readFileSync(path.join(ROOT, 'content', 'redirects.json'), 'utf8'))
       .map((r) => norm(r.from)),
-    ...redirects.tomlFroms(fs.readFileSync(path.join(ROOT, 'netlify.toml'), 'utf8')).map(norm),
     ...redirects.parseFixed(fs.readFileSync(path.join(ROOT, redirects.FIXED_FILE), 'utf8'))
       .map((r) => norm(r.from)),
   ]);

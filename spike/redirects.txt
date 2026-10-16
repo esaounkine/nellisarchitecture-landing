@@ -1,2 +1,0 @@
-# Emptied: card 3 (LouvLez1) moved the fixed rules into build/redirects.txt, which the build writes to _redirects.
-# The dashboard build command still appends this file, so it must stay (as comments only) until card 5.1 moves the build command into code.

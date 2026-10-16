@@ -4,16 +4,15 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {
-  parseRules, tomlFroms, parseFixed, fixedFroms, onDisk, validate, autoNewsRules, mergeRules,
+  parseRules, parseFixed, fixedFroms, onDisk, validate, autoNewsRules, mergeRules,
   render,
 } = require('../build/lib/redirects');
 const { pruneNews, writeRedirects } = require('../build-news');
 
 const root = path.join(__dirname, '..');
-const TOML = fs.readFileSync(path.join(root, 'netlify.toml'), 'utf8');
 const FIXED_TEXT = fs.readFileSync(path.join(root, 'build', 'redirects.txt'), 'utf8');
 const FIXED = parseFixed(FIXED_TEXT);
-const FROMS = fixedFroms(TOML, FIXED);
+const FROMS = fixedFroms(FIXED);
 
 function tempSite(files) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'redirects-'));
@@ -81,10 +80,7 @@ test('a "from" that is a live page or file fails', () => {
   });
 });
 
-test('a "from" that matches netlify.toml, build/redirects.txt or /admin/ fails', () => {
-  ['/content/x', '/content', '/AGENTS.md', '/wp-admin/x'].forEach((from) => {
-    assert.match(one(from).join(), /matches a rule in netlify\.toml/, from);
-  });
+test('a "from" that matches build/redirects.txt or /admin/ fails', () => {
   ['/pravicy', '/pravicy/', '/sitemap_index.xml', '/news/tag/x', '/news/tag', '/news/x/feed',
     '/news/x/feed/'].forEach((from) => {
     assert.match(one(from).join(), /matches a rule in build\/redirects\.txt/, from);
@@ -217,11 +213,6 @@ test('no static fixed "from" is a live file on the site', () => {
   });
 });
 
-test('no "from" in build/redirects.txt is also a rule in netlify.toml', () => {
-  const toml = new Set(tomlFroms(TOML));
-  FIXED.forEach(({ from }) => assert.ok(!toml.has(from), `${from} is in both files`));
-});
-
 test('pruneNews deletes stale news folders only', () => {
   const dir = tempSite({
     'news/keep/index.html': 'k',
@@ -243,7 +234,6 @@ test('a stale news folder does not block the auto rule: prune runs first', () =>
     'news/old/index.html': '',
     'news/new/index.html': '',
     'content/redirects.json': '{"redirects":[]}',
-    'netlify.toml': '',
     'build/redirects.txt': '',
   });
   const posts = [{ filename: 'old', slug: 'new' }];
@@ -259,7 +249,6 @@ test('writeRedirects throws with every bad rule named', () => {
     'content/redirects.json': JSON.stringify({
       redirects: [{ from: '/x', to: '/missing/' }, { from: 'bad', to: '/' }],
     }),
-    'netlify.toml': '',
     'build/redirects.txt': '',
   });
   assert.throws(() => writeRedirects(dir, []), (e) => /"\/x -> \/missing\/"/.test(e.message)
@@ -272,7 +261,6 @@ function fixedSite(fixed, cms = []) {
     'index.html': '',
     'news/new/index.html': '',
     'content/redirects.json': JSON.stringify({ redirects: cms }),
-    'netlify.toml': '[[redirects]]\n  from = "/docs/*"\n  to = "/404.html"\n  status = 404\n',
   };
   if (fixed !== undefined) files['build/redirects.txt'] = fixed;
   return tempSite(files);
@@ -291,7 +279,7 @@ test('writeRedirects writes the fixed rules around the CMS and news rules', () =
 test('writeRedirects fails when a CMS rule hits a fixed rule and names the file', () => {
   const fixed = '/s / 301\n/d/* / 301\n/n/:slug/f /n/:slug/ 301\n';
   [['/s/', 'build/redirects.txt'], ['/d/x', 'build/redirects.txt'],
-    ['/n/a/f', 'build/redirects.txt'], ['/docs/x', 'netlify.toml']].forEach(([from, file]) => {
+    ['/n/a/f', 'build/redirects.txt']].forEach(([from, file]) => {
     const dir = fixedSite(fixed, [{ from, to: '/' }]);
     const named = (e) => e.message.includes(`matches a rule in ${file}`);
     assert.throws(() => writeRedirects(dir, []), named, from);

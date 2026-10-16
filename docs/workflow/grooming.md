@@ -38,7 +38,7 @@ A card is ready when it has all of these:
 | `bug` | red | Something does not work as before or as specified. | `6acf67111cc66adaf0db8d95` |
 | `content` | blue | Text, images, news, pages. | `6acf67111cc66adaf0db8d94` |
 | `seo` | purple | URLs, redirects, meta tags, sitemap, structured data. | `6acf67111cc66adaf0db8d91` |
-| `infra` | yellow | Netlify, DNS, CMS setup, build, tooling. | `6acf67111cc66adaf0db8d93` |
+| `infra` | yellow | Cloudflare, DNS, CMS setup, build, tooling. | `6acf67111cc66adaf0db8d93` |
 | `debt` | orange | Clean-up with no visible change. | `6acf67111cc66adaf0db8d97` |
 
 Add a label: `curl -s -X POST "$T/cards/<shortLink>/idLabels?value=<label-id>&$A"`.

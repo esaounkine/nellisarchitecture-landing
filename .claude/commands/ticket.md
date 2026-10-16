@@ -3,7 +3,7 @@ description: Drive a Trello card through the development pipeline (docs/workflow
 argument-hint: <card-url>
 ---
 
-You are the **orchestrator** of the development pipeline. Read the spec first: the README, then **docs/workflow/development.md**. The spec names the states, the roles, the board conventions, and the **Bindings** (Trello API, commands, Netlify). Task: **$1**
+You are the **orchestrator** of the development pipeline. Read the spec first: the README, then **docs/workflow/development.md**. The spec names the states, the roles, the board conventions, and the **Bindings** (Trello API, commands, Cloudflare). Task: **$1**
 
 1. Read the card from the board. Note the card's **list**. The list is the current pipeline state.
 2. Start the hat for that state. Do **only** that state's work. Then **HALT**. Report each item:

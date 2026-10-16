@@ -10,7 +10,7 @@ const parse = (text) => {
   const rules = new Map();
   let current;
   text.split('\n').forEach((line, i) => {
-    if (line.trim() === '') return;
+    if (line.trim() === '' || line.startsWith('#')) return;
     if (!/^\s/.test(line)) {
       assert.ok(!rules.has(line), `_headers:${i + 1}: duplicate path ${line}`);
       current = new Map();
@@ -27,14 +27,14 @@ const parse = (text) => {
   return rules;
 };
 
-test('netlify.toml has no [[headers]] block', () => {
-  assert.ok(!read('netlify.toml').includes('[[headers]]'));
-});
-
 test('parse rejects a header line without indent or colon', () => {
   assert.throws(() => parse('/*\n  X-Frame-Options SAMEORIGIN\n'));
   assert.throws(() => parse('  X-Frame-Options: SAMEORIGIN\n'));
   assert.throws(() => parse('/*\n  A: 1\n  a: 2\n'));
+});
+
+test('parse skips # comment lines', () => {
+  assert.deepEqual([...parse('# c\n/*\n  A: 1\n').keys()], ['/*']);
 });
 
 test('_headers sets the security headers on every path', () => {
@@ -43,6 +43,7 @@ test('_headers sets the security headers on every path', () => {
   assert.equal(all.get('x-frame-options'), 'SAMEORIGIN');
   assert.equal(all.get('x-content-type-options'), 'nosniff');
   assert.equal(all.get('referrer-policy'), 'strict-origin-when-cross-origin');
+  assert.equal(all.get('x-robots-tag'), 'noindex', 'noindex stays until the DNS cutover (card 9)');
 });
 
 test('_headers caches /wp-content/* for one year, immutable', () => {

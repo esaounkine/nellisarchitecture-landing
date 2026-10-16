@@ -9,7 +9,6 @@
 /.tool-versions
 /.assetsignore
 /wrangler.jsonc
-/netlify.toml
 /AGENTS.md
 /README.md
 /docs/
@@ -25,4 +24,3 @@
 /worker/
 /.dev.vars
 /.env
-/spike/

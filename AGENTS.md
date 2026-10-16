@@ -4,7 +4,7 @@ Be brief. No prose.
 
 ## Purpose
 
-We migrate the website [nellisarchitecture.com](https://nellisarchitecture.com) from WordPress to a static site. The site is hosted on Netlify. The news section is edited in Decap CMS. See [README.md](README.md).
+We migrate the website [nellisarchitecture.com](https://nellisarchitecture.com) from WordPress to a static site. The site is hosted on [Cloudflare Workers static assets](https://developers.cloudflare.com/workers/static-assets/) (<https://landing.nellisarchitecture.workers.dev>). The domain stays on WordPress until the DNS switch. The news section is edited in Decap CMS. See [README.md](README.md).
 
 ## Principles
 
@@ -13,9 +13,9 @@ Durable working agreements. Hold to these agreements regardless of tools.
 - **Single entry point:** [README.md](README.md) is the only front door. A person or any agent onboards from the README. Everything else hangs off the README.
 - **One source per concern:** document each thing once. Everywhere else, link to the source. Pipeline → [docs/workflow/development.md](docs/workflow/development.md). Requirements, decisions, tasks and status → the Trello board. Never duplicate.
 - **Abstract the design, concretise the execution:** specs are tool-neutral and vendor-neutral. A person or any agent can follow a spec. *Bindings* (the harness, the board, the exact commands) are named and concrete, in one place. Do not genericise the bindings.
-- **Name bindings, do not wrap them:** when a choice is tool-specific (Claude Code, Trello, Netlify, npm), state the tool as the current binding. Do not build an abstraction layer for tools we do not use.
+- **Name bindings, do not wrap them:** when a choice is tool-specific (Claude Code, Trello, Cloudflare, npm), state the tool as the current binding. Do not build an abstraction layer for tools we do not use.
 - **Abstraction, not at the cost of performance:** refuse indirection and adapters added for hypothetical futures (YAGNI). The shortest path wins.
-- **Portable hosting:** the site MUST stay portable between static hosts. Netlify is the current host, not a fixed choice; Cloudflare Pages or AWS Amplify can replace it. Use broadly available technologies and open standards: plain HTML, CSS and JS, HTTP caching, standard image formats and `<img>`/`<picture>` attributes. Do not add a feature that only one host offers (for example Netlify Image CDN, Edge Functions or Blobs). Keep each host-specific binding we already use (`netlify.toml`, `_redirects`, `_headers`, Netlify Forms, GitHub OAuth in the Worker for the CMS login) in one place, with a known replacement on the other hosts. Choose the industry-standard option before a CDN or a vendor service.
+- **Portable hosting:** the site MUST stay portable between static hosts. Cloudflare Workers is the current host, not a fixed choice; Netlify, Cloudflare Pages or AWS Amplify can replace it. Use broadly available technologies and open standards: plain HTML, CSS and JS, HTTP caching, standard image formats and `<img>`/`<picture>` attributes. Do not add a feature that only one host offers (for example Cloudflare Images, KV or Durable Objects). Keep each host-specific binding we already use (`wrangler.jsonc`, `_redirects`, `_headers`, `.assetsignore`, the Worker routes for the forms and the CMS login, R2 for the form files, Turnstile for the spam check) in one place, with a known replacement on the other hosts (see [Hosting — Cloudflare Workers](docs/workflow/development.md#hosting--cloudflare-workers)). Choose the industry-standard option before a CDN or a vendor service.
 - **Infrastructure as code:** keep all infrastructure in code in this repo, so that a person or an agent can make an environment again with few steps. Only bootstrap steps may stay manual: for example the move of the DNS nameservers, the link from GitHub to the host, an account or an API token. Write each bootstrap step in one place. After the bootstrap, code makes and changes everything: the host config, the build settings and variables, storage buckets, spam protection, DNS records and email routing. A dashboard change is not a final state.
 - **Simple site, consistent site:** this is a simple static site. Consistency and performance come first. SEO drives the content; agents keep everything consistent. Do not add scope, options or follow-up ideas. Choose the simplest option that matches the existing patterns and continue. Ask the operator only when a choice changes content, a public URL or cost.
 
@@ -57,11 +57,11 @@ The site replaces a live WordPress site. Search ranking must survive the migrati
 - `data/filters/*.html` are hand-kept, not generated. Each project item in them carries a link to its project page.
 - To change the project grid on Home and on the project pages, edit `build/lib/partials/index-projects.html`. To change the open project panel of a project page, edit `build/lib/partials/current-project.html`.
 - Keep every public URL of the old site. If a URL must change, add a 301 redirect in `content/redirects.json` (or in `build/redirects.txt` for a wildcard or fixed rule).
-- CMS redirects → `content/redirects.json`. Wildcard or fixed rules → `build/redirects.txt` (never status 404). Deny rules (404) → `netlify.toml`. Netlify reads `_redirects` first.
+- CMS redirects → `content/redirects.json`. Wildcard or fixed rules → `build/redirects.txt` (never status 404). Deny rules (404) → `.assetsignore` (an ignored path answers 404).
 - Keep titles, meta descriptions, canonical URLs, Open Graph tags and schema.org data correct. Absolute URLs use the production domain `https://nellisarchitecture.com`.
 - Never delete or rename files in `wp-content/uploads/`. Pages and external sites link to them.
-- Netlify publishes the repo root. A new internal root file or folder needs a 404 deny rule in `netlify.toml` and a line in `.assetsignore`. A new public root file or folder needs an entry in the `SITE` allow-list in `test/netlify-deny.test.js`, and no deny rule. Root `*.html` pages need neither. A new root dotfile needs only a line in `.assetsignore`.
-- Decap CMS commits to the `backend.branch` of `admin/config.yml` on the remote (`spike/cloudflare` until the cutover). Pull before you work. Rebase local commits before a push.
+- The Worker publishes the repo root. A new internal root file or folder needs a line in `.assetsignore`. A new public root file or folder needs an entry in the `SITE` allow-list in `test/assets-deny.test.js`. Root `*.html` pages need neither.
+- Decap CMS commits to the `backend.branch` of `admin/config.yml` on the remote (`master`). Pull before you work. Rebase local commits before a push.
 
 ## Code style
 
@@ -93,7 +93,7 @@ Scope: our own code (`build-news.js`, `build/lib/`, `js/static-backend.js`, futu
 - Do not over-engineer.
 - When we agree on a new convention or pattern, add the convention here as a rule (keep this list current).
 - After each task, create a checkpoint (git commit). Run the project's checks (see [Bindings](docs/workflow/development.md#bindings)). Move the card to the next pipeline state (usually **Dev BR** after Test). Then stop for the bar-raiser or human review. Do not leave an implemented change in **To do** or **In Progress**.
-- Do not push to the remote after committing. Commit locally as checkpoints. Push in batches when multiple changes reach the shipping stage, and the operator decides the changes are ready to ship. Only `git push` when operator explicitly asks. A push to `master` deploys to production and uses Netlify credits (see [Netlify credits](docs/workflow/development.md#netlify-credits)).
+- Do not push to the remote after committing. Commit locally as checkpoints. Push in batches when multiple changes reach the shipping stage, and the operator decides the changes are ready to ship. Only `git push` when operator explicitly asks. A push to `master` deploys to Cloudflare (workers.dev) through Workers Builds (see [Cloudflare limits](docs/workflow/development.md#cloudflare-limits)).
 
 ## Writing style
 

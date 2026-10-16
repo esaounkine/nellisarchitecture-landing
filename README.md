@@ -10,9 +10,9 @@ static JSON snapshots.
 How this project is run — start here:
 
 - **Conventions and working agreements:** [AGENTS.md](AGENTS.md) — principles, code style, content and SEO rules, testing.
-- **How we work (workflows):** [development](docs/workflow/development.md) · [grooming](docs/workflow/grooming.md) · [incident response](docs/workflow/incident.md). Driven by `/ticket`, `/groom` and `/incident` in [Claude Code](https://code.claude.com/docs). Tool bindings (Trello, Netlify, commands) are in [development.md → Bindings](docs/workflow/development.md#bindings).
+- **How we work (workflows):** [development](docs/workflow/development.md) · [grooming](docs/workflow/grooming.md) · [incident response](docs/workflow/incident.md). Driven by `/ticket`, `/groom` and `/incident` in [Claude Code](https://code.claude.com/docs). Tool bindings (Trello, Cloudflare, commands) are in [development.md → Bindings](docs/workflow/development.md#bindings).
 - **Tasks, requirements, decisions and status:** the **Website** board on Trello — <https://trello.com/b/jaBEXApc/website>.
-- **Hosting:** Netlify — <https://app.netlify.com/projects/nellis-arch/overview>. Preview: <https://nellis-arch.netlify.app>.
+- **Hosting:** [Cloudflare Workers static assets](https://developers.cloudflare.com/workers/static-assets/) — <https://landing.nellisarchitecture.workers.dev>. The domain nellisarchitecture.com stays on WordPress until the DNS cutover.
 
 ## Structure
 
@@ -39,24 +39,18 @@ build-news.js         # regenerates news pages, generated pages, sitemap + feed.
 feed.xml              # RSS feed, served at /feed/ (generated)
 robots.txt            # crawl rules (generated from content/robots.json, edited in the CMS)
 admin/                # Decap CMS (news and page editing UI)
-netlify.toml          # build + 404 deny rules
 wrangler.jsonc        # Cloudflare Worker config (static assets)
-.assetsignore         # files the Cloudflare Worker does not publish
+.assetsignore         # files the Cloudflare Worker does not publish (they answer 404)
 infra/cloudflare.js   # Cloudflare build settings as code (npm run infra)
 eslint.config.mjs     # lint rules (npm run lint)
 test/                 # unit tests (npm test)
 ```
 
-## Deploy (Netlify, free tier)
+## Deploy (Cloudflare Workers, Free plan)
 
-1. Push this folder to a GitHub repo.
-2. Netlify → Add new site → Import from Git → pick the repo.
-   Build command and publish dir come from `netlify.toml` automatically.
-3. Point the DNS for nellisarchitecture.com to Netlify.
-4. Forms do not use Netlify. They post to the Cloudflare Worker, see
-   [Hosting — Cloudflare Workers](docs/workflow/development.md#hosting--cloudflare-workers-migration).
-5. The news admin does not use Netlify. For the CMS login, do the
-   [Cloudflare bootstrap](docs/workflow/development.md#setup-as-code).
+1. Do the one-time [Cloudflare bootstrap](docs/workflow/development.md#setup-as-code). It links the repo, sets the build settings, the forms and the CMS login.
+2. A push to `master` builds and deploys the site. See
+   [Hosting — Cloudflare Workers](docs/workflow/development.md#hosting--cloudflare-workers).
 
 ## Updating news (SEO team)
 
@@ -77,7 +71,7 @@ To edit page texts (Home, Studio, People, Privacy, the News index, shared affili
 ```bash
 # edit or add a file in content/news/, then:
 node build-news.js
-# commit + push (Netlify rebuilds), or test locally:
+# commit + push (Cloudflare rebuilds), or test locally:
 npm run serve
 ```
 
@@ -85,7 +79,7 @@ To use the CMS on your computer, see [Local CMS](docs/workflow/development.md#co
 
 ## Notes
 
-- Contact-form spam protection uses Netlify's honeypot; the old PHP captcha is gone.
+- Form spam protection uses [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/); the old PHP captcha is gone.
 - All absolute URLs (canonical, Open Graph, schema.org) intentionally keep the
   production domain — correct after DNS cutover.
 - Google Analytics (G-5D57DNBBLX) is unchanged.

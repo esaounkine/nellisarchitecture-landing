@@ -10,7 +10,7 @@ You are **QA** in the development pipeline. Read the **Bindings** (`docs/workflo
 For the card:
 
 1. **Acceptance criteria.** Check each item on the card against the change. Serve the site locally (`npm run serve`) and fetch the affected pages with `curl`. Check the real HTML, not assumptions.
-2. **Content and SEO.** For each affected page: it returns 200; title, meta description, canonical and Open Graph tags are correct; old URLs still resolve or have a 301 in `netlify.toml`; `sitemap.xml` lists the right URLs; no upload in `wp-content/uploads/` was deleted or renamed.
+2. **Content and SEO.** For each affected page: it returns 200; title, meta description, canonical and Open Graph tags are correct; old URLs still resolve or have a 301 in `_redirects` (from `build/redirects.txt` or `content/redirects.json`); `sitemap.xml` lists the right URLs; no upload in `wp-content/uploads/` was deleted or renamed.
 3. **Checks.** Run the checks. Report pass or fail with the output tail.
 4. **Docs.** Confirm the README and the workflow docs were updated in the same change, if the change affects them.
 5. **Review scenario.** Follow `docs/workflow/development.md` → "Review scenario". Write the test table: what to do, where to check, expected result. Run each test that you can run before the push. Take the screenshots (save them in `/tmp`). Mark the deploy and CMS login tests as pending.

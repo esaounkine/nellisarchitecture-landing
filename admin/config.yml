@@ -1,10 +1,10 @@
 # Decap CMS configuration — Nellis Architecture news
-# The branch is spike/cloudflare until the cutover (card 9 sets master and the apex base_url).
+# base_url is the workers.dev Worker until the DNS cutover (card 9 sets the apex).
 
 backend:
   name: github
   repo: esaounkine/nellisarchitecture-landing
-  branch: spike/cloudflare
+  branch: master
   base_url: https://landing.nellisarchitecture.workers.dev
   auth_endpoint: api/auth
 
