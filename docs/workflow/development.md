@@ -101,7 +101,7 @@ The shell is zsh: an unquoted `$var` does not split into words. Pass each argume
 
 ### Repository
 
-- GitHub: <https://github.com/esaounkine/nellisarchitecture-landing> (private). Branch: `master`. CLI: `gh`.
+- GitHub: <https://github.com/nellis-architecture/nellisarchitecture-landing> (private). Branch: `master`. CLI: `gh`.
 - Decap CMS commits to the `backend.branch` of [admin/config.yml](../../admin/config.yml) on the remote (`master`). Before work: `git pull --rebase`.
 
 ### Commands

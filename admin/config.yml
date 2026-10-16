@@ -3,7 +3,7 @@
 
 backend:
   name: github
-  repo: esaounkine/nellisarchitecture-landing
+  repo: nellis-architecture/nellisarchitecture-landing
   branch: master
   base_url: https://landing.nellisarchitecture.workers.dev
   auth_endpoint: api/auth

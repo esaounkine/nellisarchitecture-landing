@@ -55,7 +55,7 @@ test/                 # unit tests (npm test)
 ## Updating news (SEO team)
 
 1. Open `<site>/admin/` and click **Login with GitHub**. Before the cutover, `<site>` is <https://landing.nellisarchitecture.workers.dev>.
-   Each editor needs a [GitHub](https://github.com/) account with write access to the repo `esaounkine/nellisarchitecture-landing` (decision D5).
+   Each editor needs a [GitHub](https://github.com/) account with write access to the repo `nellis-architecture/nellisarchitecture-landing` (decision D5).
    The operator adds each editor as a [collaborator](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-access-to-your-personal-repositories/inviting-collaborators-to-a-personal-repository) of the repo.
    On a shared computer, log out after you work: the login gives access to the full repo (`repo` scope).
 2. News → New article. Fill title, date, meta description, hero image, body.
