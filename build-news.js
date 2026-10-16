@@ -19,6 +19,8 @@
  *   9. Writes _redirects from build/redirects.txt, content/redirects.json and changed news slugs
  *  10. Writes feed.xml (RSS 2.0, 10 newest posts; build/redirects.txt serves it at /feed/)
  *  11. Writes robots.txt from content/robots.json (plus the Sitemap line)
+ *  First, on Workers Builds only: makes the image variants that build/images.json lacks
+ *  (build/lib/images.js)
  */
 const fs = require('node:fs');
 const path = require('node:path');
@@ -35,6 +37,7 @@ const { imageSize } = require('./build/lib/image-size');
 const { escAttr, isVideo } = require('./build/lib/html');
 const { sitekey } = require('./build/lib/chrome');
 const { heroPath, FALLBACK_SRC } = require('./build/lib/pages/news');
+const { ensureVariants } = require('./build/lib/images');
 
 const ROOT = __dirname;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -385,7 +388,7 @@ function build() {
     + `${projects.length} project pages; ${rules.length} redirects`);
 }
 
-if (require.main === module) build();
+if (require.main === module) ensureVariants(ROOT).then(() => build());
 
 module.exports = {
   parseFrontMatter,

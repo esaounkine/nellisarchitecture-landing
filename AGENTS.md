@@ -53,13 +53,14 @@ When driving a card via `/ticket`, read the card's current list. Follow the stat
 The site replaces a live WordPress site. Search ranking must survive the migration.
 
 - `content/news/*.md` is the source of truth for news. `content/pages/*.json` is the source of truth for the generated pages (`news.json`: the `/news/` index; `contact.json`: the `/contact/` page; `projects.json`: the `/projects/` hub; `projects-<category>.json`: the category pages; the project list comes from `data/projects.json`). `content/redirects.json` is the source of truth for redirects. `content/robots.json` is the source of truth for `robots.txt` (the build adds the Sitemap line). `data/projects.json` is the source of truth for the project pages. `content/pages/site.json` `forms.file_days` is the source of truth for the retention of uploaded form files (default 90 days). The CMS and people edit only these files (and uploads).
-- Never edit generated files by hand: `news/index.html`, `news/<slug>/index.html`, `projects/index.html`, `projects/<category>/index.html`, `projects/<category>/<slug>/index.html`, `data/news.json`, `sitemap.xml`, `feed.xml`, `robots.txt`, `index.html`, `studio/index.html`, `people/index.html`, `privacy/index.html`, `contact/index.html` and `_redirects`. Change `build-news.js`, `build/news-template.html` or `build/lib/`, then run the build.
+- Never edit generated files by hand: `news/index.html`, `news/<slug>/index.html`, `projects/index.html`, `projects/<category>/index.html`, `projects/<category>/<slug>/index.html`, `data/news.json`, `sitemap.xml`, `feed.xml`, `robots.txt`, `index.html`, `studio/index.html`, `people/index.html`, `privacy/index.html`, `contact/index.html`, `_redirects`, `wp-content/variants/` and `build/images.json`. Change `build-news.js`, `build/news-template.html` or `build/lib/`, then run the build.
 - `data/filters/*.html` are hand-kept, not generated. Each project item in them carries a link to its project page.
 - To change the project grid on Home and on the project pages, edit `build/lib/partials/index-projects.html`. To change the open project panel of a project page, edit `build/lib/partials/current-project.html`.
 - Keep every public URL of the old site. If a URL must change, add a 301 redirect in `content/redirects.json` (or in `build/redirects.txt` for a wildcard or fixed rule).
 - CMS redirects → `content/redirects.json`. Wildcard or fixed rules → `build/redirects.txt` (never status 404). Deny rules (404) → `.assetsignore` (an ignored path answers 404).
 - Keep titles, meta descriptions, canonical URLs, Open Graph tags and schema.org data correct. Absolute URLs use the production domain `https://nellisarchitecture.com`.
 - Never delete or rename files in `wp-content/uploads/`. Pages and external sites link to them.
+- Run `npm run images` after a new upload, then commit the variants (`wp-content/variants/` and `build/images.json`).
 - The Worker publishes the repo root. A new internal root file or folder needs a line in `.assetsignore`. A new public root file or folder needs an entry in the `SITE` allow-list in `test/assets-deny.test.js`. Root `*.html` pages need neither.
 - Decap CMS commits to the `backend.branch` of `admin/config.yml` on the remote (`master`). Pull before you work. Rebase local commits before a push.
 
@@ -77,7 +78,7 @@ Scope: our own code (`build-news.js`, `build/lib/`, `js/static-backend.js`, futu
 - Plain JavaScript. No TypeScript. No framework.
 - Build scripts run on Node with zero runtime dependencies. Add a dependency only when a card needs it. Dev tools go in `devDependencies`.
 - Browser code runs without a bundler. Keep the existing theme scripts working.
-- Base: Airbnb via `eslint-config-airbnb-extended` (`eslint.config.mjs`). Linted files: `build-news.js`, `build/lib/**/*.js`, `infra/**/*.js`, `js/static-backend.js`, `js/project-switch.js`, `js/forms.js`, `worker/**`, `test/`, `eslint.config.mjs`. Add new own files to the config.
+- Base: Airbnb via `eslint-config-airbnb-extended` (`eslint.config.mjs`). Linted files: `build-news.js`, `build/make-images.js`, `build/lib/**/*.js` (with `build/lib/images.js`), `infra/**/*.js`, `js/static-backend.js`, `js/project-switch.js`, `js/forms.js`, `worker/**`, `test/`, `eslint.config.mjs`. Add new own files to the config.
 - Build scripts: synchronous `fs` calls and `console` output are allowed (`n/no-sync`, `no-console` off).
 - Browser scripts: `'use strict'` inside the IIFE (`strict: function`). Underscore fields are allowed for shim internals (`no-underscore-dangle` off).
 - Build scripts export their pure functions and run only when called directly (`require.main === module`), so tests can import them.
