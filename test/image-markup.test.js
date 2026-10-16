@@ -10,6 +10,7 @@ const ROOT = path.join(__dirname, '..');
 const rel = (f) => path.relative(ROOT, f).split(path.sep).join('/');
 const PAGES = ['index.html', 'studio/index.html', 'people/index.html',
   ...walk(path.join(ROOT, 'projects')).map(rel).filter((f) => f.endsWith('index.html'))];
+const NEWS = walk(path.join(ROOT, 'news')).map(rel).filter((f) => f.endsWith('index.html'));
 const HAND_KEPT = ['build/lib/partials/index-projects.html',
   ...walk(path.join(ROOT, 'data', 'filters')).map(rel)];
 const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'content', 'pages', 'site.json'), 'utf8'));
@@ -20,10 +21,11 @@ const read = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const attr = (tag, name) => (tag.match(new RegExp(`\\s${name}="([^"]*)"`)) || [])[1];
 
 test('every content image has srcset, sizes, width and height, or is the sized fallback', () => {
-  [...PAGES, ...HAND_KEPT].forEach((file) => {
+  [...PAGES, ...NEWS, ...HAND_KEPT].forEach((file) => {
     (read(file).match(/<img\b[^>]*>/g) || []).forEach((tag) => {
       if (/\blazyload\b/.test(attr(tag, 'class') || '')) {
-        assert.ok(CHROME.has(attr(tag, 'data-src')), `${file}: lazyload content image ${tag}`);
+        const src = attr(tag, 'data-src').replace(/^(\.\.\/)+/, '/');
+        assert.ok(CHROME.has(src), `${file}: lazyload content image ${tag}`);
         return;
       }
       const src = attr(tag, 'src') || '';

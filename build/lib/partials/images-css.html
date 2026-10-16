@@ -1,0 +1,14 @@
+<style id="nellis-images-css">
+	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
+	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   height: auto: the width and height attributes give only the aspect ratio. */
+	picture {
+		display: inline-block;
+		line-height: 0;
+		background-position: center;
+	}
+
+	picture img {
+		height: auto;
+	}
+</style>

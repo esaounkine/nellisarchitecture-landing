@@ -6,6 +6,8 @@ const path = require('node:path');
 const news = require('../build/lib/pages/news');
 const { PAGES, renderPages } = require('../build/lib/pages');
 const { loadProjects } = require('../build/lib/projects');
+const { readManifest, SLOTS } = require('../build/lib/images');
+const { escAttr } = require('../build/lib/html');
 const {
   loadPosts, sitemap, pruneNews, refreshNewsLists,
 } = require('../build-news');
@@ -22,8 +24,8 @@ const read = (name) => JSON.parse(
 const site = read('site');
 const content = read('news');
 const page = PAGES.find((p) => p.slug === 'news');
-const render = (posts) => news.render(content, {
-  site, newsHref: '/news/', page, posts,
+const render = (posts, manifest) => news.render(content, {
+  site, newsHref: '/news/', page, posts, manifest,
 });
 const count = (s, sub) => s.split(sub).length - 1;
 const post = (over) => ({
@@ -65,7 +67,7 @@ test('each item shows the hero, else minis.png, with the hero alt or the title',
     post({ slug: 'c', hero: `${UP}/c.mp4`, title: 'C & D' }),
     post({ slug: 'd' }),
   ]);
-  const imgs = [...html.matchAll(/<img src="([^"]+)" alt="([^"]*)" loading="lazy" \/>/g)]
+  const imgs = [...html.matchAll(/<img src="([^"]+)" alt="([^"]*)" decoding="async"/g)]
     .map((m) => [m[1], m[2]]);
   assert.deepEqual(imgs, [
     ['/wp-content/uploads/a.jpg', 'Alt &quot;q&quot;'],
@@ -172,4 +174,24 @@ test('news partials close every div they open', () => {
 
 test('the /news/ page keeps a noindex post', () => {
   assert.ok(render([post({ slug: 'hidden', noindex: true })]).includes('href="/news/hidden/"'));
+});
+
+test('the first /news/ card is the priority image, the other cards are lazy', () => {
+  const manifest = readManifest(ROOT);
+  const html = render([
+    post({ slug: 'a', hero: `${UP}/2026/07/Luxury-home-design-Dubai-scaled.jpg` }),
+    post({ slug: 'b', hero: `${UP}/2026/07/Zoya6-1024x576.jpg` }),
+    post({ slug: 'c' }),
+  ], manifest);
+  const cards = html.split('<article class="newsIndexItem">').slice(1);
+  assert.equal(cards.length, 3);
+  assert.match(cards[0], /<picture [^]*loading="eager" fetchpriority="high"/);
+  cards.slice(1).forEach((c) => {
+    assert.match(c, /loading="lazy"/);
+    assert.ok(!c.includes('fetchpriority'));
+  });
+  assert.ok(cards[1].includes(`sizes="${escAttr(SLOTS.teaser)}"`));
+  assert.match(cards[1], /src="\/wp-content\/variants\/2026\/07\/Zoya6-1024x576-/);
+  assert.ok(!html.includes(`src="${UP}`));
+  assert.equal(count(render(POSTS, manifest), 'fetchpriority="high"'), 1);
 });

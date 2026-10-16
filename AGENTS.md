@@ -85,7 +85,7 @@ Scope: our own code (`build-news.js`, `build/lib/`, `js/static-backend.js`, futu
 - Build scripts export their pure functions and run only when called directly (`require.main === module`), so tests can import them.
 - Worker (`worker/`): ES modules, no npm dependencies. Export the pure functions, so tests can import them (`await import()`).
 - Page generator: static markup (with the WordPress tabs and spaces) stays in `build/lib/partials/*.html` with `{{TOKEN}}`s. JS fills the tokens with `fill()`. Escape CMS text with `escText` (text) or `escAttr` (attributes).
-- Content images (upload images on Home, the project, category, studio and people pages): `picture()` of `build/lib/images.js`, with a slot of its `SLOTS` table. The build sets the one priority image of each page; never write `loading="eager"` in a partial. Chrome images (logo, partner logos) keep the theme `lazyload` markup. The `picture` CSS is in `build/lib/partials/head.html` (`#nellis-images-css`).
+- Content images (upload images on Home, the project, category, studio, people and news pages, and in the news markdown): `picture()` of `build/lib/images.js`, with a slot of its `SLOTS` table. The build sets the one priority image of each page; never write `loading="eager"` in a partial. Chrome images (logo, partner logos) keep the theme `lazyload` markup. The `picture` CSS is in `build/lib/partials/images-css.html` (`#nellis-images-css`); `head.html` and `build/news-template.html` get it through the `{{IMAGES_CSS}}` token.
 - Cloudflare build settings change only in `infra/cloudflare.js` or `wrangler.jsonc`. Never change them in the dashboard.
 
 ### Generic rules

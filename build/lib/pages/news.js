@@ -5,6 +5,7 @@ const {
   head, top, affiliations, footer,
 } = require('../chrome');
 const { DOMAIN, pageUrl, seoTokens } = require('../seo');
+const { picture } = require('../images');
 
 const FALLBACK_SRC = '/wp-content/themes/nellis/assets/img/minis.png';
 const MAX = 160;
@@ -28,12 +29,14 @@ function excerpt(p) {
   return `${(space > 0 ? cut.slice(0, space) : cut.slice(0, MAX - 1)).replace(/[\s,.;:]+$/, '')}…`;
 }
 
-function items(posts) {
+/* The first card is the page priority image. */
+function items(posts, manifest) {
   const tpl = loadPartial('news-item');
-  return posts.map((p) => fill(tpl, {
+  return posts.map((p, i) => fill(tpl, {
     HREF: escAttr(`/news/${p.slug}/`),
-    IMG: escAttr(heroPath(p) || FALLBACK_SRC),
-    ALT: escAttr(p.hero_alt || p.title),
+    PICTURE: picture({
+      src: heroPath(p) || FALLBACK_SRC, alt: p.hero_alt || p.title, slot: 'teaser', priority: !i,
+    }, manifest),
     ISO: p.dateObj.toISOString().slice(0, 10),
     DATE: escText(p.date),
     TITLE: escText(p.title),
@@ -70,7 +73,7 @@ function schema(url, name, desc) {
 }
 
 function render(content, {
-  site, newsHref, page, posts,
+  site, newsHref, page, posts, manifest = {},
 }) {
   if (!posts || !posts.length) throw new Error('news/: no posts');
   const seo = content.seo || {};
@@ -91,7 +94,7 @@ function render(content, {
       AFFILIATIONS: affiliations(site.affiliations, '    '),
       H1: escText(content.h1),
       INTRO: escText(content.intro),
-      ITEMS: items(posts),
+      ITEMS: items(posts, manifest),
     }),
     footer(),
   ].join('\n');

@@ -66,6 +66,20 @@
 <link rel='stylesheet' id='swiper-css' href='../../wp-content/themes/nellis/assets/scss/swiper.css' media='all' />
 <link rel='stylesheet' id='fancybox-css' href='../../wp-content/themes/nellis/assets/scss/vendor/fancybox.css' media='all' />
 <link rel='stylesheet' id='maincss-css' href='../../wp-content/themes/nellis/assets/scss/main.css' media='all' />
+<style id="nellis-images-css">
+	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
+	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   height: auto: the width and height attributes give only the aspect ratio. */
+	picture {
+		display: inline-block;
+		line-height: 0;
+		background-position: center;
+	}
+
+	picture img {
+		height: auto;
+	}
+</style>
 
 
 
@@ -512,7 +526,7 @@
       <div class="NewsCenter">
 
                   <div class="NewsImg">
-            <img src="https://nellisarchitecture.com/wp-content/uploads/2025/12/Water-as-Experience.jpg" alt="Pools, Rills and Thermal Comfort" class="lazyload">
+            <picture style="background-image:url(data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAQAgCdASoQAAoAA4BaJYwC06Ef8XeazRgAAP7hnGVpjVSO6MrGioQbCaIZTNv6uPZ9gXYU7zHlpJKWNyjS4bJieskqzlky5Y1pxy2r/iOk8SAAAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-320.avif 320w, /wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-640.avif 640w, /wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-842.avif 842w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-842.jpg" srcset="/wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-640.jpg 640w, /wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-842.jpg 842w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="842" height="538" alt="Pools, Rills and Thermal Comfort" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
           </div>
 
         
@@ -557,7 +571,7 @@
 <p>-Limestone, granite and natural stone for thermal stability</p>
 <p>“You can design comfort without relying entirely on mechanical cooling,” says Quinton Murdoch, Associate Architect. “Water, shade and material selection already do half the work when combined correctly.” This allows homes to feel naturally cool and visually calm, even at peak temperatures.</p>
 <h3>Case Study: Miraia</h3>
-<img src="https://nellisarchitecture.com/wp-content/uploads/2025/12/Water-as-Experience.jpg" alt="Pools, Rills and Thermal Comfort" class="lazyload" />
+<picture style="background-image:url(data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAQAgCdASoQAAoAA4BaJYwC06Ef8XeazRgAAP7hnGVpjVSO6MrGioQbCaIZTNv6uPZ9gXYU7zHlpJKWNyjS4bJieskqzlky5Y1pxy2r/iOk8SAAAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-320.avif 320w, /wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-640.avif 640w, /wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-842.avif 842w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-842.jpg" srcset="/wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-640.jpg 640w, /wp-content/variants/2025/12/Water-as-Experience-cbf84ffd-842.jpg 842w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="842" height="538" alt="Pools, Rills and Thermal Comfort" decoding="async" loading="lazy" data-overlay-added="true"></picture>
 <p>Miraia sits on the edge of the Gulf as a home shaped by light, reflection and the calming presence of water. Across its terraces and sunken courtyard, water is not a backdrop. It is part of the architectural rhythm, guiding how the home is experienced from the moment you arrive.</p>
 <p>From the earliest sketches, the team understood that water would be central to creating the softness and decompression the client hoped for. As you move through the entrance, shallow reflective surfaces sit beneath shaded walkways, cooling the air before it reaches the interior. The sunken courtyard forms the emotional centre of the home, where water, planting and filtered light meet in a quiet, consistent rhythm.</p>
 <p>“Water guided the flow of the entire house,” says Lee Nellis, Principal Architect. “It allowed us to create a sense of tranquillity even in the hottest months. The goal was for the architecture to feel like it was breathing.”</p>
@@ -1338,7 +1352,10 @@
                 globalVariable = post.title;
                 document.querySelector('.NewsTitle').textContent = post.title;
                 const mediaContainer = document.querySelector('.NewsImg');
-                if (post.img && isImageOrVideo(post.img) === 'image') {
+                if (post.picture) {
+                  mediaContainer.style.display = "block";
+                  mediaContainer.innerHTML = post.picture;
+                } else if (post.img && isImageOrVideo(post.img) === 'image') {
                   mediaContainer.style.display = "block";
                   mediaContainer.innerHTML = '<img src="' + post.img + '" alt="' + post.title + '">';
                   mediaContainer.querySelector('img').setAttribute("alt", post.imgalt || post.title)

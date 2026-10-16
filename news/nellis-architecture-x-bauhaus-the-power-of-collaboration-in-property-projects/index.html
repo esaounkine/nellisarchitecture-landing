@@ -66,6 +66,20 @@
 <link rel='stylesheet' id='swiper-css' href='../../wp-content/themes/nellis/assets/scss/swiper.css' media='all' />
 <link rel='stylesheet' id='fancybox-css' href='../../wp-content/themes/nellis/assets/scss/vendor/fancybox.css' media='all' />
 <link rel='stylesheet' id='maincss-css' href='../../wp-content/themes/nellis/assets/scss/main.css' media='all' />
+<style id="nellis-images-css">
+	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
+	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   height: auto: the width and height attributes give only the aspect ratio. */
+	picture {
+		display: inline-block;
+		line-height: 0;
+		background-position: center;
+	}
+
+	picture img {
+		height: auto;
+	}
+</style>
 
 
 
@@ -512,7 +526,7 @@
       <div class="NewsCenter">
 
                   <div class="NewsImg">
-            <img src="https://nellisarchitecture.com/wp-content/uploads/2024/12/Lees-talk-with-Bauhaus-photo.png" alt="Nellis Architecture X Bauhaus: The Power of Collaboration in Property Projects" class="lazyload">
+            <picture style="background-image:url(data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAQCdASoQAAkAA4BaJZQAAudfMmqDUAD9eBYDtehjUqxcSh6TC5ybkKtVwA+kMVU4PN8cjsYQOOK/bCTn1hI6WcK7s58z3ARThIQA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-320.avif 320w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-640.avif 640w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-960.avif 960w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-1366.avif 1366w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-1366.jpg" srcset="/wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-640.jpg 640w, /wp-content/variants/2024/12/Lees-talk-with-Bauhaus-photo-33964bb9-1366.jpg 1366w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="1366" height="768" alt="Nellis Architecture X Bauhaus: The Power of Collaboration in Property Projects" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
           </div>
 
         
@@ -1297,7 +1311,10 @@
                 globalVariable = post.title;
                 document.querySelector('.NewsTitle').textContent = post.title;
                 const mediaContainer = document.querySelector('.NewsImg');
-                if (post.img && isImageOrVideo(post.img) === 'image') {
+                if (post.picture) {
+                  mediaContainer.style.display = "block";
+                  mediaContainer.innerHTML = post.picture;
+                } else if (post.img && isImageOrVideo(post.img) === 'image') {
                   mediaContainer.style.display = "block";
                   mediaContainer.innerHTML = '<img src="' + post.img + '" alt="' + post.title + '">';
                   mediaContainer.querySelector('img').setAttribute("alt", post.imgalt || post.title)

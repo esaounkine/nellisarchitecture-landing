@@ -46,7 +46,10 @@ const SEARCH = 'data/search.json';
    card: .project__item-img on Home and the category pages. thumb: the same grid in the
    .centerMini column of a project page. full: .currentProject-heroImg and .curProjimg2.
    wide: .FirstBlock__BigImg (studio, people). slide: .swiper-slide. portrait: the studio
-   .photo1 and .FourBlock__firstPhoto. person: the open .accord__itemImg (people). */
+   .photo1 and .FourBlock__firstPhoto. person: the open .accord__itemImg (people).
+   post: the .NewsImg hero and the .NewsContent images of a news post (the news theme also
+   breaks at 1700 px). teaser: the .newsIndexImg cards of /news/ (page-news.html: 320 px).
+   Measured in headless Brave (card 9qVdi6pv). */
 const SLOTS = {
   card: '(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), '
     + '(max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), '
@@ -64,6 +67,10 @@ const SLOTS = {
     + '(max-width: 1439px) 570px, (max-width: 1919px) 600px, 1020px',
   person: '(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, '
     + '(max-width: 1699px) 330px, 1000px',
+  post: '(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), '
+    + '(max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), '
+    + '(max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)',
+  teaser: '(max-width: 759px) calc(100vw - 32px), 320px',
 };
 const LAZY = ' loading="lazy"';
 const PRIORITY = ' loading="eager" fetchpriority="high"';

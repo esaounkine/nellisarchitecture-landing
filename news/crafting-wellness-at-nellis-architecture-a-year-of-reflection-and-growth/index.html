@@ -66,6 +66,20 @@
 <link rel='stylesheet' id='swiper-css' href='../../wp-content/themes/nellis/assets/scss/swiper.css' media='all' />
 <link rel='stylesheet' id='fancybox-css' href='../../wp-content/themes/nellis/assets/scss/vendor/fancybox.css' media='all' />
 <link rel='stylesheet' id='maincss-css' href='../../wp-content/themes/nellis/assets/scss/main.css' media='all' />
+<style id="nellis-images-css">
+	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
+	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   height: auto: the width and height attributes give only the aspect ratio. */
+	picture {
+		display: inline-block;
+		line-height: 0;
+		background-position: center;
+	}
+
+	picture img {
+		height: auto;
+	}
+</style>
 
 
 
@@ -512,7 +526,7 @@
       <div class="NewsCenter">
 
                   <div class="NewsImg">
-            <img src="https://nellisarchitecture.com/wp-content/uploads/2025/02/image_2025-03-22_01-30-43-1.png" alt="Crafting Wellness at Nellis Architecture: A Year of Reflection and Growth" class="lazyload">
+            <picture style="background-image:url(data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAACwAQCdASoQAAkAA4BaJZwAAjAp9eesAP2QLyU4e0BVsPZCwEZJzEqiqJEmnSPKiLwUs948nqLf/czeh/PKQbSXc/ihs7dBua30qifQYUAAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/02/image_2025-03-22_01-30-43-1-85064afc-320.avif 320w, /wp-content/variants/2025/02/image_2025-03-22_01-30-43-1-85064afc-640.avif 640w, /wp-content/variants/2025/02/image_2025-03-22_01-30-43-1-85064afc-960.avif 960w, /wp-content/variants/2025/02/image_2025-03-22_01-30-43-1-85064afc-1600.avif 1600w, /wp-content/variants/2025/02/image_2025-03-22_01-30-43-1-85064afc-1803.avif 1803w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2025/02/image_2025-03-22_01-30-43-1-85064afc-1600.jpg" srcset="/wp-content/variants/2025/02/image_2025-03-22_01-30-43-1-85064afc-640.jpg 640w, /wp-content/variants/2025/02/image_2025-03-22_01-30-43-1-85064afc-1600.jpg 1600w, /wp-content/variants/2025/02/image_2025-03-22_01-30-43-1-85064afc-1803.jpg 1803w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="1803" height="1015" alt="Crafting Wellness at Nellis Architecture: A Year of Reflection and Growth" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
           </div>
 
         
@@ -1311,7 +1325,10 @@
                 globalVariable = post.title;
                 document.querySelector('.NewsTitle').textContent = post.title;
                 const mediaContainer = document.querySelector('.NewsImg');
-                if (post.img && isImageOrVideo(post.img) === 'image') {
+                if (post.picture) {
+                  mediaContainer.style.display = "block";
+                  mediaContainer.innerHTML = post.picture;
+                } else if (post.img && isImageOrVideo(post.img) === 'image') {
                   mediaContainer.style.display = "block";
                   mediaContainer.innerHTML = '<img src="' + post.img + '" alt="' + post.title + '">';
                   mediaContainer.querySelector('img').setAttribute("alt", post.imgalt || post.title)

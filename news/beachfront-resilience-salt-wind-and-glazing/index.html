@@ -66,6 +66,20 @@
 <link rel='stylesheet' id='swiper-css' href='../../wp-content/themes/nellis/assets/scss/swiper.css' media='all' />
 <link rel='stylesheet' id='fancybox-css' href='../../wp-content/themes/nellis/assets/scss/vendor/fancybox.css' media='all' />
 <link rel='stylesheet' id='maincss-css' href='../../wp-content/themes/nellis/assets/scss/main.css' media='all' />
+<style id="nellis-images-css">
+	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
+	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   height: auto: the width and height attributes give only the aspect ratio. */
+	picture {
+		display: inline-block;
+		line-height: 0;
+		background-position: center;
+	}
+
+	picture img {
+		height: auto;
+	}
+</style>
 
 
 
@@ -512,7 +526,7 @@
       <div class="NewsCenter">
 
                   <div class="NewsImg">
-            <img src="https://nellisarchitecture.com/wp-content/uploads/2025/11/qENpH5_A.jpeg" alt="Beachfront Resilience: Salt, Wind, And Glazing" class="lazyload">
+            <picture style="background-image:url(data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAQCdASoQAAkAA4BaJQBOj+AC6KCIAPJtIo/khLFrdfZkPBcQ8vv1jAcZHWIpS0LLJwdcfuWVseAAl8gQi2BKy4XWXY1wAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/11/qENpH5_A-564d0cd7-320.avif 320w, /wp-content/variants/2025/11/qENpH5_A-564d0cd7-640.avif 640w, /wp-content/variants/2025/11/qENpH5_A-564d0cd7-960.avif 960w, /wp-content/variants/2025/11/qENpH5_A-564d0cd7-1600.avif 1600w, /wp-content/variants/2025/11/qENpH5_A-564d0cd7-2048.avif 2048w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)"><img src="/wp-content/variants/2025/11/qENpH5_A-564d0cd7-1600.jpg" srcset="/wp-content/variants/2025/11/qENpH5_A-564d0cd7-640.jpg 640w, /wp-content/variants/2025/11/qENpH5_A-564d0cd7-1600.jpg 1600w, /wp-content/variants/2025/11/qENpH5_A-564d0cd7-2048.jpg 2048w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 272px), (max-width: 1439px) calc(100vw - 502px), (max-width: 1700px) calc(100vw - 726px), (max-width: 1919px) calc(100vw - 836px), calc(100vw - 902px)" width="2048" height="1152" alt="Beachfront Resilience: Salt, Wind, And Glazing" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
           </div>
 
         
@@ -1308,7 +1322,10 @@
                 globalVariable = post.title;
                 document.querySelector('.NewsTitle').textContent = post.title;
                 const mediaContainer = document.querySelector('.NewsImg');
-                if (post.img && isImageOrVideo(post.img) === 'image') {
+                if (post.picture) {
+                  mediaContainer.style.display = "block";
+                  mediaContainer.innerHTML = post.picture;
+                } else if (post.img && isImageOrVideo(post.img) === 'image') {
                   mediaContainer.style.display = "block";
                   mediaContainer.innerHTML = '<img src="' + post.img + '" alt="' + post.title + '">';
                   mediaContainer.querySelector('img').setAttribute("alt", post.imgalt || post.title)

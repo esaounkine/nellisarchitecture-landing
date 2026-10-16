@@ -34,10 +34,10 @@ const project = require('./build/lib/pages/project');
 const { rss } = require('./build/lib/feed');
 const { robots } = require('./build/lib/robots');
 const { imageSize } = require('./build/lib/image-size');
-const { escAttr, isVideo } = require('./build/lib/html');
+const { escAttr, isVideo, loadPartial } = require('./build/lib/html');
 const { sitekey } = require('./build/lib/chrome');
 const { heroPath, FALLBACK_SRC } = require('./build/lib/pages/news');
-const { ensureVariants, readManifest } = require('./build/lib/images');
+const { ensureVariants, readManifest, picture } = require('./build/lib/images');
 
 const ROOT = __dirname;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -74,37 +74,44 @@ function parseFrontMatter(src, file = '') {
   return { fm, body: m[2].trim() };
 }
 
-function inlineMd(s) {
+/* manifest: build/images.json. The images go through picture(); the markdown keeps the
+   original URLs. */
+function inlineMd(s, manifest = {}) {
   return s
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="lazyload" />')
+    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (m, alt, src) => picture({
+      src, alt, slot: 'post',
+    }, manifest))
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>');
 }
 
-function blockToHtml(b) {
+function blockToHtml(b, manifest) {
   if (/^#{2,4}\s/.test(b)) {
     const level = b.match(/^(#{2,4})/)[1].length;
-    return `<h${level}>${inlineMd(b.replace(/^#{2,4}\s*/, ''))}</h${level}>\n`;
+    return `<h${level}>${inlineMd(b.replace(/^#{2,4}\s*/, ''), manifest)}</h${level}>\n`;
   }
   if (b === '---') return '<hr />\n';
   if (/^(- )/m.test(b)) {
     const items = b.split('\n')
       .filter((l) => l.startsWith('- '))
-      .map((l) => `<li>${inlineMd(l.slice(2))}</li>`)
+      .map((l) => `<li>${inlineMd(l.slice(2), manifest)}</li>`)
       .join('');
     return `<ul>${items}</ul>\n`;
   }
-  if (b.startsWith('> ')) return `<blockquote>${inlineMd(b.replace(/^>\s?/gm, ''))}</blockquote>\n`;
-  if (/^<img /.test(inlineMd(b))) return `${inlineMd(b)}\n`;
-  return `<p>${inlineMd(b.replace(/\n/g, ' '))}</p>\n`;
+  if (b.startsWith('> ')) {
+    return `<blockquote>${inlineMd(b.replace(/^>\s?/gm, ''), manifest)}</blockquote>\n`;
+  }
+  const html = inlineMd(b, manifest);
+  if (/^<(?:img|picture)\b/.test(html)) return `${html}\n`;
+  return `<p>${inlineMd(b.replace(/\n/g, ' '), manifest)}</p>\n`;
 }
 
-function mdToHtml(md) {
+function mdToHtml(md, manifest = {}) {
   return md.split(/\n{2,}/)
     .map((b) => b.trim())
     .filter(Boolean)
-    .map(blockToHtml)
+    .map((b) => blockToHtml(b, manifest))
     .join('')
     .trim();
 }
@@ -142,7 +149,7 @@ function newsList(posts) {
           </div>`).join('\n');
 }
 
-function loadPosts(dir) {
+function loadPosts(dir, manifest = {}) {
   const posts = fs.readdirSync(dir).filter((f) => f.endsWith('.md')).map((f) => {
     const file = path.join(dir, f);
     const { fm, body } = parseFrontMatter(fs.readFileSync(file, 'utf8'), file);
@@ -155,7 +162,7 @@ function loadPosts(dir) {
     fm.noindex = fm.noindex === 'true';
     if (!fm.id) fm.id = `md${fm.slug}`;
     fm.filename = f.slice(0, -3);
-    fm.html = mdToHtml(body);
+    fm.html = mdToHtml(body, manifest);
     fm.dateObj = parseDate(fm.date);
     return fm;
   });
@@ -204,16 +211,23 @@ function readingTime(html) {
   return `${n} minute${n === 1 ? '' : 's'}`;
 }
 
-function newsImg(p) {
+/* The post priority image. The switcher (data/news.json) shows the same markup. */
+function heroPicture(p, manifest) {
+  return picture({
+    src: p.hero, alt: p.hero_alt || p.title, slot: 'post', priority: true,
+  }, manifest);
+}
+
+function newsImg(p, manifest = {}) {
   if (!p.hero) return '<div class="NewsImg" style="display: none;">\n          </div>';
   const inner = isVideo(p.hero)
     ? '<video autoplay muted loop playsinline>'
       + `<source src="${escAttr(p.hero)}" type="video/mp4" /></video>`
-    : `<img src="${p.hero}" alt="${esc(p.hero_alt || p.title)}" class="lazyload">`;
+    : heroPicture(p, manifest);
   return `<div class="NewsImg">\n            ${inner}\n          </div>`;
 }
 
-function renderPost(template, p, list) {
+function renderPost(template, p, list, manifest = {}) {
   const img = ogImage(p);
   const newsBtn = p.link
     ? `<a target="_blank" href="${p.link}" class="NewsBtn">MORE INFO ${ARROW_SVG}</a>`
@@ -234,7 +248,8 @@ function renderPost(template, p, list) {
     .replaceAll('{{OG_IMAGE_TYPE}}', img.type)
     .replaceAll('{{READ_TIME}}', readingTime(p.html))
     .replaceAll('{{SCHEMA}}', articleSchema(p))
-    .replaceAll('{{NEWS_IMG}}', newsImg(p))
+    .replaceAll('{{NEWS_IMG}}', newsImg(p, manifest))
+    .replaceAll('{{IMAGES_CSS}}', loadPartial('images-css'))
     .replaceAll('{{TITLE}}', p.title)
     .replaceAll('{{DATE}}', p.date || '')
     .replaceAll('{{CONTENT}}', `\n${p.html}\n        `)
@@ -243,7 +258,7 @@ function renderPost(template, p, list) {
     .replaceAll('{{TURNSTILE_SITEKEY}}', sitekey());
 }
 
-function newsJsonEntry(p) {
+function newsJsonEntry(p, manifest) {
   return {
     success: true,
     data: {
@@ -252,6 +267,7 @@ function newsJsonEntry(p) {
       data: p.date || '',
       img: p.hero || '',
       imgalt: p.hero_alt || p.title,
+      picture: p.hero && !isVideo(p.hero) ? heroPicture(p, manifest) : '',
       link: p.link || '',
       slug: p.slug,
     },
@@ -352,7 +368,7 @@ function writeRedirects(root, posts) {
 
 /* manifest: build/images.json, plus the variants that CI made (ensureVariants). */
 function build(manifest = readManifest(ROOT)) {
-  const posts = loadPosts(path.join(ROOT, 'content', 'news'));
+  const posts = loadPosts(path.join(ROOT, 'content', 'news'), manifest);
   if (!posts.length) {
     console.log('no posts');
     return;
@@ -365,8 +381,8 @@ function build(manifest = readManifest(ROOT)) {
   posts.forEach((p) => {
     const outDir = path.join(ROOT, 'news', p.slug);
     fs.mkdirSync(outDir, { recursive: true });
-    fs.writeFileSync(path.join(outDir, 'index.html'), renderPost(template, p, list));
-    newsJson[p.id] = newsJsonEntry(p);
+    fs.writeFileSync(path.join(outDir, 'index.html'), renderPost(template, p, list, manifest));
+    newsJson[p.id] = newsJsonEntry(p, manifest);
   });
 
   pruneNews(ROOT, posts);
@@ -403,6 +419,8 @@ module.exports = {
   loadPosts,
   renderPost,
   newsImg,
+  newsJsonEntry,
+  newsList,
   readingTime,
   pruneNews,
   refreshNewsLists,

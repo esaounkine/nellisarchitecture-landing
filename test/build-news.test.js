@@ -5,8 +5,11 @@ const os = require('node:os');
 const path = require('node:path');
 const {
   parseFrontMatter, inlineMd, mdToHtml, parseDate, esc, idNum, sitemap, loadPosts,
-  renderPost, readingTime, newsImg,
+  renderPost, readingTime, newsImg, newsJsonEntry, newsList,
 } = require('../build-news');
+const { readManifest, SLOTS } = require('../build/lib/images');
+const { escAttr } = require('../build/lib/html');
+const { rss } = require('../build/lib/feed');
 const { INDEX, NOINDEX } = require('../build/lib/seo');
 
 test('parseFrontMatter reads plain and quoted values', () => {
@@ -26,8 +29,11 @@ test('parseFrontMatter throws on a missing front matter block', () => {
   assert.throws(() => parseFrontMatter('no front matter', 'x.md'), /bad front matter: x\.md/);
 });
 
+const FALLBACK = (src, alt) => `<img src="${src}" alt="${alt}" decoding="async" `
+  + 'loading="lazy" data-overlay-added="true">';
+
 test('inlineMd renders images before links, bold before italics', () => {
-  assert.equal(inlineMd('![alt](/a.jpg)'), '<img src="/a.jpg" alt="alt" class="lazyload" />');
+  assert.equal(inlineMd('![alt](/a.jpg)'), FALLBACK('/a.jpg', 'alt'));
   assert.equal(inlineMd('[site](https://x.com)'), '<a href="https://x.com">site</a>');
   assert.equal(inlineMd('**b** and *i*'), '<strong>b</strong> and <em>i</em>');
 });
@@ -43,7 +49,7 @@ test('mdToHtml renders each block type', () => {
     '<hr />',
     '<ul><li>one</li><li>two</li></ul>',
     '<blockquote>quote</blockquote>',
-    '<img src="/i.jpg" alt="a" class="lazyload" />',
+    FALLBACK('/i.jpg', 'a'),
     '<p>line one line two</p>',
   ].join('\n'));
 });
@@ -260,8 +266,109 @@ test('newsImg renders a video, an image or a hidden div', () => {
   assert.equal(newsImg({ hero: '/v.MP4' }), VIDEO_IMG('/v.MP4'));
   assert.equal(newsImg({ hero: '/a"b&c.mp4' }), VIDEO_IMG('/a&quot;b&amp;c.mp4'));
   const img = newsImg({ hero: '/a.jpg', hero_alt: 'Alt', title: 'T' });
-  assert.equal(img, '<div class="NewsImg">\n            '
-    + '<img src="/a.jpg" alt="Alt" class="lazyload">\n          </div>');
+  assert.equal(img, '<div class="NewsImg">\n            <img src="/a.jpg" alt="Alt" '
+    + 'decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true">'
+    + '\n          </div>');
   assert.doesNotMatch(img, /<video/);
   assert.equal(newsImg({}), '<div class="NewsImg" style="display: none;">\n          </div>');
+});
+
+const MANIFEST = readManifest(ROOT);
+const POSTS = loadPosts(path.join(ROOT, 'content', 'news'), MANIFEST);
+const HERO = `${UP}/2026/07/Luxury-home-design-Dubai-scaled.jpg`;
+const BODY = `${UP}/2026/07/Zoya6-1024x576.jpg`;
+const VARIANT = /\/wp-content\/variants\//;
+const imageHero = (p) => Boolean(p.hero) && !/\.mp4$/i.test(p.hero);
+
+test('inlineMd and mdToHtml: an upload image becomes a lazy picture with local variants', () => {
+  const html = inlineMd(`![A "b"](${BODY})`, MANIFEST);
+  assert.match(html, /^<picture style="background-image:url\(data:image\/webp;base64,/);
+  assert.match(html, /<img src="\/wp-content\/variants\/2026\/07\/Zoya6-1024x576-\w{8}-1024\.jpg"/);
+  assert.ok(html.includes(`sizes="${escAttr(SLOTS.post)}"`));
+  assert.ok(html.includes('alt="A &quot;b&quot;"'));
+  assert.ok(html.includes('loading="lazy"'));
+  assert.ok(!html.includes('fetchpriority'));
+  assert.ok(!html.includes(SITE));
+  assert.equal(mdToHtml(`![a](${BODY})`, MANIFEST), html.replace('A &quot;b&quot;', 'a'));
+  assert.match(mdToHtml(`text ![a](${BODY})`, MANIFEST), /^<p>text <picture /);
+});
+
+test('inlineMd: an upload without a manifest entry is the plain img of the original', () => {
+  const html = inlineMd(`![a](${UP}/2026/07/none.jpg)`, MANIFEST);
+  assert.equal(html, FALLBACK('/wp-content/uploads/2026/07/none.jpg', 'a'));
+});
+
+test('newsImg: an image hero is the priority picture, a video stays a video', () => {
+  const img = newsImg({ hero: HERO, title: 'T' }, MANIFEST);
+  assert.match(img, /^<div class="NewsImg">\n {12}<picture /);
+  assert.ok(img.includes('loading="eager" fetchpriority="high"'));
+  assert.ok(img.includes(`sizes="${escAttr(SLOTS.post)}"`));
+  assert.ok(img.includes('alt="T"'));
+  assert.ok(!img.includes(SITE));
+  assert.equal(newsImg({ hero: `${UP}/v.mp4` }, MANIFEST), VIDEO_IMG(`${UP}/v.mp4`));
+  assert.equal(newsImg({}, MANIFEST), newsImg({}));
+});
+
+test('each real post: one priority image (the hero) or none; the CSS is in the head', () => {
+  POSTS.forEach((p) => {
+    const html = renderPost(TEMPLATE, p, '', MANIFEST);
+    const want = imageHero(p) ? 1 : 0;
+    assert.equal(html.split('fetchpriority="high"').length - 1, want, p.slug);
+    assert.equal(html.split('loading="eager"').length - 1, want, p.slug);
+    if (want) {
+      const hero = html.split('<div class="NewsImg">')[1].split('</div>')[0];
+      assert.match(hero, /fetchpriority="high"/, p.slug);
+    }
+    assert.equal(html.split('<style id="nellis-images-css">').length - 1, 1, p.slug);
+    assert.ok(!html.includes('{{'), p.slug);
+  });
+});
+
+test('og:image, the schema, the feed and the sitemap keep the original URLs', () => {
+  const p = POSTS.find((x) => x.hero === HERO);
+  const html = renderPost(TEMPLATE, p, '', MANIFEST);
+  assert.deepEqual(meta(html, 'og:image'), [HERO]);
+  const ld = html.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/)[1];
+  assert.doesNotMatch(ld, VARIANT);
+  assert.match(html.split('<div class="NewsImg">')[1], VARIANT);
+  assert.doesNotMatch(rss(POSTS), VARIANT);
+  assert.doesNotMatch(sitemap(POSTS, []), VARIANT);
+  const md = fs.readFileSync(path.join(ROOT, 'content/news', `${p.filename}.md`), 'utf8');
+  assert.doesNotMatch(md, VARIANT);
+});
+
+test('newsJsonEntry: picture is the hero markup for an image hero, else empty', () => {
+  const p = { ...post({ hero: HERO }), slug: 's' };
+  const { data } = newsJsonEntry(p, MANIFEST);
+  assert.equal(data.img, HERO);
+  assert.ok(newsImg(p, MANIFEST).includes(data.picture));
+  assert.match(data.picture, /^<picture /);
+  assert.equal(newsJsonEntry(post({ hero: `${UP}/v.mp4` }), MANIFEST).data.picture, '');
+  assert.equal(newsJsonEntry(post({}), MANIFEST).data.picture, '');
+});
+
+test('the switcher uses post.picture first and keeps the img and video paths', () => {
+  const js = TEMPLATE.slice(TEMPLATE.indexOf('function ajaxNews'));
+  const at = (s) => js.indexOf(s);
+  assert.ok(at('if (post.picture) {') > -1);
+  assert.ok(at('mediaContainer.innerHTML = post.picture;') > at('if (post.picture) {'));
+  assert.ok(at("} else if (post.img && isImageOrVideo(post.img) === 'image') {")
+    > at('mediaContainer.innerHTML = post.picture;'));
+  assert.ok(at("isImageOrVideo(post.img) === 'video'") > -1);
+});
+
+test('the build is current and idempotent: news pages and news.json match a new render', () => {
+  const list = newsList(POSTS);
+  const json = {};
+  POSTS.forEach((p) => {
+    json[p.id] = newsJsonEntry(p, MANIFEST);
+    const file = path.join(ROOT, 'news', p.slug, 'index.html');
+    assert.equal(fs.readFileSync(file, 'utf8'), renderPost(TEMPLATE, p, list, MANIFEST), p.slug);
+  });
+  const disk = fs.readFileSync(path.join(ROOT, 'data', 'news.json'), 'utf8');
+  assert.equal(disk, JSON.stringify(json, null, 2));
+  Object.values(JSON.parse(disk)).forEach(({ data }) => {
+    if (/\.mp4$/i.test(data.img) || !data.img) assert.equal(data.picture, '', data.slug);
+    else assert.match(data.picture, /^<picture /, data.slug);
+  });
 });

@@ -66,6 +66,20 @@
 <link rel='stylesheet' id='swiper-css' href='../../wp-content/themes/nellis/assets/scss/swiper.css' media='all' />
 <link rel='stylesheet' id='fancybox-css' href='../../wp-content/themes/nellis/assets/scss/vendor/fancybox.css' media='all' />
 <link rel='stylesheet' id='maincss-css' href='../../wp-content/themes/nellis/assets/scss/main.css' media='all' />
+<style id="nellis-images-css">
+	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
+	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   height: auto: the width and height attributes give only the aspect ratio. */
+	picture {
+		display: inline-block;
+		line-height: 0;
+		background-position: center;
+	}
+
+	picture img {
+		height: auto;
+	}
+</style>
 
 
 
@@ -1302,7 +1316,10 @@
                 globalVariable = post.title;
                 document.querySelector('.NewsTitle').textContent = post.title;
                 const mediaContainer = document.querySelector('.NewsImg');
-                if (post.img && isImageOrVideo(post.img) === 'image') {
+                if (post.picture) {
+                  mediaContainer.style.display = "block";
+                  mediaContainer.innerHTML = post.picture;
+                } else if (post.img && isImageOrVideo(post.img) === 'image') {
                   mediaContainer.style.display = "block";
                   mediaContainer.innerHTML = '<img src="' + post.img + '" alt="' + post.title + '">';
                   mediaContainer.querySelector('img').setAttribute("alt", post.imgalt || post.title)
