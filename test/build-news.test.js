@@ -5,7 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const {
   parseFrontMatter, inlineMd, mdToHtml, parseDate, esc, idNum, sitemap, loadPosts,
-  renderPost, readingTime,
+  renderPost, readingTime, newsImg,
 } = require('../build-news');
 const { INDEX, NOINDEX } = require('../build/lib/seo');
 
@@ -233,4 +233,35 @@ test('sitemap skips noindex posts and keeps the others', () => {
   const xml = sitemap([{ slug: 'a', dateObj, noindex: true }, { slug: 'b', dateObj }], []);
   assert.ok(!xml.includes('/news/a/'));
   assert.ok(xml.includes('/news/b/'));
+});
+
+const VIDEO_IMG = (src) => '<div class="NewsImg">\n            '
+  + '<video autoplay muted loop playsinline>'
+  + `<source src="${src}" type="video/mp4" /></video>\n          </div>`;
+
+test('renderPost shows an mp4 hero as a video, not as an img', () => {
+  const src = `${UP}/2025/07/One-Year-Anniversary-Video-For-Website.mp4`;
+  const html = renderPost(TEMPLATE, post({ hero: src }), '');
+  assert.ok(html.includes(VIDEO_IMG(src)));
+  assert.doesNotMatch(html, /<img src="[^"]*\.mp4"/);
+});
+
+test('the real anniversary post renders a video and keeps the minis.png og:image', () => {
+  const p = loadPosts(path.join(ROOT, 'content', 'news'))
+    .find((x) => x.slug.startsWith('one-year-anniversary'));
+  const html = renderPost(TEMPLATE, p, '');
+  assert.match(html, /<div class="NewsImg">\n {12}<video /);
+  assert.doesNotMatch(html, /<img src="[^"]*\.mp4"/);
+  const minis = `${SITE}/wp-content/themes/nellis/assets/img/minis.png`;
+  assert.deepEqual(meta(html, 'og:image'), [minis]);
+});
+
+test('newsImg renders a video, an image or a hidden div', () => {
+  assert.equal(newsImg({ hero: '/v.MP4' }), VIDEO_IMG('/v.MP4'));
+  assert.equal(newsImg({ hero: '/a"b&c.mp4' }), VIDEO_IMG('/a&quot;b&amp;c.mp4'));
+  const img = newsImg({ hero: '/a.jpg', hero_alt: 'Alt', title: 'T' });
+  assert.equal(img, '<div class="NewsImg">\n            '
+    + '<img src="/a.jpg" alt="Alt" class="lazyload">\n          </div>');
+  assert.doesNotMatch(img, /<video/);
+  assert.equal(newsImg({}), '<div class="NewsImg" style="display: none;">\n          </div>');
 });

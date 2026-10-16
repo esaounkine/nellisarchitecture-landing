@@ -43,11 +43,13 @@ function lazyImg({
     + `--smush-placeholder-aspect-ratio: ${escAttr(width)}/${escAttr(height)};" />`;
 }
 
+const isVideo = (src) => /\.(mp4|avi|mov|webm|mkv)$/i.test(src);
+
 /* Partial files end with one newline for editors; the page markup does not. */
 function loadPartial(name, dir = PARTIALS) {
   return fs.readFileSync(path.join(dir, `${name}.html`), 'utf8').replace(/\n$/, '');
 }
 
 module.exports = {
-  escText, escAttr, fill, titleAttr, lazyImg, loadPartial,
+  escText, escAttr, fill, titleAttr, lazyImg, loadPartial, isVideo,
 };

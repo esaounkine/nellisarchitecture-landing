@@ -1,5 +1,5 @@
 const {
-  escText, escAttr, fill, loadPartial,
+  escText, escAttr, fill, loadPartial, isVideo,
 } = require('../html');
 const {
   head, top, affiliations, footer,
@@ -13,7 +13,6 @@ const SWIPER_NAV_BUTTON = (cls) => `                    <svg class="${cls}" widt
                     </svg>`;
 /* eslint-enable @stylistic/max-len */
 
-const isVideo = (src) => /\.(mp4|avi|mov|webm|mkv)$/i.test(src);
 const nonEmpty = (list) => (list || []).filter((t) => t && t.trim());
 
 /* Project texts are HTML from our own data (entities, </br>): output raw, as the overlay does. */

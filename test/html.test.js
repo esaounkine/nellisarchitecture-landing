@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 const {
-  escText, escAttr, fill, titleAttr, lazyImg, loadPartial,
+  escText, escAttr, fill, titleAttr, lazyImg, loadPartial, isVideo,
 } = require('../build/lib/html');
 const { affiliations } = require('../build/lib/chrome');
 
@@ -92,4 +92,12 @@ test('affiliations level defaults to 7 and moves the partner div', () => {
   assert.equal(eight[0], `${' '.repeat(16)}<div class="partner">`);
   assert.ok(eight[1].startsWith(`${' '.repeat(18)}<img data-src="/a.png"`));
   assert.equal(eight[2], `${' '.repeat(16)}</div>`);
+});
+
+test('isVideo matches video extensions in any case, at the end of the path only', () => {
+  assert.equal(isVideo('/a.mp4'), true);
+  assert.equal(isVideo('/a.MOV'), true);
+  assert.equal(isVideo('/a.jpg'), false);
+  assert.equal(isVideo(''), false);
+  assert.equal(isVideo('/a.mp4?x'), false);
 });

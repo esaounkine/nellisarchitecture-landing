@@ -32,7 +32,7 @@ const project = require('./build/lib/pages/project');
 const { rss } = require('./build/lib/feed');
 const { robots } = require('./build/lib/robots');
 const { imageSize } = require('./build/lib/image-size');
-const { escAttr } = require('./build/lib/html');
+const { escAttr, isVideo } = require('./build/lib/html');
 const { sitekey } = require('./build/lib/chrome');
 const { heroPath, FALLBACK_SRC } = require('./build/lib/pages/news');
 
@@ -201,12 +201,17 @@ function readingTime(html) {
   return `${n} minute${n === 1 ? '' : 's'}`;
 }
 
+function newsImg(p) {
+  if (!p.hero) return '<div class="NewsImg" style="display: none;">\n          </div>';
+  const inner = isVideo(p.hero)
+    ? '<video autoplay muted loop playsinline>'
+      + `<source src="${escAttr(p.hero)}" type="video/mp4" /></video>`
+    : `<img src="${p.hero}" alt="${esc(p.hero_alt || p.title)}" class="lazyload">`;
+  return `<div class="NewsImg">\n            ${inner}\n          </div>`;
+}
+
 function renderPost(template, p, list) {
   const img = ogImage(p);
-  const newsImg = p.hero
-    ? `<div class="NewsImg">\n            <img src="${p.hero}" alt="${esc(p.hero_alt || p.title)}" `
-      + 'class="lazyload">\n          </div>'
-    : '<div class="NewsImg" style="display: none;">\n          </div>';
   const newsBtn = p.link
     ? `<a target="_blank" href="${p.link}" class="NewsBtn">MORE INFO ${ARROW_SVG}</a>`
     : '<a href="/" class="NewsBtn"></a>';
@@ -226,7 +231,7 @@ function renderPost(template, p, list) {
     .replaceAll('{{OG_IMAGE_TYPE}}', img.type)
     .replaceAll('{{READ_TIME}}', readingTime(p.html))
     .replaceAll('{{SCHEMA}}', articleSchema(p))
-    .replaceAll('{{NEWS_IMG}}', newsImg)
+    .replaceAll('{{NEWS_IMG}}', newsImg(p))
     .replaceAll('{{TITLE}}', p.title)
     .replaceAll('{{DATE}}', p.date || '')
     .replaceAll('{{CONTENT}}', `\n${p.html}\n        `)
@@ -392,6 +397,7 @@ module.exports = {
   sitemap,
   loadPosts,
   renderPost,
+  newsImg,
   readingTime,
   pruneNews,
   refreshNewsLists,
