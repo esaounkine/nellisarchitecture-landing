@@ -78,7 +78,7 @@ Scope: our own code (`build-news.js`, `build/lib/`, `js/static-backend.js`, futu
 - Plain JavaScript. No TypeScript. No framework.
 - Build scripts run on Node with zero runtime dependencies. Add a dependency only when a card needs it. Dev tools go in `devDependencies`.
 - Browser code runs without a bundler. Keep the existing theme scripts working.
-- Base: Airbnb via `eslint-config-airbnb-extended` (`eslint.config.mjs`). Linted files: `build-news.js`, `build/make-images.js`, `build/lib/**/*.js` (with `build/lib/images.js`), `infra/**/*.js`, `js/static-backend.js`, `js/project-switch.js`, `js/forms.js`, `worker/**`, `test/`, `eslint.config.mjs`. Add new own files to the config.
+- Base: Airbnb via `eslint-config-airbnb-extended` (`eslint.config.mjs`). Linted files: `build-news.js`, `build/make-images.js`, `build/lib/**/*.js`, `infra/**/*.js`, `js/static-backend.js`, `js/project-switch.js`, `js/forms.js`, `worker/**`, `test/`, `eslint.config.mjs`. Add new own files to the config.
 - Build scripts: synchronous `fs` calls and `console` output are allowed (`n/no-sync`, `no-console` off).
 - Browser scripts: `'use strict'` inside the IIFE (`strict: function`). Underscore fields are allowed for shim internals (`no-underscore-dangle` off).
 - Build scripts export their pure functions and run only when called directly (`require.main === module`), so tests can import them.

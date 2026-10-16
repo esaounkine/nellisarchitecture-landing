@@ -5,6 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 const sharp = require('sharp');
 const images = require('../build/lib/images');
+const { main: makeImages } = require('../build/make-images');
 
 const root = path.join(__dirname, '..');
 const manifestFile = path.join(root, images.MANIFEST);
@@ -47,6 +48,79 @@ test('toUploadPath reads root, relative, absolute and encoded upload URLs', () =
   assert.equal(images.toUploadPath('https://example.com/wp-content/uploads/a.jpg'), null);
   assert.equal(images.toUploadPath('/wp-content/themes/a.jpg'), null);
   assert.equal(images.toUploadPath('/images/a.jpg'), null);
+});
+
+test('toUploadPath rejects dot segments, backslashes and paths that leave uploads', () => {
+  [
+    '/wp-content/uploads/%2e%2e/x.jpg',
+    '/wp-content/uploads/%2E%2E/%2e%2e/x.jpg',
+    '/wp-content/uploads/../x.jpg',
+    '/wp-content/uploads/2025/../../x.jpg',
+    '/wp-content/uploads/./x.jpg',
+    '/wp-content/uploads/a/%2e/x.jpg',
+    '/wp-content/uploads/a%2F..%2F..%2Fx.jpg',
+    '/wp-content/uploads/a%2f..%2fx.jpg',
+    '/wp-content/uploads/a\\..\\x.jpg',
+    '/wp-content/uploads/a%5C..%5Cx.jpg',
+    '/wp-content/uploads//x.jpg',
+  ].forEach((url) => assert.equal(images.toUploadPath(url), null, url));
+  assert.equal(
+    images.toUploadPath('/wp-content/uploads/%252e%252e/x.jpg'),
+    'wp-content/uploads/%2e%2e/x.jpg',
+  );
+  assert.equal(
+    images.toUploadPath('/wp-content/uploads/a..b/x.jpg'),
+    'wp-content/uploads/a..b/x.jpg',
+  );
+});
+
+test('variantName throws when the output leaves wp-content/variants/', () => {
+  assert.throws(() => images.variantName('wp-content/uploads/../x.jpg', 'abcdef12', 640, 'avif'));
+  assert.throws(() => images.variantName('wp-content/uploads/a/../../x.jpg', 'abcdef12', 1, 'jpg'));
+  assert.throws(() => images.variantName('wp-content/uploads/a.jpg', '../../x', 640, 'avif'));
+});
+
+test('walk does not follow symbolic links', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'images-walk-'));
+  try {
+    fs.mkdirSync(path.join(dir, 'tree', 'sub'), { recursive: true });
+    fs.mkdirSync(path.join(dir, 'other'));
+    fs.writeFileSync(path.join(dir, 'tree', 'sub', 'a.jpg'), 'a');
+    fs.writeFileSync(path.join(dir, 'other', 'b.jpg'), 'b');
+    fs.symlinkSync(path.join(dir, 'other'), path.join(dir, 'tree', 'link'));
+    fs.symlinkSync(path.join(dir, 'other', 'b.jpg'), path.join(dir, 'tree', 'b.jpg'));
+    fs.symlinkSync(path.join(dir, 'tree'), path.join(dir, 'tree', 'sub', 'loop'));
+    fs.symlinkSync(path.join(dir, 'other'), path.join(dir, 'top'));
+    assert.deepEqual(images.walk(path.join(dir, 'tree')), [path.join(dir, 'tree', 'sub', 'a.jpg')]);
+    assert.deepEqual(images.walk(path.join(dir, 'top')), []);
+    assert.deepEqual(images.walk(`${path.join(dir, 'top')}/`), []);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('staleVariants lists only unnamed variant files inside wp-content/variants/', () => {
+  const entry = { hash: 'abcdef12', widths: { avif: [320], jpg: [640] } };
+  const manifest = { 'wp-content/uploads/2025/a.jpg': entry };
+  const files = [
+    'wp-content/variants/2025/a-abcdef12-320.avif',
+    'wp-content/variants/2025/a-abcdef12-640.jpg',
+    'wp-content/variants/2025/a-00000000-320.avif',
+    'wp-content/variants/old-12345678-1600.png',
+    'wp-content/variants/../uploads/x-12345678-640.jpg',
+    'wp-content/variants/2025/../../uploads/y-12345678-640.jpg',
+    'wp-content/uploads/z-12345678-640.jpg',
+    '/etc/z-12345678-640.jpg',
+    '../z-12345678-640.jpg',
+    'wp-content/variants/.DS_Store',
+    'wp-content/variants/README.md',
+    'wp-content/variants/2025/a-abcdef12-640.webp',
+  ];
+  assert.deepEqual(images.staleVariants(manifest, files), [
+    'wp-content/variants/2025/a-00000000-320.avif',
+    'wp-content/variants/old-12345678-1600.png',
+  ]);
+  assert.deepEqual(images.staleVariants(manifest, []), []);
 });
 
 test('manifestEntry: AVIF and JPEG widths, PNG for alpha', () => {
@@ -183,6 +257,43 @@ test('ensureVariants never throws: an install failure logs one line', async () =
   }
 });
 
+test('ensureVariants in CI: a corrupt manifest logs one line and does not throw', async () => {
+  const dir = ciRoot();
+  try {
+    fs.writeFileSync(path.join(dir, images.MANIFEST), '{"broken');
+    const logs = [];
+    const manifest = await images.ensureVariants(dir, {
+      env: { WORKERS_CI: '1' }, install: noInstall, log: (line) => logs.push(line),
+    });
+    assert.deepEqual(manifest, {});
+    assert.equal(logs.length, 1);
+    assert.match(logs[0], /^images: CI fallback skipped/);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('ensureVariants: the time cap counts the install time', async () => {
+  const dir = ciRoot();
+  try {
+    let t = 0;
+    const manifest = await images.ensureVariants(dir, {
+      env: { WORKERS_CI: '1' },
+      install: () => {
+        t += 10;
+        return 'sharp';
+      },
+      encode: async () => ({}),
+      log: () => {},
+      maxMs: 5,
+      now: () => t,
+    });
+    assert.deepEqual(manifest, {});
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('ensureVariants stops after maxMs', async () => {
   const dir = ciRoot();
   try {
@@ -254,6 +365,64 @@ test('encodeImage writes the ladder: JPEG for opaque, PNG for alpha, rotated siz
     assert.equal(files.length, 5);
     const meta = await sharp(path.join(dir, files[0])).metadata();
     assert.deepEqual([meta.format, meta.width, meta.height], ['heif', 300, 700]);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+function makeRoot() {
+  const dir = ciRoot();
+  fs.writeFileSync(path.join(dir, images.MANIFEST), '{}');
+  const stale = path.join(dir, 'wp-content', 'variants', 'old-12345678-640.avif');
+  fs.mkdirSync(path.dirname(stale), { recursive: true });
+  fs.writeFileSync(stale, 'x');
+  return { dir, stale };
+}
+
+const quiet = { log: () => {}, warn: () => {} };
+
+test('make-images deletes stale variants after a clean run', async () => {
+  const { dir, stale } = makeRoot();
+  try {
+    await makeImages(dir, { ...quiet, encode: async () => ({ hash: 'abcdef12', widths: {} }) });
+    assert.equal(fs.existsSync(stale), false);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('make-images keeps every variant when an encode fails', async () => {
+  const { dir, stale } = makeRoot();
+  try {
+    const warns = [];
+    await makeImages(dir, {
+      log: () => {},
+      warn: (line) => warns.push(line),
+      encode: async () => {
+        throw new Error('sharp is broken');
+      },
+    });
+    assert.equal(fs.existsSync(stale), true);
+    assert.match(warns.at(-1), /stale delete skipped/);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('make-images deletes nothing when wp-content/variants is a symbolic link', async () => {
+  const { dir, stale } = makeRoot();
+  try {
+    const real = path.join(dir, 'real');
+    fs.renameSync(path.dirname(stale), real);
+    fs.symlinkSync(real, path.dirname(stale));
+    const warns = [];
+    await makeImages(dir, {
+      log: () => {},
+      warn: (line) => warns.push(line),
+      encode: async () => ({ hash: 'abcdef12', widths: {} }),
+    });
+    assert.equal(fs.existsSync(path.join(real, 'old-12345678-640.avif')), true);
+    assert.match(warns.at(-1), /symbolic link/);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }

@@ -51,7 +51,9 @@ export default [
     files: [
       'build-news.js', 'build/make-images.js', 'build/lib/**/*.js', 'infra/**/*.js', 'test/**/*.js',
     ],
-    languageOptions: { sourceType: 'commonjs' },
+    languageOptions: {
+      sourceType: 'commonjs', ecmaVersion: 2022, parserOptions: { ecmaVersion: 2022 },
+    },
   },
   {
     files: ['build/make-images.js'],

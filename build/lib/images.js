@@ -1,4 +1,3 @@
-/* eslint no-unused-vars: ["error", { "caughtErrors": "none" }] -- see toUploadPath */
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
@@ -27,6 +26,11 @@ const REF = new RegExp(
   'gi',
 );
 const UPLOAD = new RegExp(`^${DOMAIN}(wp-content/uploads/[^?#]+)`);
+const VARIANT = /-[0-9a-f]{8}-\d+\.(?:avif|jpg|png)$/;
+
+/* A clean relative posix path below base: no ".", "..", "//" or a backslash. */
+const inside = (p, base) => !p.includes('\\') && path.posix.normalize(p) === p
+  && p.startsWith(base);
 
 /* Steps below the original width, then the original width once (never upscale). */
 function ladder(width, steps = AVIF) {
@@ -38,7 +42,9 @@ function variantName(uploadPath, hash, w, ext) {
   const rel = uploadPath.slice(UPLOADS.length);
   const dir = path.posix.dirname(rel);
   const name = path.posix.basename(rel, path.posix.extname(rel));
-  return `${VARIANTS}${dir === '.' ? '' : `${dir}/`}${name}-${hash}-${w}.${ext}`;
+  const out = `${VARIANTS}${dir === '.' ? '' : `${dir}/`}${name}-${hash}-${w}.${ext}`;
+  if (!inside(out, VARIANTS)) throw new Error(`variant outside ${VARIANTS}: ${out}`);
+  return out;
 }
 
 /* An upload URL or path -> "wp-content/uploads/...", else null. */
@@ -46,8 +52,9 @@ function toUploadPath(url) {
   const m = String(url).match(UPLOAD);
   if (!m) return null;
   try {
-    return decodeURIComponent(m[1]);
-  } catch (bad) {
+    const p = decodeURIComponent(m[1]);
+    return inside(p, UPLOADS) ? p : null;
+  } catch {
     return null;
   }
 }
@@ -70,12 +77,21 @@ const missing = (manifest, used) => used.filter((p) => !manifest[p]);
 const variantFiles = (manifest) => Object.entries(manifest).flatMap(([p, e]) => Object
   .entries(e.widths).flatMap(([ext, ws]) => ws.map((w) => variantName(p, e.hash, w, ext))));
 
+/* The files below wp-content/variants/ with a variant name that the manifest does not name. */
+function staleVariants(manifest, files) {
+  const keep = new Set(variantFiles(manifest));
+  return files.filter((f) => inside(f, VARIANTS) && VARIANT.test(f) && !keep.has(f));
+}
+
 const hash8 = (buf) => crypto.createHash('sha256').update(buf).digest('hex').slice(0, 8);
 
+/* Never follows a symbolic link (path.resolve drops a trailing "/", which follows one). */
 function walk(file) {
-  if (!fs.existsSync(file)) return [];
+  if (!fs.existsSync(file) || fs.lstatSync(path.resolve(file)).isSymbolicLink()) return [];
   if (!fs.statSync(file).isDirectory()) return [file];
-  return fs.readdirSync(file).flatMap((name) => walk(path.join(file, name)));
+  return fs.readdirSync(file, { withFileTypes: true })
+    .filter((d) => !d.isSymbolicLink())
+    .flatMap((d) => walk(path.join(file, d.name)));
 }
 
 /* Every upload image the site content and the generated pages name, sorted. */
@@ -126,27 +142,29 @@ function installSharp(version) {
   const prefix = fs.mkdtempSync(path.join(os.tmpdir(), 'sharp-'));
   execFileSync('npm', [
     'install', '--no-save', '--no-package-lock', '--prefix', prefix, `sharp@${version}`,
-  ], { stdio: 'ignore' });
+  ], { stdio: 'ignore', timeout: 180000 });
   return createRequire(path.join(prefix, 'node_modules', 'sharp', 'package.json'))('sharp');
 }
 
 /* CI only (WORKERS_CI=1): make the variants of uploads without a manifest entry.
-   The new entries stay in memory; build/images.json does not change. Never throws.
+   The new entries stay in memory; build/images.json does not change. Never throws:
+   a corrupt manifest gives {} in CI (originals), but throws locally so people see it.
    SHORTCUT: at most maxImages images or maxMs per build; the rest fall back to the
    originals until `npm run images` runs locally and the variants are committed. */
 async function ensureVariants(root, {
   env = process.env, install = installSharp, encode = encodeImage, log = console.log,
   maxImages = 40, maxMs = 8 * 60 * 1000, now = Date.now,
 } = {}) {
-  const manifest = readManifest(root);
-  if (env.WORKERS_CI !== '1') return manifest;
+  if (env.WORKERS_CI !== '1') return readManifest(root);
+  const start = now();
+  let manifest = {};
   try {
+    manifest = readManifest(root);
     const todo = missing(manifest, usedImages(root))
       .filter((p) => fs.existsSync(path.join(root, p))).slice(0, maxImages);
     if (!todo.length) return manifest;
     const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
     const sharp = install(pkg.devDependencies.sharp);
-    const start = now();
     let made = 0;
     await todo.reduce((chain, p) => chain.then(async () => {
       if (now() - start > maxMs) return;
@@ -169,6 +187,7 @@ module.exports = {
   manifestEntry,
   missing,
   variantFiles,
+  staleVariants,
   hash8,
   walk,
   usedImages,
