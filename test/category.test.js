@@ -6,6 +6,7 @@ const category = require('../build/lib/pages/category');
 const { PAGES, renderPages } = require('../build/lib/pages');
 const { loadProjects, CATEGORY_KEYS, inCategory } = require('../build/lib/projects');
 const { sitemap } = require('../build-news');
+const { originalOf, readManifest } = require('../build/lib/images');
 
 const ROOT = path.join(__dirname, '..');
 const DOMAIN = 'https://nellisarchitecture.com';
@@ -65,7 +66,9 @@ test('each item links to the project page in its primary category', () => {
   assert.ok(html.includes('<a class="project__link" href="/projects/architecture/zoya/" '
     + 'aria-label="Zoya"></a>'));
   assert.ok(html.includes('href="/projects/master-planning/orel/"'));
-  assert.ok(html.includes('src="/wp-content/uploads/2025/07/Zoya1-scaled.jpg"'));
+  assert.ok(html.includes('src="/wp-content/variants/2025/07/Zoya1-scaled-f4a51325-1600.jpg"'));
+  assert.equal(count(html, 'fetchpriority="high"'), 1);
+  assert.ok(html.split('fetchpriority')[0].includes('aria-label="Zoya"'));
   const atelier = render(fixture(), 'architecture').split('aria-label="Atelier"')[1]
     .split('</div>')[0];
   assert.ok(!atelier.includes('<br>'));
@@ -192,5 +195,6 @@ test('the hub head has its own SEO tags and an absolute og:image', () => {
   assert.equal(count(html, 'property="og:image"'), 1);
   const thumb = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'search.json'), 'utf8'))
     .find((s) => s.title === LIST[0].name).minImg;
-  assert.ok(html.includes(`<meta property="og:image" content="${DOMAIN}${thumb}">`));
+  const upload = originalOf(thumb, readManifest(ROOT));
+  assert.ok(html.includes(`<meta property="og:image" content="${DOMAIN}/${upload}">`));
 });

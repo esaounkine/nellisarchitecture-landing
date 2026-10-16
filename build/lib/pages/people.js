@@ -1,6 +1,7 @@
 const {
-  escText, escAttr, fill, lazyImg, loadPartial,
+  escText, escAttr, fill, loadPartial,
 } = require('../html');
+const { picture } = require('../images');
 const {
   head, top, affiliations, footer,
 } = require('../chrome');
@@ -21,17 +22,24 @@ function intro(paragraphs) {
 }
 
 /* Bio keeps its raw line breaks, as on the old site. */
-function people(items) {
+const pic = (img, slot, manifest, priority = false) => picture({
+  src: img.src, alt: img.alt, title: img.title, slot, priority,
+}, manifest);
+
+function people(items, manifest) {
   const tpl = loadPartial('people-item');
   return items.map((p) => fill(tpl, {
-    PHOTO: lazyImg(p.photo),
+    PHOTO: pic(p.photo, 'person', manifest),
     NAME: escText(p.name),
     ROLE: escText(p.role),
     BIO: escText(p.bio),
   })).join('\n\n\n      \n');
 }
 
-function render(content, { site, newsHref, page }) {
+/* The intro image is the page priority image. */
+function render(content, {
+  site, newsHref, page, manifest,
+}) {
   return [
     head({ ...HEAD, ...seoTokens(content, page) }),
     top(content.h1, site),
@@ -40,8 +48,8 @@ function render(content, { site, newsHref, page }) {
       AFFILIATIONS: affiliations(site.affiliations, '  '),
       TITLE: escText(content.intro.title),
       INTRO: intro(content.intro.paragraphs),
-      IMAGE: lazyImg(content.intro.image),
-      PEOPLE: people(content.people),
+      IMAGE: pic(content.intro.image, 'wide', manifest, true),
+      PEOPLE: people(content.people, manifest),
     }),
     footer(),
   ].join('\n');

@@ -168,11 +168,12 @@ test('studio render puts each value in its places', () => {
   assert.ok(html.includes('href="index.html#a b"'));
   assert.ok(html.includes('href="x&quot;y"'));
   assert.equal(count(html, '                Go\n'), 2);
-  assert.ok(html.includes('data-src="/wp-content/uploads/pages/founder.png" '
-    + 'alt="founder &quot;alt&quot;" class="photo1 lazyload"'));
-  assert.ok(html.includes('--smush-placeholder-width: 10px; '
-    + '--smush-placeholder-aspect-ratio: 10/20;" />'));
-  assert.ok(html.includes('data-src="/wp-content/uploads/pages/big.png"'));
+  assert.ok(html.includes('<img class="photo1" src="/wp-content/uploads/pages/founder.png" '
+    + 'alt="founder &quot;alt&quot;" decoding="async" loading="lazy"'));
+  assert.ok(html.includes('<img src="/wp-content/uploads/pages/photo.png" '
+    + 'alt="photo &quot;alt&quot;" decoding="async" loading="eager" fetchpriority="high"'));
+  assert.ok(html.includes('src="/wp-content/uploads/pages/big.png"'));
+  assert.equal(count(html, 'fetchpriority="high"'), 1);
   assert.ok(html.includes('href="news/n/index.html" class="newsPage"'));
   assert.ok(html.includes(`${' '.repeat(16)}<div class="partner">`));
   assert.ok(html.includes('"Quote"      </p>'));
@@ -239,8 +240,9 @@ test('people render puts each value in its places', () => {
   assert.ok(html.includes('<h1 class="visually-hidden">Hidden &amp; H1</h1>'));
   assert.ok(html.includes('<h1>People &lt;T&gt;</h1>'));
   assert.ok(html.includes('          Para "two"        </p>'));
-  assert.ok(html.includes('data-src="/wp-content/uploads/pages/team.png" '
-    + 'alt="team &quot;alt&quot;"'));
+  assert.ok(html.includes('src="/wp-content/uploads/pages/team.png" '
+    + 'alt="team &quot;alt&quot;" decoding="async" loading="eager" fetchpriority="high"'));
+  assert.equal(count(html, 'fetchpriority="high"'), 1);
   assert.ok(html.includes('href="news/n/index.html" class="newsPage"'));
   assert.ok(html.includes(`\n${' '.repeat(14)}<div class="partner">`));
   assert.ok(!html.includes(`${' '.repeat(16)}<div class="partner">`));
@@ -249,7 +251,7 @@ test('people render puts each value in its places', () => {
   assert.ok(html.indexOf('Ann $&amp;') < html.indexOf('Name 3'));
   assert.ok(html.includes('<span class="accord__itemDol">Role 2</span>'));
   assert.ok(html.includes('Line one &amp; $&amp; "q"\n\nLine &lt;two&gt;          </div>'));
-  assert.ok(html.includes('data-src="/wp-content/uploads/pages/p3.png" '
+  assert.ok(html.includes('src="/wp-content/uploads/pages/p3.png" '
     + 'alt="p3 &quot;alt&quot;"'));
 });
 
@@ -278,11 +280,11 @@ test('studio render adds a filled image title and nothing for an empty title', (
   content.intro.photo.title = 'Photo t';
   const html = studio.render(content, opts);
   assert.ok(html.includes('alt="founder &quot;alt&quot;" title="Founder &quot;t&quot;" '
-    + 'class="photo1 lazyload"'));
+    + 'decoding="async"'));
   assert.ok(html.includes('alt="photo &quot;alt&quot;" title="Photo t" '));
   content.founder.photo.title = ' ';
   assert.ok(studio.render(content, opts)
-    .includes('alt="founder &quot;alt&quot;" class="photo1 lazyload"'));
+    .includes('alt="founder &quot;alt&quot;" decoding="async"'));
   assert.ok(!studio.render(studioFixture(), opts).includes(' title='));
 });
 

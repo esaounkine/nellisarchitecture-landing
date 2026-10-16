@@ -56,6 +56,20 @@
 <link rel='stylesheet' id='swiper-css' href='/wp-content/themes/nellis/assets/scss/swiper.css' media='all' />
 <link rel='stylesheet' id='fancybox-css' href='/wp-content/themes/nellis/assets/scss/vendor/fancybox.css' media='all' />
 <link rel='stylesheet' id='maincss-css' href='/wp-content/themes/nellis/assets/scss/main.css' media='all' />
+<style id="nellis-images-css">
+	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
+	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   height: auto: the width and height attributes give only the aspect ratio. */
+	picture {
+		display: inline-block;
+		line-height: 0;
+		background-position: center;
+	}
+
+	picture img {
+		height: auto;
+	}
+</style>
 
 
 
@@ -431,10 +445,7 @@
                 <p class="categoryIntro">Our urban master planning work turns land into communities. West Links is a residential community next to a Scottish golf club. Evergreens is a master-planned gated community of luxury villas in Hyderabad, India. Orel turns unused land in Russia into an eco-farm. In Dubai, Skye Residences brings city living to Downtown.</p>
                     <div class="project__item">
                         <a class="project__link" href="/projects/master-planning/skye-residences/" aria-label="Skye Residences"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/02/architecture-7-scaled.jpg"
-                            alt="Skye Residences" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAkAA4BaJagCdAD2AyPLymAA/pTd1C+5tLxh+CDkVSeguzTH8YOuLcC3CG4D5Wrcac9fMZwzTZpNjM8u0SrT1TTTp0erhkwQAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-320.avif 320w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-640.avif 640w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-960.avif 960w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-1600.avif 1600w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-1600.jpg" srcset="/wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-640.jpg 640w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-1600.jpg 1600w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Skye Residences" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
                         <span class="project__name">Skye Residences</span>
                         <span class="project__descr">
                             Downtown <br>
@@ -443,10 +454,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/master-planning/evergreens/" aria-label="Evergreens"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/04/Evergreen-Visual-1-scaled.jpg"
-                            alt="Evergreens" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoQAAkAA4BaJZACdAEVOb9xx3gAAP7T67/RAdtYIXpX+5YG278I3BbjCdABhoD0PE3mEjcwC0quAr3DAc+/qKQsMapXNdIo7IT3BQgKYmg/4AAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-320.avif 320w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-640.avif 640w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-960.avif 960w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-1600.avif 1600w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-1600.jpg" srcset="/wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-640.jpg 640w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-1600.jpg 1600w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1435" alt="Evergreens" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Evergreens</span>
                         <span class="project__descr">
                             Hyderabad <br>
@@ -455,10 +463,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/master-planning/evergreens-hotel/" aria-label="Evergreens Hotel"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/02/Kakatiya_Visual-3-1-scaled.jpg"
-                            alt="Evergreens Hotel" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQAgCdASoQAAkAA4BaJbAC7AEYFFdn/kgAAP7He0JSAJEq8CgXX6VWVczTdce3ptUahCtP9t2TYrlL1W3S8UPV0sC92Odw1XiM3Vt5VKuhRr7buoAAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-320.avif 320w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-640.avif 640w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-960.avif 960w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-1600.avif 1600w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-1600.jpg" srcset="/wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-640.jpg 640w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-1600.jpg 1600w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Evergreens Hotel" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Evergreens Hotel</span>
                         <span class="project__descr">
                             Hyderabad <br>
@@ -467,10 +472,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/master-planning/west-links/" aria-label="WEST LINKS"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2024/06/West-Links9.png"
-                            alt="WEST LINKS" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAsAA4BaJagAAn+I85OpUMAA+4Ytu3yQNmZVYMhgv2O1VmU1Y/krt44wVJilIyb9rKRSCB8UJqJvaZOyRuL+q7+tRuRDSewAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2024/06/West-Links9-c656acf0-320.avif 320w, /wp-content/variants/2024/06/West-Links9-c656acf0-640.avif 640w, /wp-content/variants/2024/06/West-Links9-c656acf0-960.avif 960w, /wp-content/variants/2024/06/West-Links9-c656acf0-1536.avif 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2024/06/West-Links9-c656acf0-1536.jpg" srcset="/wp-content/variants/2024/06/West-Links9-c656acf0-640.jpg 640w, /wp-content/variants/2024/06/West-Links9-c656acf0-1536.jpg 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="1536" height="1024" alt="WEST LINKS" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">WEST LINKS</span>
                         <span class="project__descr">
                             DUMFRIES AND GALLOWAY <br>
@@ -479,10 +481,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/master-planning/orel/" aria-label="Orel"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2024/01/Orel5.png"
-                            alt="Orel" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoQAAsAA4BaJZQC7AED+/9/GeAAziztgIPX6eX0J2J4RL7nsA+mwVDxWb1XhBbkCEOJ+RAWjoJ1utP0p1P74wosVn9JgAAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2024/01/Orel5-35b562fb-320.avif 320w, /wp-content/variants/2024/01/Orel5-35b562fb-640.avif 640w, /wp-content/variants/2024/01/Orel5-35b562fb-960.avif 960w, /wp-content/variants/2024/01/Orel5-35b562fb-1536.avif 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2024/01/Orel5-35b562fb-1536.jpg" srcset="/wp-content/variants/2024/01/Orel5-35b562fb-640.jpg 640w, /wp-content/variants/2024/01/Orel5-35b562fb-1536.jpg 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="1536" height="1024" alt="Orel" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Orel</span>
                         <span class="project__descr">
                             Oryol Oblast <br>

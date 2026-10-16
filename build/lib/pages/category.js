@@ -10,6 +10,9 @@ const { DOMAIN, pageUrl, seoTokens } = require('../seo');
 const {
   CATEGORIES, CATEGORY_KEYS, categoryHref, inCategory,
 } = require('../projects');
+const {
+  picture, originalOf, uploadUrl, readManifest,
+} = require('../images');
 
 /* The /projects/ hub uses this module with category 'all'. */
 const HUB = 'all';
@@ -17,10 +20,14 @@ const HUB_HREF = '/projects/';
 const IND = ' '.repeat(20);
 const SEP = '<span aria-hidden="true">›</span>';
 
-/* Home grid thumbnails: data/search.json minImg, by project title. */
-function thumbs(root) {
+/* Home grid thumbnails: the upload of data/search.json minImg (a variant), by project title. */
+function thumbs(root, manifest) {
   const list = JSON.parse(fs.readFileSync(path.join(root, 'data', 'search.json'), 'utf8'));
-  return Object.fromEntries(list.map((s) => [s.title, s.minImg]));
+  const original = (src) => {
+    const p = src && originalOf(src, manifest);
+    return p ? uploadUrl(p) : src;
+  };
+  return Object.fromEntries(list.map((s) => [s.title, original(s.minImg)]));
 }
 
 /* Projects of the category (hub: all projects), in data/projects.json order. */
@@ -38,14 +45,17 @@ function location(p) {
     .join(` <br>\n${' '.repeat(28)}`);
 }
 
-function items(list, thumb) {
+/* The first card is the page priority image. */
+function items(list, thumb, manifest) {
   const tpl = loadPartial('category-item');
-  return list.map((e) => {
+  return list.map((e, i) => {
     if (!thumb[e.name]) throw new Error(`data/search.json: ${e.name}: no minImg`);
     return fill(tpl, {
       HREF: escAttr(e.url),
       NAME_ATTR: escAttr(e.name),
-      IMG: escAttr(thumb[e.name]),
+      IMG: picture({
+        src: thumb[e.name], alt: e.name, slot: 'card', cls: 'project__item-img', priority: !i,
+      }, manifest),
       NAME: escText(e.name),
       LOCATION: location(e.p),
     });
@@ -105,11 +115,11 @@ function schema(url, name, desc, cat, label) {
 }
 
 function render(content, {
-  site, newsHref, page, root, projects,
+  site, newsHref, page, root, projects, manifest = readManifest(root),
 }) {
   const label = labelOf(page.category);
   const list = members(projects, page.category);
-  const thumb = thumbs(root);
+  const thumb = thumbs(root, manifest);
   const seo = content.seo || {};
   const headHtml = head({
     BEFORE: '',
@@ -137,7 +147,7 @@ function render(content, {
       H1: escText(content.h1),
       INTRO: escText(content.intro),
       CATEGORY_LINKS: categoryLinks(page.category),
-      ITEMS: items(list, thumb),
+      ITEMS: items(list, thumb, manifest),
     }),
     footer(),
   ].join('\n');

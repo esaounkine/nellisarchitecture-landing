@@ -4,6 +4,9 @@ const os = require('node:os');
 const crypto = require('node:crypto');
 const { createRequire } = require('node:module');
 const { execFileSync } = require('node:child_process');
+const { escAttr } = require('./html');
+const { imageSize } = require('./image-size');
+const { decodeEntities } = require('./projects');
 
 const MANIFEST = 'build/images.json';
 const UPLOADS = 'wp-content/uploads/';
@@ -25,8 +28,45 @@ const REF = new RegExp(
   `${DOMAIN}wp-content/uploads/[^"'\\s()<>,\\\\]+?\\.(?:jpe?g|png|webp)(?![\\w.-])`,
   'gi',
 );
+const VREF = new RegExp(
+  `${DOMAIN}wp-content/variants/[^"'\\s()<>,\\\\]+?-[0-9a-f]{8}-\\d+\\.(?:avif|jpg|png)`,
+  'g',
+);
 const UPLOAD = new RegExp(`^${DOMAIN}(wp-content/uploads/[^?#]+)`);
 const VARIANT = /-[0-9a-f]{8}-\d+\.(?:avif|jpg|png)$/;
+const VARIANT_NAME = /^wp-content\/variants\/(.+)-([0-9a-f]{8})-\d+\.\w+$/;
+const VARIANT_URL = new RegExp(`^${DOMAIN}(wp-content/variants/[^?#]+)`);
+const ROOT = path.join(__dirname, '..', '..');
+const HAND_KEPT = ['build/lib/partials/index-projects.html', 'data/filters'];
+const SEARCH = 'data/search.json';
+
+/* sizes per slot: the rendered image width at each theme breakpoint (759, 980, 1179, 1439,
+   1919 px) of wp-content/themes/nellis/assets/scss/main.css, measured in headless Chromium
+   on both sides of each breakpoint (card BmeugdDp).
+   card: .project__item-img on Home and the category pages. thumb: the same grid in the
+   .centerMini column of a project page. full: .currentProject-heroImg and .curProjimg2.
+   wide: .FirstBlock__BigImg (studio, people). slide: .swiper-slide. portrait: the studio
+   .photo1 and .FourBlock__firstPhoto. person: the open .accord__itemImg (people). */
+const SLOTS = {
+  card: '(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), '
+    + '(max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), '
+    + 'calc(100vw - 447px)',
+  thumb: '(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), '
+    + '(max-width: 1439px) calc(100vw - 1050px), (max-width: 1919px) calc(33vw - 320px), '
+    + 'calc(100vw - 1644px)',
+  full: '(max-width: 980px) calc(100vw - 30px), (max-width: 1179px) calc(100vw - 260px), '
+    + '(max-width: 1439px) 767px, (max-width: 1919px) calc(67vw - 33px), 1225px',
+  wide: '(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 40px), '
+    + '(max-width: 1439px) calc(100vw - 270px), (max-width: 1919px) calc(100vw - 380px), '
+    + 'calc(100vw - 456px)',
+  slide: '(max-width: 759px) 46vw, (max-width: 1439px) 400px, (max-width: 1919px) 427px, 582px',
+  portrait: '(max-width: 759px) calc(100vw - 32px), (max-width: 1179px) 520px, '
+    + '(max-width: 1439px) 570px, (max-width: 1919px) 600px, 1020px',
+  person: '(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, '
+    + '(max-width: 1699px) 330px, 1000px',
+};
+const LAZY = ' loading="lazy"';
+const PRIORITY = ' loading="eager" fetchpriority="high"';
 
 /* A clean relative posix path below base: no ".", "..", "//" or a backslash. */
 const inside = (p, base) => !p.includes('\\') && path.posix.normalize(p) === p
@@ -57,6 +97,28 @@ function toUploadPath(url) {
   } catch {
     return null;
   }
+}
+
+const uploadUrl = (p) => encodeURI(`/${p}`);
+
+/* An upload or variant URL -> its "wp-content/uploads/..." key, else null.
+   A variant maps by name: the hash picks one of two uploads with the same base name. */
+function originalOf(url, manifest = {}) {
+  const upload = toUploadPath(url);
+  if (upload) return upload;
+  const m = String(url).match(VARIANT_URL);
+  let p = null;
+  try {
+    p = m && decodeURIComponent(m[1]);
+  } catch {
+    return null;
+  }
+  const v = p && inside(p, VARIANTS) && p.match(VARIANT_NAME);
+  if (!v) return null;
+  const base = `${UPLOADS}${v[1]}`;
+  const keys = Object.keys(manifest)
+    .filter((k) => k.slice(0, k.length - path.posix.extname(k).length) === base);
+  return keys.find((k) => manifest[k].hash === v[2]) || (keys.length === 1 ? keys[0] : null);
 }
 
 function manifestEntry({
@@ -94,8 +156,15 @@ function walk(file) {
     .flatMap((d) => walk(path.join(file, d.name)));
 }
 
-/* Every upload image the site content and the generated pages name, sorted. */
+function readManifest(root = ROOT) {
+  const file = path.join(root, MANIFEST);
+  return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
+}
+
+/* Every upload image the site content and the generated pages name, sorted.
+   A variant URL (the markup of picture()) counts as its upload. */
 function usedImages(root) {
+  const manifest = readManifest(root);
   const pages = PAGES.flatMap((p) => walk(path.join(root, p)))
     .filter((f) => path.basename(f) === 'index.html');
   const sources = SOURCES.flatMap((p) => walk(path.join(root, p)));
@@ -103,14 +172,10 @@ function usedImages(root) {
   [...pages, ...sources].forEach((file) => {
     const text = fs.readFileSync(file, 'utf8').replace(/\\\//g, '/');
     (text.match(REF) || []).forEach((ref) => used.add(toUploadPath(ref)));
+    (text.match(VREF) || []).forEach((ref) => used.add(originalOf(ref, manifest)));
   });
   used.delete(null);
   return [...used].sort();
-}
-
-function readManifest(root) {
-  const file = path.join(root, MANIFEST);
-  return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : {};
 }
 
 async function encodeImage(sharp, root, uploadPath) {
@@ -178,8 +243,115 @@ async function ensureVariants(root, {
   return manifest;
 }
 
+const fallbackOf = (e) => (e.widths.png ? 'png' : 'jpg');
+
+/* The largest JPEG/PNG variant (Fancybox), or the URL as given without a manifest entry. */
+function zoomSrc(src, manifest) {
+  const p = originalOf(src, manifest);
+  const e = p && manifest[p];
+  if (!e) return src;
+  const ext = fallbackOf(e);
+  return uploadUrl(variantName(p, e.hash, e.widths[ext].at(-1), ext));
+}
+
+/* The smallest JPEG/PNG variant (640 px), for data/search.json minImg. */
+function smallSrc(src, manifest) {
+  const p = originalOf(src, manifest);
+  const e = p && manifest[p];
+  if (!e) return src;
+  const ext = fallbackOf(e);
+  return uploadUrl(variantName(p, e.hash, e.widths[ext][0], ext));
+}
+
+const srcset = (p, e, ext) => e.widths[ext]
+  .map((w) => `${uploadUrl(variantName(p, e.hash, w, ext))} ${w}w`).join(', ');
+
+/* A content image. fancybox: the gallery name; Fancybox reads data-src (the largest variant).
+   No manifest entry: a plain <img> of the original, with its size when the file is readable. */
+function picture({
+  src, alt = '', slot, priority = false, cls = '', title = '', fancybox = '',
+}, manifest = {}) {
+  const sizes = SLOTS[slot] && escAttr(SLOTS[slot]);
+  if (!sizes) throw new Error(`picture: unknown slot "${slot}"`);
+  const p = originalOf(src, manifest);
+  const e = p && manifest[p];
+  const classAttr = cls ? ` class="${escAttr(cls)}"` : '';
+  const titleAttr = String(title || '').trim() ? ` title="${escAttr(title)}"` : '';
+  const zoom = fancybox
+    ? ` data-fancybox="${escAttr(fancybox)}" data-src="${escAttr(zoomSrc(src, manifest))}"` : '';
+  const tail = ` alt="${escAttr(alt)}"${titleAttr} decoding="async"${priority ? PRIORITY : LAZY}`
+    + `${zoom} data-overlay-added="true">`;
+  if (!e) {
+    const size = p && imageSize(path.join(ROOT, p));
+    const wh = size ? ` width="${size.width}" height="${size.height}"` : '';
+    return `<img${classAttr} src="${escAttr(p ? uploadUrl(p) : src)}"${wh}${tail}`;
+  }
+  const ext = fallbackOf(e);
+  const main = e.widths[ext].filter((w) => w <= 1600).at(-1) || e.widths[ext][0];
+  /* No placeholder behind a transparent image: it would show through. */
+  const style = e.alpha ? ''
+    : ` style="background-image:url(${escAttr(e.lqip)});background-size:cover"`;
+  return `<picture${style}>`
+    + `<source type="image/avif" srcset="${escAttr(srcset(p, e, 'avif'))}" sizes="${sizes}">`
+    + `<img${classAttr} src="${escAttr(uploadUrl(variantName(p, e.hash, main, ext)))}"`
+    + ` srcset="${escAttr(srcset(p, e, ext))}" sizes="${sizes}"`
+    + ` width="${e.width}" height="${e.height}"${tail}</picture>`;
+}
+
+/* The page priority image: the first lazy image in html gets eager and fetchpriority. */
+function prioritize(html) {
+  if (!html.includes(LAZY)) throw new Error('prioritize: no lazy image');
+  return html.replace(LAZY, PRIORITY);
+}
+
+const TAG = /<picture\b[^>]*>[\s\S]*?<\/picture>|<img\b[^>]*>/g;
+
+/* Hand-kept markup: each upload image (an old <img> or a <picture> of this script) becomes
+   picture(). Idempotent: a second run gives the same text. Other images stay as they are. */
+function rewriteImages(text, manifest, slot) {
+  return text.replace(TAG, (tag) => {
+    const img = tag.match(/<img\b[^>]*>/);
+    if (!img) return tag;
+    const attr = (name) => decodeEntities(
+      (img[0].match(new RegExp(`\\s${name}="([^"]*)"`)) || [])[1] || '',
+    );
+    const src = attr('data-src') || attr('src');
+    const p = originalOf(src, manifest);
+    if (!p) return tag;
+    const cls = attr('class').split(/\s+/).filter((c) => c && c !== 'lazyload').join(' ');
+    return picture({
+      src: uploadUrl(p), alt: attr('alt'), slot, cls, title: attr('title'),
+    }, manifest);
+  });
+}
+
+/* npm run images: the img/picture markup of the hand-kept files, and data/search.json minImg. */
+function rewriteHandKept(root, manifest) {
+  const files = HAND_KEPT.flatMap((p) => walk(path.join(root, p)))
+    .filter((f) => f.endsWith('.html'));
+  const write = (file, text) => {
+    if (fs.readFileSync(file, 'utf8') !== text) fs.writeFileSync(file, text);
+  };
+  files.forEach((f) => write(f, rewriteImages(fs.readFileSync(f, 'utf8'), manifest, 'card')));
+  const search = path.join(root, SEARCH);
+  if (!fs.existsSync(search)) return files.length;
+  const list = JSON.parse(fs.readFileSync(search, 'utf8'))
+    .map((s) => (s.minImg ? { ...s, minImg: smallSrc(s.minImg, manifest) } : s));
+  write(search, JSON.stringify(list, null, 2));
+  return files.length + 1;
+}
+
 module.exports = {
   MANIFEST,
+  SLOTS,
+  uploadUrl,
+  originalOf,
+  zoomSrc,
+  smallSrc,
+  picture,
+  prioritize,
+  rewriteImages,
+  rewriteHandKept,
   VARIANTS,
   ladder,
   variantName,

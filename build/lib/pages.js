@@ -9,6 +9,7 @@ const category = require('./pages/category');
 const news = require('./pages/news');
 const contact = require('./pages/contact');
 const { CATEGORY_KEYS, loadProjects } = require('./projects');
+const { readManifest } = require('./images');
 
 /* slug is fixed in code: the page URL is /<slug>/ (Home: /). */
 const PAGES = [
@@ -50,16 +51,23 @@ function readContent(root, name) {
 
 /* Each result also carries what the sitemap needs: slug, priority, noindex.
    projects: loadProjects() result, read once by the build. posts: loadPosts() result.
+   manifest: build/images.json (the build passes it with the variants that CI made).
    Shortcut: without posts (unit tests) the /news/ page is left out.
    Upgrade: load the posts here once loadPosts moves to build/lib/. */
-function renderPages(root, newsHref, projects = loadProjects(root), posts = null) {
+function renderPages(
+  root,
+  newsHref,
+  projects = loadProjects(root),
+  posts = null,
+  manifest = readManifest(root),
+) {
   const site = readContent(root, 'site');
   return PAGES.filter((p) => posts || p.module !== news).map((p) => {
     const content = readContent(root, p.content);
     return {
       file: pageFile(p.slug),
       html: p.module.render(content, {
-        site, newsHref, page: p, root, projects, posts,
+        site, newsHref, page: p, root, projects, posts, manifest,
       }),
       slug: p.slug,
       priority: p.priority,
@@ -68,8 +76,8 @@ function renderPages(root, newsHref, projects = loadProjects(root), posts = null
   });
 }
 
-function writePages(root, newsHref, projects, posts) {
-  const pages = renderPages(root, newsHref, projects, posts);
+function writePages(root, newsHref, projects, posts, manifest) {
+  const pages = renderPages(root, newsHref, projects, posts, manifest);
   pages.forEach((p) => {
     fs.mkdirSync(path.dirname(path.join(root, p.file)), { recursive: true });
     fs.writeFileSync(path.join(root, p.file), p.html);

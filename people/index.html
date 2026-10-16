@@ -59,6 +59,20 @@
 <link rel='stylesheet' id='swiper-css' href='/wp-content/themes/nellis/assets/scss/swiper.css' media='all' />
 <link rel='stylesheet' id='fancybox-css' href='/wp-content/themes/nellis/assets/scss/vendor/fancybox.css' media='all' />
 <link rel='stylesheet' id='maincss-css' href='/wp-content/themes/nellis/assets/scss/main.css' media='all' />
+<style id="nellis-images-css">
+	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
+	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   height: auto: the width and height attributes give only the aspect ratio. */
+	picture {
+		display: inline-block;
+		line-height: 0;
+		background-position: center;
+	}
+
+	picture img {
+		height: auto;
+	}
+</style>
 
 
 
@@ -456,7 +470,7 @@
     </div>
     <div class="container">
       <div class="FirstBlock__BigImg FirstBlock__BigImgPeople">
-        <img data-src="/wp-content/uploads/2025/02/team.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 2048px; --smush-placeholder-aspect-ratio: 2048/1366;" />
+        <picture style="background-image:url(data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAgCdASoQAAsAA4BaJZQCdAYtLvuAYtkkAAD+86y2oyMbWX9wdDtPNW58jONbhBpofrNDDvp1AFNHadyuZGQY0Oy1p0zQ0Xzu2FffW5kpXaTfj+ukdri3gAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/02/team-79fa4082-320.avif 320w, /wp-content/variants/2025/02/team-79fa4082-640.avif 640w, /wp-content/variants/2025/02/team-79fa4082-960.avif 960w, /wp-content/variants/2025/02/team-79fa4082-1600.avif 1600w, /wp-content/variants/2025/02/team-79fa4082-2048.avif 2048w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 40px), (max-width: 1439px) calc(100vw - 270px), (max-width: 1919px) calc(100vw - 380px), calc(100vw - 456px)"><img src="/wp-content/variants/2025/02/team-79fa4082-1600.jpg" srcset="/wp-content/variants/2025/02/team-79fa4082-640.jpg 640w, /wp-content/variants/2025/02/team-79fa4082-1600.jpg 1600w, /wp-content/variants/2025/02/team-79fa4082-2048.jpg 2048w" sizes="(max-width: 759px) calc(100vw - 32px), (max-width: 980px) calc(100vw - 40px), (max-width: 1439px) calc(100vw - 270px), (max-width: 1919px) calc(100vw - 380px), calc(100vw - 456px)" width="2048" height="1366" alt="" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
       </div>
     </div>
   </section>
@@ -467,7 +481,7 @@
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/02/IMG_5420-1.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1290px; --smush-placeholder-aspect-ratio: 1290/1901;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBOmUABp8vCPBj4+psS7cUAA/q8Fn1zWa5d5VUROdK7LE5iO9w9pGAa5aXEPmxkLqKWDKPeQMyoOWl0G9TmdPfrFnKbVIhO6DUZwrEqHSuYLfwKu7gBPqvgnBzND2sYuwXuUb2xAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/02/IMG_5420-1-c7e556a6-320.avif 320w, /wp-content/variants/2025/02/IMG_5420-1-c7e556a6-640.avif 640w, /wp-content/variants/2025/02/IMG_5420-1-c7e556a6-960.avif 960w, /wp-content/variants/2025/02/IMG_5420-1-c7e556a6-1290.avif 1290w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/02/IMG_5420-1-c7e556a6-1290.jpg" srcset="/wp-content/variants/2025/02/IMG_5420-1-c7e556a6-640.jpg 640w, /wp-content/variants/2025/02/IMG_5420-1-c7e556a6-1290.jpg 1290w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1290" height="1901" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Anna Saunkina</h3>
@@ -483,7 +497,7 @@
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/02/Ashley.png" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1366px; --smush-placeholder-aspect-ratio: 1366/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAACwBACdASoQABgAPu1iqU2ppaQiMAgBMB2JYwCdDiJRyqEF4EZPmpGHuZKY0jEAAP7tUE+lQNiNI7cCVIWwlNZ5i0YotOBRGg25Qp9BQNjg5oqx+9PjcgnYeqBh1FfDrP3LSI50vwK/FyWTkcGrmb5OGlRoCzmNQfxrSTVV3mJSkn/6UTGnZueSP7Xxei+yZeZaqSnMJ/RfJaQ+ZYyqNIHe8VjypUcWyY5ChI9F83AAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/02/Ashley-a09361b1-320.avif 320w, /wp-content/variants/2025/02/Ashley-a09361b1-640.avif 640w, /wp-content/variants/2025/02/Ashley-a09361b1-960.avif 960w, /wp-content/variants/2025/02/Ashley-a09361b1-1366.avif 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/02/Ashley-a09361b1-1366.jpg" srcset="/wp-content/variants/2025/02/Ashley-a09361b1-640.jpg 640w, /wp-content/variants/2025/02/Ashley-a09361b1-1366.jpg 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1366" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Ashley Bothma</h3>
@@ -499,7 +513,7 @@
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/12/Austine.png" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1365px; --smush-placeholder-aspect-ratio: 1365/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAABwBACdASoQABgAPu1iqU2ppaQiMAgBMB2JYwCw7ywBvaV4q5LEA/sVZNfgAAD+6n4hZHL3w/U8CIqqSkk3mziz3sHjamR7gJM+TdqRKWrIJyEtV/0pYH5QcO+1ZhDxsi2LDlQjviYRS+4HG3I30sBefd139fJLTe0XqFFobvAdCDI4cGyGakGCtxRR5voILcAOEOXwJihAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/12/Austine-1986ea98-320.avif 320w, /wp-content/variants/2025/12/Austine-1986ea98-640.avif 640w, /wp-content/variants/2025/12/Austine-1986ea98-960.avif 960w, /wp-content/variants/2025/12/Austine-1986ea98-1365.avif 1365w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/12/Austine-1986ea98-1365.jpg" srcset="/wp-content/variants/2025/12/Austine-1986ea98-640.jpg 640w, /wp-content/variants/2025/12/Austine-1986ea98-1365.jpg 1365w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1365" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Austine Lizarondo</h3>
@@ -515,7 +529,7 @@
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2026/03/Fiona.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1024px; --smush-placeholder-aspect-ratio: 1024/1536;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAAAQBACdASoQABgAPu1iqU2ppaQiMAgBMB2JZQCw7CICn6rHD12gACifqAD+7VuhQuuJ23w43fv7HLDafpwp3qmBDz1a7taA0Dd9cCMYYSSWr/9ilZ5jgo5vzrHqw8UdSLSvZka8XYr0M8W6OYRXEY4jrAT1DSzjPVDz//u0jFTiLm4aWTQdL3lck6hwAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/03/Fiona-1767cafe-320.avif 320w, /wp-content/variants/2026/03/Fiona-1767cafe-640.avif 640w, /wp-content/variants/2026/03/Fiona-1767cafe-960.avif 960w, /wp-content/variants/2026/03/Fiona-1767cafe-1024.avif 1024w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2026/03/Fiona-1767cafe-1024.jpg" srcset="/wp-content/variants/2026/03/Fiona-1767cafe-640.jpg 640w, /wp-content/variants/2026/03/Fiona-1767cafe-1024.jpg 1024w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1024" height="1536" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Fiona Webb-Johnston</h3>
@@ -535,7 +549,7 @@ Creativity has always been central to Fiona’s life, drawing her to design in m
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Franklin-De-Guzman-Visual-Architect.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1365px; --smush-placeholder-aspect-ratio: 1365/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAABQBACdASoQABgAPu1iqU2ppaQiMAgBMB2JQBYdsYxZVjHj5cQazrDXsHYAAP7tYWyfyuU0rCXfDTK4nq3EyvfpXTzOfA7fXnWXff6RLBOniW7vp0J0aA8JMSDm6QZlyM8JYtBEqEimz8dl8QH/eBHjYiwxSsgi8d11xCOo42ngVqm9x5v//tNGHfjaOsaDTue/KQLylhUAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Franklin-De-Guzman-Visual-Architect-5180ad18-320.avif 320w, /wp-content/variants/2025/01/Franklin-De-Guzman-Visual-Architect-5180ad18-640.avif 640w, /wp-content/variants/2025/01/Franklin-De-Guzman-Visual-Architect-5180ad18-960.avif 960w, /wp-content/variants/2025/01/Franklin-De-Guzman-Visual-Architect-5180ad18-1365.avif 1365w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Franklin-De-Guzman-Visual-Architect-5180ad18-1365.jpg" srcset="/wp-content/variants/2025/01/Franklin-De-Guzman-Visual-Architect-5180ad18-640.jpg 640w, /wp-content/variants/2025/01/Franklin-De-Guzman-Visual-Architect-5180ad18-1365.jpg 1365w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1365" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Franklin De Guzman</h3>
@@ -551,7 +565,7 @@ Creativity has always been central to Fiona’s life, drawing her to design in m
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2026/05/Ilia-Senior-Interior-Designer.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 4000px; --smush-placeholder-aspect-ratio: 4000/4793;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAQBACdASoQABMAPu1iqU2ppaQiMAgBMB2JZQCsABjK+9bz3ZnMYlHrAAD+7V2MwiSm0WiPtG8GDGAjr+dFSCojfXzuzKaIhEQLGs+y2C32Y+dYVGufkPPDIorDjOxulo0Bpv2IlUlofIct00owVQACNDR91/mXQsvBJC0NAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/05/Ilia-Senior-Interior-Designer-1766d4db-320.avif 320w, /wp-content/variants/2026/05/Ilia-Senior-Interior-Designer-1766d4db-640.avif 640w, /wp-content/variants/2026/05/Ilia-Senior-Interior-Designer-1766d4db-960.avif 960w, /wp-content/variants/2026/05/Ilia-Senior-Interior-Designer-1766d4db-1600.avif 1600w, /wp-content/variants/2026/05/Ilia-Senior-Interior-Designer-1766d4db-2400.avif 2400w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2026/05/Ilia-Senior-Interior-Designer-1766d4db-1600.jpg" srcset="/wp-content/variants/2026/05/Ilia-Senior-Interior-Designer-1766d4db-640.jpg 640w, /wp-content/variants/2026/05/Ilia-Senior-Interior-Designer-1766d4db-1600.jpg 1600w, /wp-content/variants/2026/05/Ilia-Senior-Interior-Designer-1766d4db-2400.jpg 2400w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="4000" height="4793" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Ilia Mishchenko</h3>
@@ -569,7 +583,7 @@ His approach is unmistakably his own. It is equal parts creative thinking and en
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Ivy-Corpus-Architect.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 4082px; --smush-placeholder-aspect-ratio: 4082/6123;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRroAAABXRUJQVlA4IK4AAADQBACdASoQABgAPu1iqk2ppaQiMAgBMB2JYwC1CCXgpxS+6vuJnsppaF8AZ9V3QAD+6n+1Xucb2x7K6nDjEMJmvRzJHAB/K1YO/MvYwZHa5tJg3if4anotHIkaPyb5mLFrgIo+cGf7ZjY4mU5YvrUlRfn1NH6cTB1bUN18O35w0eOwDXLtS6fIE/hCth5KLf/W+w4opDv0ZFAAM8eXFDIyT5GS7ZwMGZ3k0WarUAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Ivy-Corpus-Architect-d79d37fc-320.avif 320w, /wp-content/variants/2025/01/Ivy-Corpus-Architect-d79d37fc-640.avif 640w, /wp-content/variants/2025/01/Ivy-Corpus-Architect-d79d37fc-960.avif 960w, /wp-content/variants/2025/01/Ivy-Corpus-Architect-d79d37fc-1600.avif 1600w, /wp-content/variants/2025/01/Ivy-Corpus-Architect-d79d37fc-2400.avif 2400w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Ivy-Corpus-Architect-d79d37fc-1600.jpg" srcset="/wp-content/variants/2025/01/Ivy-Corpus-Architect-d79d37fc-640.jpg 640w, /wp-content/variants/2025/01/Ivy-Corpus-Architect-d79d37fc-1600.jpg 1600w, /wp-content/variants/2025/01/Ivy-Corpus-Architect-d79d37fc-2400.jpg 2400w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="4082" height="6123" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Ivy Corpuz</h3>
@@ -585,7 +599,7 @@ His approach is unmistakably his own. It is equal parts creative thinking and en
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Kateryna-Shekhovtsova-Executive-Assistant.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1366px; --smush-placeholder-aspect-ratio: 1366/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAABwBACdASoQABgAPu1kqU2ppaQiMAgBMB2JQBdiP/xbGzfODld1DXjoL7doAAD+6rdbncZIuH3Xyrq+/NnyHEskkY28Y5M+99q1FUpNsUiHLiUdarZetWC62/tZyX9VoKKsWhLinwMjudpogBF2HvfAxfDU2W2Z8GGjL3lvD7Ji7WyK6MLKOXKl4qGMiDvMf2EhApnauwAl9RJIwAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Kateryna-Shekhovtsova-Executive-Assistant-8720949b-320.avif 320w, /wp-content/variants/2025/01/Kateryna-Shekhovtsova-Executive-Assistant-8720949b-640.avif 640w, /wp-content/variants/2025/01/Kateryna-Shekhovtsova-Executive-Assistant-8720949b-960.avif 960w, /wp-content/variants/2025/01/Kateryna-Shekhovtsova-Executive-Assistant-8720949b-1366.avif 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Kateryna-Shekhovtsova-Executive-Assistant-8720949b-1366.jpg" srcset="/wp-content/variants/2025/01/Kateryna-Shekhovtsova-Executive-Assistant-8720949b-640.jpg 640w, /wp-content/variants/2025/01/Kateryna-Shekhovtsova-Executive-Assistant-8720949b-1366.jpg 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1366" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Kateryna Shekhovtsova</h3>
@@ -601,7 +615,7 @@ His approach is unmistakably his own. It is equal parts creative thinking and en
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Lee-Nellis-Principal-Architect-Founder.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1366px; --smush-placeholder-aspect-ratio: 1366/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRrQAAABXRUJQVlA4IKgAAACwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZwAD5aIHLvSeBjoU8EakhvME/NQAAP7v1WEdnTrfz7a+QF38I9nNepETWYh4ab90sEssPXgCeUXy3UUFqq8q75AtiMz6bnVqwD1uX+peD79/fayhRH4na8MH+VIcoeBhVY0auyAN6QhGCd5tkk4rE9UriI2+rzH2P/jufRTqMfLCzlUz4wzsFYhGoLiyAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Lee-Nellis-Principal-Architect-Founder-fe45787f-320.avif 320w, /wp-content/variants/2025/01/Lee-Nellis-Principal-Architect-Founder-fe45787f-640.avif 640w, /wp-content/variants/2025/01/Lee-Nellis-Principal-Architect-Founder-fe45787f-960.avif 960w, /wp-content/variants/2025/01/Lee-Nellis-Principal-Architect-Founder-fe45787f-1366.avif 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Lee-Nellis-Principal-Architect-Founder-fe45787f-1366.jpg" srcset="/wp-content/variants/2025/01/Lee-Nellis-Principal-Architect-Founder-fe45787f-640.jpg 640w, /wp-content/variants/2025/01/Lee-Nellis-Principal-Architect-Founder-fe45787f-1366.jpg 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1366" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Lee Nellis</h3>
@@ -617,7 +631,7 @@ His approach is unmistakably his own. It is equal parts creative thinking and en
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2026/03/Margo.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 3393px; --smush-placeholder-aspect-ratio: 3393/5090;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZwDE2YvM32xjCSr0fSABhUYAAP7vtLeHTxdVhsC7l4+DvU93fKRQf1cqWIewd3BQR9byCS4DswSireeCMcfh3Ha1uPN5n4FK65uzb5MSoXESQZXQY8teSf22jlYns1kQW8rsHcf2pa409/cRVTgr+VttdYm+kQp1gJtc/7+mYyKubR0FXmAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/03/Margo-113519ca-320.avif 320w, /wp-content/variants/2026/03/Margo-113519ca-640.avif 640w, /wp-content/variants/2026/03/Margo-113519ca-960.avif 960w, /wp-content/variants/2026/03/Margo-113519ca-1600.avif 1600w, /wp-content/variants/2026/03/Margo-113519ca-2400.avif 2400w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2026/03/Margo-113519ca-1600.jpg" srcset="/wp-content/variants/2026/03/Margo-113519ca-640.jpg 640w, /wp-content/variants/2026/03/Margo-113519ca-1600.jpg 1600w, /wp-content/variants/2026/03/Margo-113519ca-2400.jpg 2400w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="3393" height="5090" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Margarita Ataekgaeva</h3>
@@ -637,7 +651,7 @@ From Belarus, a place where the weather and seasons are constantly changing, Mar
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/11/Untitled-design-3.png" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1366px; --smush-placeholder-aspect-ratio: 1366/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZQC/OCHdVLU/5jZ/ZKVOV4AA/u+8Dv48IuA5EGFs5itgXE5/ysY2/Lf7bA86CxM1sU57HS/x9HTna3e0g/MalB/wAkM2iAbpOsVCkhyUfgFLn9mB9A4/Hf3bnoF9c7IN1t/LQs4hvcmuXEAdYAAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/11/Untitled-design-3-7f85aa60-320.avif 320w, /wp-content/variants/2025/11/Untitled-design-3-7f85aa60-640.avif 640w, /wp-content/variants/2025/11/Untitled-design-3-7f85aa60-960.avif 960w, /wp-content/variants/2025/11/Untitled-design-3-7f85aa60-1366.avif 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/11/Untitled-design-3-7f85aa60-1366.jpg" srcset="/wp-content/variants/2025/11/Untitled-design-3-7f85aa60-640.jpg 640w, /wp-content/variants/2025/11/Untitled-design-3-7f85aa60-1366.jpg 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1366" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Matas Belevicius</h3>
@@ -653,7 +667,7 @@ From Belarus, a place where the weather and seasons are constantly changing, Mar
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Mohamed-Shamel-Architect.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1366px; --smush-placeholder-aspect-ratio: 1366/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwC/OYvq3kfzsSjI27x622wAAP7tRPgdDJtpdFX7D5VNEljqFnz1JxdXtp76fN04V3FQpM4h7WA0J+2Bp6S0Y+JsRPJbxqca77dPPF31AZzt4XWn9fevzCkGKx442LKdi7EDNbflxs3PszmHvt8fNzrd5XbJ3b7ROr02pYE44qTzalLczQe/oAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Mohamed-Shamel-Architect-0b214a91-320.avif 320w, /wp-content/variants/2025/01/Mohamed-Shamel-Architect-0b214a91-640.avif 640w, /wp-content/variants/2025/01/Mohamed-Shamel-Architect-0b214a91-960.avif 960w, /wp-content/variants/2025/01/Mohamed-Shamel-Architect-0b214a91-1366.avif 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Mohamed-Shamel-Architect-0b214a91-1366.jpg" srcset="/wp-content/variants/2025/01/Mohamed-Shamel-Architect-0b214a91-640.jpg 640w, /wp-content/variants/2025/01/Mohamed-Shamel-Architect-0b214a91-1366.jpg 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1366" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Mohamed Shamel</h3>
@@ -669,7 +683,7 @@ From Belarus, a place where the weather and seasons are constantly changing, Mar
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Paul-Mjaes-Architect.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1366px; --smush-placeholder-aspect-ratio: 1366/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAAAwBACdASoQABgAPu1iqU2ppaQiMAgBMB2JZQCo9ywTogixjaWmIDRi5sAA/u1UCSVDmZgb02c0ZIsQeuBu+8WxNS1FBge3RFicAvNlsmNZb8gkZgsYQLO1sjFiK3rqOpAeNJ2s5MIo5+csSw4t0XPcHwT5dbKXDVTUP+FadOvBIAljUjqJ13z4RsK4rNXzf331sFM8ubrjAiXsuKu+lWY6K5gAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Paul-Mjaes-Architect-136683a2-320.avif 320w, /wp-content/variants/2025/01/Paul-Mjaes-Architect-136683a2-640.avif 640w, /wp-content/variants/2025/01/Paul-Mjaes-Architect-136683a2-960.avif 960w, /wp-content/variants/2025/01/Paul-Mjaes-Architect-136683a2-1366.avif 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Paul-Mjaes-Architect-136683a2-1366.jpg" srcset="/wp-content/variants/2025/01/Paul-Mjaes-Architect-136683a2-640.jpg 640w, /wp-content/variants/2025/01/Paul-Mjaes-Architect-136683a2-1366.jpg 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1366" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Paul Mjaes</h3>
@@ -685,7 +699,7 @@ From Belarus, a place where the weather and seasons are constantly changing, Mar
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Pieter-Delport-Senior-Architect.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1366px; --smush-placeholder-aspect-ratio: 1366/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADQAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JZQCdABjLBfjQfOU9EoAA/u1hFhKyPVwbx9wM/Pd9XO7lCBhRl3NH8PMDbz6bAcvlKuMMgJXQNb0LoANqy4dErirj2bguy+MwjiVejJDi5uKKJ7L6JKFb7EG7REhI7lfxZkqVIBtVTqzIIAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Pieter-Delport-Senior-Architect-31da027f-320.avif 320w, /wp-content/variants/2025/01/Pieter-Delport-Senior-Architect-31da027f-640.avif 640w, /wp-content/variants/2025/01/Pieter-Delport-Senior-Architect-31da027f-960.avif 960w, /wp-content/variants/2025/01/Pieter-Delport-Senior-Architect-31da027f-1366.avif 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Pieter-Delport-Senior-Architect-31da027f-1366.jpg" srcset="/wp-content/variants/2025/01/Pieter-Delport-Senior-Architect-31da027f-640.jpg 640w, /wp-content/variants/2025/01/Pieter-Delport-Senior-Architect-31da027f-1366.jpg 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1366" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Pieter Delport</h3>
@@ -701,7 +715,7 @@ From Belarus, a place where the weather and seasons are constantly changing, Mar
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Untitled-design-2.png" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1366px; --smush-placeholder-aspect-ratio: 1366/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRr4AAABXRUJQVlA4ILIAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JaACdMoAlwBS33F10SoGNZAAA/u1gI6/7hOdUGPRhy7tgyOmqRryK7xS8M3UXPCis1af42T/FcwmV4w6zPxLtgZZRfslf9y7J7Xe3fL6C/hg+S5MHEqgVTYPftr5nzoSUmadfXT2MR4V4AvsGNJQWb1fPnPFiTHy0n+DU6ABT2uwUmCXZIH8D80lOBpFpqbR21yfCB/cgAAAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Untitled-design-2-a85fa618-320.avif 320w, /wp-content/variants/2025/01/Untitled-design-2-a85fa618-640.avif 640w, /wp-content/variants/2025/01/Untitled-design-2-a85fa618-960.avif 960w, /wp-content/variants/2025/01/Untitled-design-2-a85fa618-1366.avif 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Untitled-design-2-a85fa618-1366.jpg" srcset="/wp-content/variants/2025/01/Untitled-design-2-a85fa618-640.jpg 640w, /wp-content/variants/2025/01/Untitled-design-2-a85fa618-1366.jpg 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1366" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Quinton Murdoch</h3>
@@ -717,7 +731,7 @@ From Belarus, a place where the weather and seasons are constantly changing, Mar
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/12/Ram.png" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1365px; --smush-placeholder-aspect-ratio: 1365/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAADQAwCdASoQABgALrV2u12jqampiYC0SzgAHy3hChQcifxrQ4qY5yAA/vTc8WjLw05U/FatKQafPV4QIeIgKOhAB6b0TDzW5EthfKqmda5JnJZubqkjAXsLhCqY/XYoQ23VASHR4rg6efdb8EgjCwhM5nk8mAr8UPPuAAAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/12/Ram-aeaff031-320.avif 320w, /wp-content/variants/2025/12/Ram-aeaff031-640.avif 640w, /wp-content/variants/2025/12/Ram-aeaff031-960.avif 960w, /wp-content/variants/2025/12/Ram-aeaff031-1365.avif 1365w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/12/Ram-aeaff031-1365.jpg" srcset="/wp-content/variants/2025/12/Ram-aeaff031-640.jpg 640w, /wp-content/variants/2025/12/Ram-aeaff031-1365.jpg 1365w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1365" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Ramel Borres</h3>
@@ -733,7 +747,7 @@ From Belarus, a place where the weather and seasons are constantly changing, Mar
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Sasha-Kiseleva-Executive-Director.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1365px; --smush-placeholder-aspect-ratio: 1365/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JZwDLLCHfUWfPDmhQU8HQAP7tN24q+/8XBFWfUTrzq++xm7hNbhyOiNolJaKfILD98uYPkMOAPGcTaOjzkUy3oXiNJQeXuwAAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Sasha-Kiseleva-Executive-Director-b4ebaf95-320.avif 320w, /wp-content/variants/2025/01/Sasha-Kiseleva-Executive-Director-b4ebaf95-640.avif 640w, /wp-content/variants/2025/01/Sasha-Kiseleva-Executive-Director-b4ebaf95-960.avif 960w, /wp-content/variants/2025/01/Sasha-Kiseleva-Executive-Director-b4ebaf95-1365.avif 1365w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Sasha-Kiseleva-Executive-Director-b4ebaf95-1365.jpg" srcset="/wp-content/variants/2025/01/Sasha-Kiseleva-Executive-Director-b4ebaf95-640.jpg 640w, /wp-content/variants/2025/01/Sasha-Kiseleva-Executive-Director-b4ebaf95-1365.jpg 1365w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1365" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Sasha Kiseleva</h3>
@@ -749,7 +763,7 @@ From Belarus, a place where the weather and seasons are constantly changing, Mar
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2026/03/Siebert.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 4082px; --smush-placeholder-aspect-ratio: 4082/6123;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZQCsAB9gEmStIVNk+JrCWAD+7UxVNUD+eLcePcxxvVjEBJfnVwTeCJxs44h0Qan/P+Z5WM48mlGil0Lb4McLL2LFp8tsU7f/K9lEpzx+2ea+M3wXGoS9zt2GcjX9kA36NMNO4CLUXB3WAhdVkYQRw6hpQLgA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/03/Siebert-bfaea35a-320.avif 320w, /wp-content/variants/2026/03/Siebert-bfaea35a-640.avif 640w, /wp-content/variants/2026/03/Siebert-bfaea35a-960.avif 960w, /wp-content/variants/2026/03/Siebert-bfaea35a-1600.avif 1600w, /wp-content/variants/2026/03/Siebert-bfaea35a-2400.avif 2400w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2026/03/Siebert-bfaea35a-1600.jpg" srcset="/wp-content/variants/2026/03/Siebert-bfaea35a-640.jpg 640w, /wp-content/variants/2026/03/Siebert-bfaea35a-1600.jpg 1600w, /wp-content/variants/2026/03/Siebert-bfaea35a-2400.jpg 2400w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="4082" height="6123" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Siebert Labuschagne</h3>
@@ -769,7 +783,7 @@ At Nellis Architecture, Siebert’s role focuses on Revit modelling and technica
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Shaheen-Ibrahim-Architect.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1366px; --smush-placeholder-aspect-ratio: 1366/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAABwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZwCzgYwS3m2XBvIEqkag9e60AAD+78I5qfF9Kumnu1YRX+ssU0T/jgaCj38vnVLEg7IKmARUSCrytsla6Pk6lxY8R7u/gwc9Gpj73n50CJu2njtWIbbHWubmvypUSI9VWI3y20raN/4/r8NXtGQP2HgGIKe6j1L1nb/pWK1LV7PiNSAAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Shaheen-Ibrahim-Architect-766e052b-320.avif 320w, /wp-content/variants/2025/01/Shaheen-Ibrahim-Architect-766e052b-640.avif 640w, /wp-content/variants/2025/01/Shaheen-Ibrahim-Architect-766e052b-960.avif 960w, /wp-content/variants/2025/01/Shaheen-Ibrahim-Architect-766e052b-1366.avif 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Shaheen-Ibrahim-Architect-766e052b-1366.jpg" srcset="/wp-content/variants/2025/01/Shaheen-Ibrahim-Architect-766e052b-640.jpg 640w, /wp-content/variants/2025/01/Shaheen-Ibrahim-Architect-766e052b-1366.jpg 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1366" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Shaheen Ibrahim</h3>
@@ -785,7 +799,7 @@ At Nellis Architecture, Siebert’s role focuses on Revit modelling and technica
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Valentina-Ezhova-Architect.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1366px; --smush-placeholder-aspect-ratio: 1366/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAAAQBACdASoQABgAPu1iqk4ppaQiMAgBMB2JYwC7ACHgAHHVsYlaq1ZpqAD+7UGR1lRpiPpHvqL/P1PGGwqN+hby6RaFeHkI8KrAQkcjzxJMfKrVu4Ju0vWasLGaK4Q8uhacNCnnv94lGIRM/71Qe4BzXV6ShO/T/lTQMeId4v24+AgA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Valentina-Ezhova-Architect-04edc13c-320.avif 320w, /wp-content/variants/2025/01/Valentina-Ezhova-Architect-04edc13c-640.avif 640w, /wp-content/variants/2025/01/Valentina-Ezhova-Architect-04edc13c-960.avif 960w, /wp-content/variants/2025/01/Valentina-Ezhova-Architect-04edc13c-1366.avif 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Valentina-Ezhova-Architect-04edc13c-1366.jpg" srcset="/wp-content/variants/2025/01/Valentina-Ezhova-Architect-04edc13c-640.jpg 640w, /wp-content/variants/2025/01/Valentina-Ezhova-Architect-04edc13c-1366.jpg 1366w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1366" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Valentina Ezhova</h3>
@@ -801,7 +815,7 @@ At Nellis Architecture, Siebert’s role focuses on Revit modelling and technica
       
         <div class="accord__item">
           <div class="accord__itemImg">
-            <img data-src="/wp-content/uploads/2025/01/Viktoriia-Sikorska-Studio-Curator.jpg" alt="" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjwvc3ZnPg==" class="lazyload" style="--smush-placeholder-width: 1365px; --smush-placeholder-aspect-ratio: 1365/2048;" />
+            <picture style="background-image:url(data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JZQC06YxstaYp8T1K4BFNfgMAAP7v1oQfeIsbG9pgIW91p+UCsKIgFkJ8+L5/2qfreprqEIYgcBOTmmeT8iLDoTWn52uhrlzJrdV0qMOdj4gJwvREWuyUNHNhLpZXtA95Q9fKqVDHDeglQqI8CMMPu8BO1cKBMm+TS4DAwIXfCkAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/01/Viktoriia-Sikorska-Studio-Curator-4bc50d19-320.avif 320w, /wp-content/variants/2025/01/Viktoriia-Sikorska-Studio-Curator-4bc50d19-640.avif 640w, /wp-content/variants/2025/01/Viktoriia-Sikorska-Studio-Curator-4bc50d19-960.avif 960w, /wp-content/variants/2025/01/Viktoriia-Sikorska-Studio-Curator-4bc50d19-1365.avif 1365w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px"><img src="/wp-content/variants/2025/01/Viktoriia-Sikorska-Studio-Curator-4bc50d19-1365.jpg" srcset="/wp-content/variants/2025/01/Viktoriia-Sikorska-Studio-Curator-4bc50d19-640.jpg 640w, /wp-content/variants/2025/01/Viktoriia-Sikorska-Studio-Curator-4bc50d19-1365.jpg 1365w" sizes="(max-width: 759px) 30vw, (max-width: 980px) 20vw, (max-width: 1179px) 270px, (max-width: 1699px) 330px, 1000px" width="1365" height="2048" alt="" decoding="async" loading="lazy" data-overlay-added="true"></picture>
           </div>
           <div class="accord__itemHead">
             <h3 class="accordName">Viktoriia Sikorska</h3>

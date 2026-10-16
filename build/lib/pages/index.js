@@ -4,6 +4,7 @@ const {
 } = require('../chrome');
 const { seoTokens } = require('../seo');
 const { earlyScript } = require('../projects');
+const { prioritize } = require('../images');
 
 /* Fixed head values, raw HTML. SEO values come from content.seo (seoTokens). */
 /* eslint-disable @stylistic/max-len -- raw WordPress head values, kept byte for byte */
@@ -36,10 +37,11 @@ function render(content, {
     fill(loadPartial('page-index'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
-      PROJECTS: fill(loadPartial('index-projects'), {
+      /* The first grid image is the page priority image. */
+      PROJECTS: prioritize(fill(loadPartial('index-projects'), {
         CENTER_CLASS: '',
         CURRENT_PROJECT: fill(loadPartial('current-project'), CLOSED_PROJECT),
-      }),
+      })),
     }),
     footer(),
   ].join('\n');

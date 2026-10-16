@@ -37,7 +37,7 @@ const { imageSize } = require('./build/lib/image-size');
 const { escAttr, isVideo } = require('./build/lib/html');
 const { sitekey } = require('./build/lib/chrome');
 const { heroPath, FALLBACK_SRC } = require('./build/lib/pages/news');
-const { ensureVariants } = require('./build/lib/images');
+const { ensureVariants, readManifest } = require('./build/lib/images');
 
 const ROOT = __dirname;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -323,13 +323,14 @@ function pruneProjects(root, list) {
   });
 }
 
-function writeProjects(root, list, newsHref) {
+function writeProjects(root, list, newsHref, manifest) {
   const siteFile = path.join(root, 'content', 'pages', 'site.json');
   const site = JSON.parse(fs.readFileSync(siteFile, 'utf8'));
   list.forEach((e) => {
     const outDir = path.join(root, e.url);
     fs.mkdirSync(outDir, { recursive: true });
-    fs.writeFileSync(path.join(outDir, 'index.html'), project.render(e, { site, newsHref }));
+    const html = project.render(e, { site, newsHref, manifest });
+    fs.writeFileSync(path.join(outDir, 'index.html'), html);
   });
   pruneProjects(root, list);
 }
@@ -349,7 +350,8 @@ function writeRedirects(root, posts) {
   return rules;
 }
 
-function build() {
+/* manifest: build/images.json, plus the variants that CI made (ensureVariants). */
+function build(manifest = readManifest(ROOT)) {
   const posts = loadPosts(path.join(ROOT, 'content', 'news'));
   if (!posts.length) {
     console.log('no posts');
@@ -374,8 +376,8 @@ function build() {
   const newest = posts[0];
   const newsHref = '/news/';
   const projects = loadProjects(ROOT);
-  const pages = writePages(ROOT, newsHref, projects, posts);
-  writeProjects(ROOT, projects, newsHref);
+  const pages = writePages(ROOT, newsHref, projects, posts, manifest);
+  writeProjects(ROOT, projects, newsHref, manifest);
 
   fs.writeFileSync(path.join(ROOT, 'data', 'news.json'), JSON.stringify(newsJson, null, 2));
   fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), sitemap(posts, pages, projects));
@@ -388,7 +390,7 @@ function build() {
     + `${projects.length} project pages; ${rules.length} redirects`);
 }
 
-if (require.main === module) ensureVariants(ROOT).then(() => build());
+if (require.main === module) ensureVariants(ROOT).then((manifest) => build(manifest));
 
 module.exports = {
   parseFrontMatter,

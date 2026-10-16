@@ -56,6 +56,20 @@
 <link rel='stylesheet' id='swiper-css' href='/wp-content/themes/nellis/assets/scss/swiper.css' media='all' />
 <link rel='stylesheet' id='fancybox-css' href='/wp-content/themes/nellis/assets/scss/vendor/fancybox.css' media='all' />
 <link rel='stylesheet' id='maincss-css' href='/wp-content/themes/nellis/assets/scss/main.css' media='all' />
+<style id="nellis-images-css">
+	/* picture() markup (build/lib/images.js) keeps the layout of the img-protect.js wrapper
+	   (inline-block, line-height 0): the img percentage heights stay unresolved, as before.
+	   height: auto: the width and height attributes give only the aspect ratio. */
+	picture {
+		display: inline-block;
+		line-height: 0;
+		background-position: center;
+	}
+
+	picture img {
+		height: auto;
+	}
+</style>
 
 
 
@@ -436,10 +450,7 @@
                 </nav>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/zoya/" aria-label="Zoya"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/07/Zoya1-scaled.jpg"
-                            alt="Zoya" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAkAA4BaJbACsAD6ePqDWqAA/sj+bYeyjnOEswS+S98trFvmxhCKwqPSXlzs7BlQE823MhXYKrrQLmJ1AavXYchYjbuF2AAAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/07/Zoya1-scaled-f4a51325-320.avif 320w, /wp-content/variants/2025/07/Zoya1-scaled-f4a51325-640.avif 640w, /wp-content/variants/2025/07/Zoya1-scaled-f4a51325-960.avif 960w, /wp-content/variants/2025/07/Zoya1-scaled-f4a51325-1600.avif 1600w, /wp-content/variants/2025/07/Zoya1-scaled-f4a51325-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/07/Zoya1-scaled-f4a51325-1600.jpg" srcset="/wp-content/variants/2025/07/Zoya1-scaled-f4a51325-640.jpg 640w, /wp-content/variants/2025/07/Zoya1-scaled-f4a51325-1600.jpg 1600w, /wp-content/variants/2025/07/Zoya1-scaled-f4a51325-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Zoya" decoding="async" loading="eager" fetchpriority="high" data-overlay-added="true"></picture>
                         <span class="project__name">Zoya</span>
                         <span class="project__descr">
                             Palm Jumeirah <br>
@@ -448,10 +459,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/aurea/" aria-label="AUREA"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2026/06/6-scaled.jpg"
-                            alt="AUREA" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAkAA4BaJZgCdH8AFi5yIWgA/slFCcU1kkHfyeSy9f45ph3M7g4N+TVkUVtnP3dx9NHSA5inkfiIDgAq/s66I4SV6JvpmDgAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/06/6-scaled-a1882ee5-320.avif 320w, /wp-content/variants/2026/06/6-scaled-a1882ee5-640.avif 640w, /wp-content/variants/2026/06/6-scaled-a1882ee5-960.avif 960w, /wp-content/variants/2026/06/6-scaled-a1882ee5-1600.avif 1600w, /wp-content/variants/2026/06/6-scaled-a1882ee5-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2026/06/6-scaled-a1882ee5-1600.jpg" srcset="/wp-content/variants/2026/06/6-scaled-a1882ee5-640.jpg 640w, /wp-content/variants/2026/06/6-scaled-a1882ee5-1600.jpg 1600w, /wp-content/variants/2026/06/6-scaled-a1882ee5-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="AUREA" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">AUREA</span>
                         <span class="project__descr">
                             PALM JUMEIRAH <br>
@@ -460,10 +468,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/athena/" aria-label="Athena"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2026/01/Athena-1-scaled.jpg"
-                            alt="Athena" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoQAAkAA4BaJQBOgCHemjUsWAAA/mEdJdohUPj1qonjvY16aVcqJEGOfFgxgpEduBf+XpB6G1m/abp+4AA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/01/Athena-1-scaled-2822e6e3-320.avif 320w, /wp-content/variants/2026/01/Athena-1-scaled-2822e6e3-640.avif 640w, /wp-content/variants/2026/01/Athena-1-scaled-2822e6e3-960.avif 960w, /wp-content/variants/2026/01/Athena-1-scaled-2822e6e3-1600.avif 1600w, /wp-content/variants/2026/01/Athena-1-scaled-2822e6e3-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2026/01/Athena-1-scaled-2822e6e3-1600.jpg" srcset="/wp-content/variants/2026/01/Athena-1-scaled-2822e6e3-640.jpg 640w, /wp-content/variants/2026/01/Athena-1-scaled-2822e6e3-1600.jpg 1600w, /wp-content/variants/2026/01/Athena-1-scaled-2822e6e3-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Athena" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Athena</span>
                         <span class="project__descr">
                             Porto Cheli <br>
@@ -472,10 +477,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/onyx/" aria-label="Onyx"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2026/01/Onyx-1-scaled.jpg"
-                            alt="Onyx" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQAgCdASoQAAkAA4BaJYgCdAEWjmAZkc6AAP5MDzEd75+/iuhrsMpeg8XzjVSWo3vI5yOMhuvzKZiqJGnISPGtm4wdhU87TPO8ngmFaF2gAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/01/Onyx-1-scaled-56068d1f-320.avif 320w, /wp-content/variants/2026/01/Onyx-1-scaled-56068d1f-640.avif 640w, /wp-content/variants/2026/01/Onyx-1-scaled-56068d1f-960.avif 960w, /wp-content/variants/2026/01/Onyx-1-scaled-56068d1f-1600.avif 1600w, /wp-content/variants/2026/01/Onyx-1-scaled-56068d1f-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2026/01/Onyx-1-scaled-56068d1f-1600.jpg" srcset="/wp-content/variants/2026/01/Onyx-1-scaled-56068d1f-640.jpg 640w, /wp-content/variants/2026/01/Onyx-1-scaled-56068d1f-1600.jpg 1600w, /wp-content/variants/2026/01/Onyx-1-scaled-56068d1f-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Onyx" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Onyx</span>
                         <span class="project__descr">
                             Freetown <br>
@@ -484,10 +486,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/moya/" aria-label="Moya"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2026/03/Moya-2-scaled.jpg"
-                            alt="Moya" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAQCdASoQAAkAA4BaJYgCdADO/BKoyAD9nU4WZ7p7/TbCNVpAwHF6XT7HnEPUJCCnaLNhWqlzoNoqDRSltKNejFEk3rOQrqF/MEAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/03/Moya-2-scaled-241358e8-320.avif 320w, /wp-content/variants/2026/03/Moya-2-scaled-241358e8-640.avif 640w, /wp-content/variants/2026/03/Moya-2-scaled-241358e8-960.avif 960w, /wp-content/variants/2026/03/Moya-2-scaled-241358e8-1600.avif 1600w, /wp-content/variants/2026/03/Moya-2-scaled-241358e8-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2026/03/Moya-2-scaled-241358e8-1600.jpg" srcset="/wp-content/variants/2026/03/Moya-2-scaled-241358e8-640.jpg 640w, /wp-content/variants/2026/03/Moya-2-scaled-241358e8-1600.jpg 1600w, /wp-content/variants/2026/03/Moya-2-scaled-241358e8-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Moya" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Moya</span>
                         <span class="project__descr">
                             Emirates Hills <br>
@@ -496,10 +495,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/vaya/" aria-label="Vaya"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/06/Untitled-design-9-scaled.jpg"
-                            alt="Vaya" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQAAkAA4BaJZQCdAEPBdepQ6JAAOJ9IZbDPldp/JCtvQGTijZO5NpMfmTlpJp+DUC9w2mpcR4nEk/d1nEdjleJKQd5jqAAAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/06/Untitled-design-9-scaled-9bf5830c-320.avif 320w, /wp-content/variants/2025/06/Untitled-design-9-scaled-9bf5830c-640.avif 640w, /wp-content/variants/2025/06/Untitled-design-9-scaled-9bf5830c-960.avif 960w, /wp-content/variants/2025/06/Untitled-design-9-scaled-9bf5830c-1600.avif 1600w, /wp-content/variants/2025/06/Untitled-design-9-scaled-9bf5830c-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/06/Untitled-design-9-scaled-9bf5830c-1600.jpg" srcset="/wp-content/variants/2025/06/Untitled-design-9-scaled-9bf5830c-640.jpg 640w, /wp-content/variants/2025/06/Untitled-design-9-scaled-9bf5830c-1600.jpg 1600w, /wp-content/variants/2025/06/Untitled-design-9-scaled-9bf5830c-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Vaya" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Vaya</span>
                         <span class="project__descr">
                             Palm Jumeirah <br>
@@ -508,10 +504,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/master-planning/skye-residences/" aria-label="Skye Residences"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/02/architecture-7-scaled.jpg"
-                            alt="Skye Residences" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAkAA4BaJagCdAD2AyPLymAA/pTd1C+5tLxh+CDkVSeguzTH8YOuLcC3CG4D5Wrcac9fMZwzTZpNjM8u0SrT1TTTp0erhkwQAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-320.avif 320w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-640.avif 640w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-960.avif 960w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-1600.avif 1600w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-1600.jpg" srcset="/wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-640.jpg 640w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-1600.jpg 1600w, /wp-content/variants/2025/02/architecture-7-scaled-a6f788c7-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Skye Residences" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Skye Residences</span>
                         <span class="project__descr">
                             Downtown <br>
@@ -520,10 +513,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/sonia/" aria-label="Sonia"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/06/f_68_02-scaled.jpg"
-                            alt="Sonia" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAkAA4BaJYgCdAD6k6OVCgAAzaVHk/NHx7BRv3s5h+w88MQZytylS5zFp/cqd36/TWYIBfLIVOcUuwV+DPH2dWzY8SlWiwAAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/06/f_68_02-scaled-6e7ac7b3-320.avif 320w, /wp-content/variants/2025/06/f_68_02-scaled-6e7ac7b3-640.avif 640w, /wp-content/variants/2025/06/f_68_02-scaled-6e7ac7b3-960.avif 960w, /wp-content/variants/2025/06/f_68_02-scaled-6e7ac7b3-1600.avif 1600w, /wp-content/variants/2025/06/f_68_02-scaled-6e7ac7b3-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/06/f_68_02-scaled-6e7ac7b3-1600.jpg" srcset="/wp-content/variants/2025/06/f_68_02-scaled-6e7ac7b3-640.jpg 640w, /wp-content/variants/2025/06/f_68_02-scaled-6e7ac7b3-1600.jpg 1600w, /wp-content/variants/2025/06/f_68_02-scaled-6e7ac7b3-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Sonia" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Sonia</span>
                         <span class="project__descr">
                             Palm Jumeirah <br>
@@ -532,10 +522,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/interior-design/lumeria/" aria-label="Lumeria"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2026/09/Lumeria-3-scaled.jpg"
-                            alt="Lumeria" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoQAAkAA4BaJQBOgCL9KFvZvAAA/rs+s6yZ1gzmaE9VtvQDkTNXKFjua4NqJNsjM9lzOmktBcKkeM2Nw8Yli4Tl0zT4dgAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/09/Lumeria-3-scaled-ced0c0f6-320.avif 320w, /wp-content/variants/2026/09/Lumeria-3-scaled-ced0c0f6-640.avif 640w, /wp-content/variants/2026/09/Lumeria-3-scaled-ced0c0f6-960.avif 960w, /wp-content/variants/2026/09/Lumeria-3-scaled-ced0c0f6-1600.avif 1600w, /wp-content/variants/2026/09/Lumeria-3-scaled-ced0c0f6-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2026/09/Lumeria-3-scaled-ced0c0f6-1600.jpg" srcset="/wp-content/variants/2026/09/Lumeria-3-scaled-ced0c0f6-640.jpg 640w, /wp-content/variants/2026/09/Lumeria-3-scaled-ced0c0f6-1600.jpg 1600w, /wp-content/variants/2026/09/Lumeria-3-scaled-ced0c0f6-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Lumeria" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Lumeria</span>
                         <span class="project__descr">
                             Palm Jumeirah <br>
@@ -544,10 +531,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/maelis/" aria-label="Maelis"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2026/07/Maelis-1-scaled.jpg"
-                            alt="Maelis" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoQAAkAA4BaJYwCdADMlmnvAAAA/tHJSsJSG47z5MGO/0n4vZg2Cm2UnsmUhqjVRqVhg3N7gYG/6fPgvDHOEmAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/07/Maelis-1-scaled-34321a26-320.avif 320w, /wp-content/variants/2026/07/Maelis-1-scaled-34321a26-640.avif 640w, /wp-content/variants/2026/07/Maelis-1-scaled-34321a26-960.avif 960w, /wp-content/variants/2026/07/Maelis-1-scaled-34321a26-1600.avif 1600w, /wp-content/variants/2026/07/Maelis-1-scaled-34321a26-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2026/07/Maelis-1-scaled-34321a26-1600.jpg" srcset="/wp-content/variants/2026/07/Maelis-1-scaled-34321a26-640.jpg 640w, /wp-content/variants/2026/07/Maelis-1-scaled-34321a26-1600.jpg 1600w, /wp-content/variants/2026/07/Maelis-1-scaled-34321a26-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Maelis" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Maelis</span>
                         <span class="project__descr">
                             Palm Jumeirah <br>
@@ -556,10 +540,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/mila/" aria-label="MILA"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/07/Mila--scaled.jpg"
-                            alt="MILA" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQAQCdASoQAAkAA4BaJQBOgCHt9XmPgAD+bJFmttlJCc/8A+GuNsBz5u4vVdvBaSx0GkQoULAGMi3D9Tm7rLdnalN24AtMuKhgo982vtY4PAAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/07/Mila--scaled-4148ef80-320.avif 320w, /wp-content/variants/2025/07/Mila--scaled-4148ef80-640.avif 640w, /wp-content/variants/2025/07/Mila--scaled-4148ef80-960.avif 960w, /wp-content/variants/2025/07/Mila--scaled-4148ef80-1600.avif 1600w, /wp-content/variants/2025/07/Mila--scaled-4148ef80-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/07/Mila--scaled-4148ef80-1600.jpg" srcset="/wp-content/variants/2025/07/Mila--scaled-4148ef80-640.jpg 640w, /wp-content/variants/2025/07/Mila--scaled-4148ef80-1600.jpg 1600w, /wp-content/variants/2025/07/Mila--scaled-4148ef80-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="MILA" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">MILA</span>
                         <span class="project__descr">
                             UMM SUQEIM <br>
@@ -568,10 +549,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/atelier/" aria-label="Atelier"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2026/04/Atelier-8-scaled.jpg"
-                            alt="Atelier" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADwAQCdASoQAAkAA4BaJagCdAC7IjVfxgAA8o25CYlUWotx2182K0xQggd86kr07tnl4G4SN/HTYVoCF5SgRqujz72UBxLToLKmPHEw95GmA9abUHnjAAAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/04/Atelier-8-scaled-b0da6f6d-320.avif 320w, /wp-content/variants/2026/04/Atelier-8-scaled-b0da6f6d-640.avif 640w, /wp-content/variants/2026/04/Atelier-8-scaled-b0da6f6d-960.avif 960w, /wp-content/variants/2026/04/Atelier-8-scaled-b0da6f6d-1600.avif 1600w, /wp-content/variants/2026/04/Atelier-8-scaled-b0da6f6d-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2026/04/Atelier-8-scaled-b0da6f6d-1600.jpg" srcset="/wp-content/variants/2026/04/Atelier-8-scaled-b0da6f6d-640.jpg 640w, /wp-content/variants/2026/04/Atelier-8-scaled-b0da6f6d-1600.jpg 1600w, /wp-content/variants/2026/04/Atelier-8-scaled-b0da6f6d-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Atelier" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Atelier</span>
                         <span class="project__descr">
                             Dubai, UAE
@@ -579,10 +557,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/miraia/" aria-label="Miraia"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2026/07/Untitled-design-6-1-scaled.jpg"
-                            alt="Miraia" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACwAQCdASoQAAkAA4BaJQBOgBuVb4fwAP6p/3UpYsnQA4JNg312FeTssz1MW8PUcSVEXu7lW1RhdMHqRWxZwiWDGKEYlFhxVwEnIAAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/07/Untitled-design-6-1-scaled-d4f171fc-320.avif 320w, /wp-content/variants/2026/07/Untitled-design-6-1-scaled-d4f171fc-640.avif 640w, /wp-content/variants/2026/07/Untitled-design-6-1-scaled-d4f171fc-960.avif 960w, /wp-content/variants/2026/07/Untitled-design-6-1-scaled-d4f171fc-1600.avif 1600w, /wp-content/variants/2026/07/Untitled-design-6-1-scaled-d4f171fc-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2026/07/Untitled-design-6-1-scaled-d4f171fc-1600.jpg" srcset="/wp-content/variants/2026/07/Untitled-design-6-1-scaled-d4f171fc-640.jpg 640w, /wp-content/variants/2026/07/Untitled-design-6-1-scaled-d4f171fc-1600.jpg 1600w, /wp-content/variants/2026/07/Untitled-design-6-1-scaled-d4f171fc-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Miraia" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Miraia</span>
                         <span class="project__descr">
                             Palm Jebel Ali <br>
@@ -591,10 +566,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/soul/" aria-label="Soul"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/07/ID-1-scaled.jpg"
-                            alt="Soul" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADwAQCdASoQAAgAA4BaJZQCdAEO4frVC0gA/pGaMNiWh/0fktJswMMEkZHegojm+d7nVpN5elbDIoAdT+ZaEAAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/07/ID-1-scaled-c850b460-320.avif 320w, /wp-content/variants/2025/07/ID-1-scaled-c850b460-640.avif 640w, /wp-content/variants/2025/07/ID-1-scaled-c850b460-960.avif 960w, /wp-content/variants/2025/07/ID-1-scaled-c850b460-1600.avif 1600w, /wp-content/variants/2025/07/ID-1-scaled-c850b460-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/07/ID-1-scaled-c850b460-1600.jpg" srcset="/wp-content/variants/2025/07/ID-1-scaled-c850b460-640.jpg 640w, /wp-content/variants/2025/07/ID-1-scaled-c850b460-1600.jpg 1600w, /wp-content/variants/2025/07/ID-1-scaled-c850b460-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1280" alt="Soul" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Soul</span>
                         <span class="project__descr">
                             La Mer <br>
@@ -603,10 +575,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/ayla/" aria-label="Ayla"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/06/6.png"
-                            alt="Ayla" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAQAgCdASoQAAoAA4BaJYwCdADhWcemS0jAAP7WHAutxgHeOBXpsafekP1KwVyoKGVumRLyUJJnf7bWvtLu+6p5rHjPvhUOCLE9LyXWiux31IQ81wwauinew6AYfhujj/WuNSvmwAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/06/6-6beb71f5-320.avif 320w, /wp-content/variants/2025/06/6-6beb71f5-640.avif 640w, /wp-content/variants/2025/06/6-6beb71f5-960.avif 960w, /wp-content/variants/2025/06/6-6beb71f5-1600.avif 1600w, /wp-content/variants/2025/06/6-6beb71f5-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/06/6-6beb71f5-1600.jpg" srcset="/wp-content/variants/2025/06/6-6beb71f5-640.jpg 640w, /wp-content/variants/2025/06/6-6beb71f5-1600.jpg 1600w, /wp-content/variants/2025/06/6-6beb71f5-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1634" alt="Ayla" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Ayla</span>
                         <span class="project__descr">
                             Emirates Hills <br>
@@ -615,10 +584,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/w44/" aria-label="W44"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2026/04/W-44-5-scaled.jpg"
-                            alt="W44" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAQCdASoQAAkAA4BaJYwCdADiQ9YKplAA/n0U8+X2rlNO+PlnomXm5qpDqxFtgJyVorCFiX6kKIJKX9nBpizezmZ7r8csAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/04/W-44-5-scaled-850b48ce-320.avif 320w, /wp-content/variants/2026/04/W-44-5-scaled-850b48ce-640.avif 640w, /wp-content/variants/2026/04/W-44-5-scaled-850b48ce-960.avif 960w, /wp-content/variants/2026/04/W-44-5-scaled-850b48ce-1600.avif 1600w, /wp-content/variants/2026/04/W-44-5-scaled-850b48ce-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2026/04/W-44-5-scaled-850b48ce-1600.jpg" srcset="/wp-content/variants/2026/04/W-44-5-scaled-850b48ce-640.jpg 640w, /wp-content/variants/2026/04/W-44-5-scaled-850b48ce-1600.jpg 1600w, /wp-content/variants/2026/04/W-44-5-scaled-850b48ce-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="W44" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">W44</span>
                         <span class="project__descr">
                             Dubai, UAE
@@ -626,10 +592,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/interior-design/solari/" aria-label="Solari"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/07/Untitled-design-12-scaled.jpg"
-                            alt="Solari" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADwAQCdASoQAAkAA4BaJQBOgB7HMG7jOUAA/vEE7rG0FOTl1AHexUZtZ2Zv0mRuYlNTwNyvQyDjkhPsY8VfZTslwvMFLWD3ygNXyyd4gAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/07/Untitled-design-12-scaled-f5630c6b-320.avif 320w, /wp-content/variants/2025/07/Untitled-design-12-scaled-f5630c6b-640.avif 640w, /wp-content/variants/2025/07/Untitled-design-12-scaled-f5630c6b-960.avif 960w, /wp-content/variants/2025/07/Untitled-design-12-scaled-f5630c6b-1600.avif 1600w, /wp-content/variants/2025/07/Untitled-design-12-scaled-f5630c6b-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/07/Untitled-design-12-scaled-f5630c6b-1600.jpg" srcset="/wp-content/variants/2025/07/Untitled-design-12-scaled-f5630c6b-640.jpg 640w, /wp-content/variants/2025/07/Untitled-design-12-scaled-f5630c6b-1600.jpg 1600w, /wp-content/variants/2025/07/Untitled-design-12-scaled-f5630c6b-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Solari" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Solari</span>
                         <span class="project__descr">
                             Palm Jumeirah <br>
@@ -638,10 +601,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/parus/" aria-label="Parus"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2024/06/Parus-Architectural-2-scaled.jpg"
-                            alt="Parus" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQAAkAA4BaJYgCdAEDXue1gRVAAN5iPZgdMf+gN6sLolK44zB+gG5yA3ECsK9otjl4grC/13YyrLFJ2sL4qGqvUZe/wBObQAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2024/06/Parus-Architectural-2-scaled-210d8c1c-320.avif 320w, /wp-content/variants/2024/06/Parus-Architectural-2-scaled-210d8c1c-640.avif 640w, /wp-content/variants/2024/06/Parus-Architectural-2-scaled-210d8c1c-960.avif 960w, /wp-content/variants/2024/06/Parus-Architectural-2-scaled-210d8c1c-1600.avif 1600w, /wp-content/variants/2024/06/Parus-Architectural-2-scaled-210d8c1c-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2024/06/Parus-Architectural-2-scaled-210d8c1c-1600.jpg" srcset="/wp-content/variants/2024/06/Parus-Architectural-2-scaled-210d8c1c-640.jpg 640w, /wp-content/variants/2024/06/Parus-Architectural-2-scaled-210d8c1c-1600.jpg 1600w, /wp-content/variants/2024/06/Parus-Architectural-2-scaled-210d8c1c-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Parus" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Parus</span>
                         <span class="project__descr">
                             Palm Jumeirah <br>
@@ -650,10 +610,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/tela/" aria-label="Tela"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/12/Untitled-design-1.jpg"
-                            alt="Tela" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAAAwAgCdASoQAAsAA4BaJbACdAEfn2r2TAwMgAD+kXSCyhp+ag2YGsC9Z31CpMwblEWwSi15zjHLllLPLAiLJ0iS4QecXZ5QMPwgvHrhmBolYGRmnaReiFIhewoOHubyeXZNud8QI5NH3IbliTGIthcAAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/12/Untitled-design-1-3d69738e-320.avif 320w, /wp-content/variants/2025/12/Untitled-design-1-3d69738e-640.avif 640w, /wp-content/variants/2025/12/Untitled-design-1-3d69738e-960.avif 960w, /wp-content/variants/2025/12/Untitled-design-1-3d69738e-1600.avif 1600w, /wp-content/variants/2025/12/Untitled-design-1-3d69738e-2048.avif 2048w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/12/Untitled-design-1-3d69738e-1600.jpg" srcset="/wp-content/variants/2025/12/Untitled-design-1-3d69738e-640.jpg 640w, /wp-content/variants/2025/12/Untitled-design-1-3d69738e-1600.jpg 1600w, /wp-content/variants/2025/12/Untitled-design-1-3d69738e-2048.jpg 2048w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2048" height="1365" alt="Tela" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Tela</span>
                         <span class="project__descr">
                             Palm Jumeirah <br>
@@ -662,10 +619,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/mantara/" aria-label="Mantara"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2026/07/Untitled-design-7.jpg"
-                            alt="Mantara" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQAAkAA4BaJQBOgMWlmOybZgD+x0b5RLPtl4v629aCR6s0oVTgzC4LIVsrVQPKs6LqsYJIuA7pJ/M98ONMIN2R5M/nsusIAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/07/Untitled-design-7-63b39281-320.avif 320w, /wp-content/variants/2026/07/Untitled-design-7-63b39281-640.avif 640w, /wp-content/variants/2026/07/Untitled-design-7-63b39281-960.avif 960w, /wp-content/variants/2026/07/Untitled-design-7-63b39281-1600.avif 1600w, /wp-content/variants/2026/07/Untitled-design-7-63b39281-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2026/07/Untitled-design-7-63b39281-1600.jpg" srcset="/wp-content/variants/2026/07/Untitled-design-7-63b39281-640.jpg 640w, /wp-content/variants/2026/07/Untitled-design-7-63b39281-1600.jpg 1600w, /wp-content/variants/2026/07/Untitled-design-7-63b39281-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="6666" height="3750" alt="Mantara" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Mantara</span>
                         <span class="project__descr">
                             Jumeirah Bay Island <br>
@@ -674,10 +628,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/dune/" aria-label="Dune"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/06/Dune1-1.png"
-                            alt="Dune" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoQAAsAA4BaJQBOgCPyHYoG66AA/maFlG4gk3UzMuN9obUIynuSBBg0rEp96ZnpWzQQ0IHEGgKma/tUHO+qQcw5wsRR4c8dJNQrSgCJQAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/06/Dune1-1-405cca32-320.avif 320w, /wp-content/variants/2025/06/Dune1-1-405cca32-640.avif 640w, /wp-content/variants/2025/06/Dune1-1-405cca32-960.avif 960w, /wp-content/variants/2025/06/Dune1-1-405cca32-1536.avif 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/06/Dune1-1-405cca32-1536.jpg" srcset="/wp-content/variants/2025/06/Dune1-1-405cca32-640.jpg 640w, /wp-content/variants/2025/06/Dune1-1-405cca32-1536.jpg 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="1536" height="1024" alt="Dune" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Dune</span>
                         <span class="project__descr">
                             Al Manara <br>
@@ -686,10 +637,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/zephyr/" aria-label="Zephyr"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/06/Sailing-Club.png"
-                            alt="Zephyr" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoQAAsAA4BaJZACdAYu5j/P9pq3gAD7pQX3Sui+uJTu1hyMr1mJ7NilRRX9lj9AlpnNx3eETI0Miql3F5rQZXiJBWPhNzCbTZ6GsaGiUjdLVZ3vnCpJXl/qgAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/06/Sailing-Club-90a99763-320.avif 320w, /wp-content/variants/2025/06/Sailing-Club-90a99763-640.avif 640w, /wp-content/variants/2025/06/Sailing-Club-90a99763-960.avif 960w, /wp-content/variants/2025/06/Sailing-Club-90a99763-1536.avif 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/06/Sailing-Club-90a99763-1536.jpg" srcset="/wp-content/variants/2025/06/Sailing-Club-90a99763-640.jpg 640w, /wp-content/variants/2025/06/Sailing-Club-90a99763-1536.jpg 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="1536" height="1024" alt="Zephyr" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Zephyr</span>
                         <span class="project__descr">
                             Dubai, UAE
@@ -697,10 +645,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/miro/" aria-label="Miro"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/04/Miro-2-1-scaled.jpg"
-                            alt="Miro" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAQCdASoQAAkAA4BaJQBOgCaex+EPIAD7vbE3jTXVnhk5T2X2BGqMVT2SXxNQ415TWMgG1X9K8BIAQ0QkOKV9ap26L4AAAAA=);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/04/Miro-2-1-scaled-0c28bb7f-320.avif 320w, /wp-content/variants/2025/04/Miro-2-1-scaled-0c28bb7f-640.avif 640w, /wp-content/variants/2025/04/Miro-2-1-scaled-0c28bb7f-960.avif 960w, /wp-content/variants/2025/04/Miro-2-1-scaled-0c28bb7f-1600.avif 1600w, /wp-content/variants/2025/04/Miro-2-1-scaled-0c28bb7f-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/04/Miro-2-1-scaled-0c28bb7f-1600.jpg" srcset="/wp-content/variants/2025/04/Miro-2-1-scaled-0c28bb7f-640.jpg 640w, /wp-content/variants/2025/04/Miro-2-1-scaled-0c28bb7f-1600.jpg 1600w, /wp-content/variants/2025/04/Miro-2-1-scaled-0c28bb7f-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Miro" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Miro</span>
                         <span class="project__descr">
                             UMM AL SHEIF <br>
@@ -709,10 +654,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/master-planning/evergreens/" aria-label="Evergreens"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/04/Evergreen-Visual-1-scaled.jpg"
-                            alt="Evergreens" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoQAAkAA4BaJZACdAEVOb9xx3gAAP7T67/RAdtYIXpX+5YG278I3BbjCdABhoD0PE3mEjcwC0quAr3DAc+/qKQsMapXNdIo7IT3BQgKYmg/4AAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-320.avif 320w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-640.avif 640w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-960.avif 960w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-1600.avif 1600w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-1600.jpg" srcset="/wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-640.jpg 640w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-1600.jpg 1600w, /wp-content/variants/2025/04/Evergreen-Visual-1-scaled-d4a5f51c-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1435" alt="Evergreens" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Evergreens</span>
                         <span class="project__descr">
                             Hyderabad <br>
@@ -721,10 +663,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/harmonia/" aria-label="HARMONIA"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2026/06/O-Villas_2-scaled.jpg"
-                            alt="HARMONIA" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACwAQCdASoQAAkAA4BaJYwCdAEUY+aYAP5b+RtZuugTdu4DTHrIS5s97amrvNO2u/UrG/dsJDYeDe35h2JVcPKgXwyYBwk/jS4AAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2026/06/O-Villas_2-scaled-c59c9ba0-320.avif 320w, /wp-content/variants/2026/06/O-Villas_2-scaled-c59c9ba0-640.avif 640w, /wp-content/variants/2026/06/O-Villas_2-scaled-c59c9ba0-960.avif 960w, /wp-content/variants/2026/06/O-Villas_2-scaled-c59c9ba0-1600.avif 1600w, /wp-content/variants/2026/06/O-Villas_2-scaled-c59c9ba0-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2026/06/O-Villas_2-scaled-c59c9ba0-1600.jpg" srcset="/wp-content/variants/2026/06/O-Villas_2-scaled-c59c9ba0-640.jpg 640w, /wp-content/variants/2026/06/O-Villas_2-scaled-c59c9ba0-1600.jpg 1600w, /wp-content/variants/2026/06/O-Villas_2-scaled-c59c9ba0-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="HARMONIA" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">HARMONIA</span>
                         <span class="project__descr">
                             PALM JUMEIRAH <br>
@@ -733,10 +672,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/amara/" aria-label="Amara"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/03/Amara4.jpg"
-                            alt="Amara" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAQCdASoQAAsAA4BaJQBOgBmcClRDOAAA/ryRgN3RtSYDfnVyMsZvPhNAr9BNoRaL12q6XlUMYNv0at4yTNtqJJlOXFTMSE8AwkGmYHDgZnIH2YxTCekS0ACwAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/03/Amara4-bf87f452-320.avif 320w, /wp-content/variants/2025/03/Amara4-bf87f452-640.avif 640w, /wp-content/variants/2025/03/Amara4-bf87f452-960.avif 960w, /wp-content/variants/2025/03/Amara4-bf87f452-1536.avif 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/03/Amara4-bf87f452-1536.jpg" srcset="/wp-content/variants/2025/03/Amara4-bf87f452-640.jpg 640w, /wp-content/variants/2025/03/Amara4-bf87f452-1536.jpg 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="1536" height="1024" alt="Amara" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Amara</span>
                         <span class="project__descr">
                             Nareel Island <br>
@@ -745,10 +681,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/breakwater/" aria-label="Breakwater"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/03/Breakwater-2.jpg"
-                            alt="Breakwater" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAQCdASoQAAsAA4BaJQBOgCG+aIbPTaAA/spifwXRJge6Uqb3RdHXDWj03SEdkjvpFfV+FUheh7xpsx60+vWgXnPUoD+DQRnp/oiXxFgVWQAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/03/Breakwater-2-a526a3ad-320.avif 320w, /wp-content/variants/2025/03/Breakwater-2-a526a3ad-640.avif 640w, /wp-content/variants/2025/03/Breakwater-2-a526a3ad-960.avif 960w, /wp-content/variants/2025/03/Breakwater-2-a526a3ad-1536.avif 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/03/Breakwater-2-a526a3ad-1536.jpg" srcset="/wp-content/variants/2025/03/Breakwater-2-a526a3ad-640.jpg 640w, /wp-content/variants/2025/03/Breakwater-2-a526a3ad-1536.jpg 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="1536" height="1024" alt="Breakwater" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Breakwater</span>
                         <span class="project__descr">
                             Palm Jumeirah <br>
@@ -757,10 +690,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/cassia/" aria-label="Cassia"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/02/Cassia-10-scaled.jpg"
-                            alt="Cassia" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAQCdASoQAAkAA4BaJaACdADvZ8zKAAD5bZ/tMSSh0hd64gLIURxpDSxIcjZf0F6mymiZNKsxHZfRDRDpx/SVuYRyDcO5C7xF0AAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/02/Cassia-10-scaled-76fa9d1b-320.avif 320w, /wp-content/variants/2025/02/Cassia-10-scaled-76fa9d1b-640.avif 640w, /wp-content/variants/2025/02/Cassia-10-scaled-76fa9d1b-960.avif 960w, /wp-content/variants/2025/02/Cassia-10-scaled-76fa9d1b-1600.avif 1600w, /wp-content/variants/2025/02/Cassia-10-scaled-76fa9d1b-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/02/Cassia-10-scaled-76fa9d1b-1600.jpg" srcset="/wp-content/variants/2025/02/Cassia-10-scaled-76fa9d1b-640.jpg 640w, /wp-content/variants/2025/02/Cassia-10-scaled-76fa9d1b-1600.jpg 1600w, /wp-content/variants/2025/02/Cassia-10-scaled-76fa9d1b-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Cassia" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Cassia</span>
                         <span class="project__descr">
                             Emirates Hills <br>
@@ -769,10 +699,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/master-planning/evergreens-hotel/" aria-label="Evergreens Hotel"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/02/Kakatiya_Visual-3-1-scaled.jpg"
-                            alt="Evergreens Hotel" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAQAgCdASoQAAkAA4BaJbAC7AEYFFdn/kgAAP7He0JSAJEq8CgXX6VWVczTdce3ptUahCtP9t2TYrlL1W3S8UPV0sC92Odw1XiM3Vt5VKuhRr7buoAAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-320.avif 320w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-640.avif 640w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-960.avif 960w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-1600.avif 1600w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-2400.avif 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-1600.jpg" srcset="/wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-640.jpg 640w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-1600.jpg 1600w, /wp-content/variants/2025/02/Kakatiya_Visual-3-1-scaled-5551d041-2400.jpg 2400w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="2560" height="1440" alt="Evergreens Hotel" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Evergreens Hotel</span>
                         <span class="project__descr">
                             Hyderabad <br>
@@ -781,10 +708,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/architecture/evia/" aria-label="Evia"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2025/02/Evia-front.jpg"
-                            alt="Evia" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAwAgCdASoQAAsAA4BaJQBOj+ADFRc5ai7uQAD+4ak0HKNk5Lo13NAEgiTFMT0Ndon3dCE+m36uCVwhH+lj8kbSGgGKcmbmf7MxpYssJMAAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2025/02/Evia-front-40189e97-320.avif 320w, /wp-content/variants/2025/02/Evia-front-40189e97-640.avif 640w, /wp-content/variants/2025/02/Evia-front-40189e97-960.avif 960w, /wp-content/variants/2025/02/Evia-front-40189e97-1536.avif 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2025/02/Evia-front-40189e97-1536.jpg" srcset="/wp-content/variants/2025/02/Evia-front-40189e97-640.jpg 640w, /wp-content/variants/2025/02/Evia-front-40189e97-1536.jpg 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="1536" height="1024" alt="Evia" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Evia</span>
                         <span class="project__descr">
                             Saadiyat Island <br>
@@ -793,10 +717,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/master-planning/west-links/" aria-label="WEST LINKS"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2024/06/West-Links9.png"
-                            alt="WEST LINKS" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAsAA4BaJagAAn+I85OpUMAA+4Ytu3yQNmZVYMhgv2O1VmU1Y/krt44wVJilIyb9rKRSCB8UJqJvaZOyRuL+q7+tRuRDSewAAA==);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2024/06/West-Links9-c656acf0-320.avif 320w, /wp-content/variants/2024/06/West-Links9-c656acf0-640.avif 640w, /wp-content/variants/2024/06/West-Links9-c656acf0-960.avif 960w, /wp-content/variants/2024/06/West-Links9-c656acf0-1536.avif 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2024/06/West-Links9-c656acf0-1536.jpg" srcset="/wp-content/variants/2024/06/West-Links9-c656acf0-640.jpg 640w, /wp-content/variants/2024/06/West-Links9-c656acf0-1536.jpg 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="1536" height="1024" alt="WEST LINKS" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">WEST LINKS</span>
                         <span class="project__descr">
                             DUMFRIES AND GALLOWAY <br>
@@ -805,10 +726,7 @@
                     </div>
                     <div class="project__item">
                         <a class="project__link" href="/projects/master-planning/orel/" aria-label="Orel"></a>
-                        <img
-                            class="project__item-img"
-                            src="/wp-content/uploads/2024/01/Orel5.png"
-                            alt="Orel" loading="lazy" />
+                        <picture style="background-image:url(data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoQAAsAA4BaJZQC7AED+/9/GeAAziztgIPX6eX0J2J4RL7nsA+mwVDxWb1XhBbkCEOJ+RAWjoJ1utP0p1P74wosVn9JgAAA);background-size:cover"><source type="image/avif" srcset="/wp-content/variants/2024/01/Orel5-35b562fb-320.avif 320w, /wp-content/variants/2024/01/Orel5-35b562fb-640.avif 640w, /wp-content/variants/2024/01/Orel5-35b562fb-960.avif 960w, /wp-content/variants/2024/01/Orel5-35b562fb-1536.avif 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)"><img class="project__item-img" src="/wp-content/variants/2024/01/Orel5-35b562fb-1536.jpg" srcset="/wp-content/variants/2024/01/Orel5-35b562fb-640.jpg 640w, /wp-content/variants/2024/01/Orel5-35b562fb-1536.jpg 1536w" sizes="(max-width: 980px) calc(100vw - 32px), (max-width: 1179px) calc(100vw - 262px), (max-width: 1439px) calc(100vw - 331px), (max-width: 1919px) calc(100vw - 401px), calc(100vw - 447px)" width="1536" height="1024" alt="Orel" decoding="async" loading="lazy" data-overlay-added="true"></picture>
                         <span class="project__name">Orel</span>
                         <span class="project__descr">
                             Oryol Oblast <br>

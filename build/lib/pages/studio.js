@@ -1,6 +1,7 @@
 const {
-  escText, escAttr, fill, titleAttr, lazyImg, loadPartial,
+  escText, escAttr, fill, loadPartial,
 } = require('../html');
+const { picture } = require('../images');
 const {
   head, top, affiliations, footer,
 } = require('../chrome');
@@ -42,8 +43,14 @@ function values(items, first, next, indent) {
     + `${pad(indent)}</div>`).join('\n');
 }
 
-function render(content, { site, newsHref, page }) {
+/* The intro photo is the page priority image. */
+function render(content, {
+  site, newsHref, page, manifest,
+}) {
   const { intro, founder } = content;
+  const pic = (img, slot, more) => picture({
+    src: img.src, alt: img.alt, title: img.title, slot, ...more,
+  }, manifest);
   return [
     head({ ...HEAD, ...seoTokens(content, page) }),
     top(content.h1, site),
@@ -53,12 +60,12 @@ function render(content, { site, newsHref, page }) {
       INTRO_TITLE_ATTR: escAttr(intro.title),
       INTRO_TITLE: escText(intro.title),
       INTRO_SUBTITLE: escText(intro.subtitle),
-      INTRO_PHOTO: lazyImg(intro.photo),
+      INTRO_PHOTO: pic(intro.photo, 'portrait', { priority: true }),
       INTRO_QUOTE: quoteLines(intro.quote),
       INTRO_QUOTE_AUTHOR: escText(intro.quote_author),
       PARAGRAPH_1: escText(intro.paragraphs[0]),
       PARAGRAPH_2: escText(intro.paragraphs[1]),
-      BIG_IMAGE: lazyImg(intro.big_image),
+      BIG_IMAGE: pic(intro.big_image, 'wide'),
       SERVICES_TITLE: escText(content.services.title),
       SERVICES: services(content.services),
       VALUES_TITLE: escText(content.values.title),
@@ -66,11 +73,7 @@ function render(content, { site, newsHref, page }) {
       VALUES_2: values(content.values.items, 18, 16, 10),
       FOUNDER_TITLE: escText(founder.title),
       FOUNDER_QUOTE: escText(founder.quote),
-      FOUNDER_PHOTO_SRC: escAttr(founder.photo.src),
-      FOUNDER_PHOTO_ALT: escAttr(founder.photo.alt),
-      FOUNDER_PHOTO_TITLE: titleAttr(founder.photo.title),
-      FOUNDER_PHOTO_WIDTH: escAttr(founder.photo.width),
-      FOUNDER_PHOTO_HEIGHT: escAttr(founder.photo.height),
+      FOUNDER_PHOTO: pic(founder.photo, 'portrait', { cls: 'photo1' }),
       FOUNDER_LABEL: escText(founder.label),
       FOUNDER_NAME: escText(founder.name),
       FOUNDER_BIO: escText(founder.bio),

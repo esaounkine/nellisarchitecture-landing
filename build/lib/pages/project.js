@@ -6,6 +6,9 @@ const {
 } = require('../chrome');
 const { DOMAIN, INDEX } = require('../seo');
 const { CATEGORIES, categoryHref, description } = require('../projects');
+const {
+  picture, zoomSrc, readManifest, SLOTS,
+} = require('../images');
 
 /* eslint-disable @stylistic/max-len -- raw theme SVG, as in the overlay */
 const SWIPER_NAV_BUTTON = (cls) => `                    <svg class="${cls}" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -23,26 +26,29 @@ function texts(list, cls) {
   return ps && `        <div class="currentProject_container ${cls}">${ps}</div>`;
 }
 
-function img(src, alt, lazy) {
-  const loading = lazy ? ' loading="lazy"' : '';
-  return `<img src="${escAttr(src)}" alt="${escAttr(alt)}"${loading} data-fancybox="galleryHI">`;
+function img(src, alt, priority, manifest) {
+  return picture({
+    src, alt, slot: 'full', priority, fancybox: 'galleryHI',
+  }, manifest);
 }
 
-function hero(src, name) {
+/* The hero image is the page priority image; a video hero gives none. */
+function hero(src, name, manifest) {
   if (isVideo(src)) {
     return `${' '.repeat(8)}<div class="currentProject-heroImg">`
       + '<video autoplay muted loop playsinline>'
       + `<source src="${escAttr(src)}" type="video/mp4" /></video></div>`;
   }
   return `${' '.repeat(8)}<div class="currentProject-heroImg varVideo">`
-    + `${img(src, name, false)}</div>`;
+    + `${img(src, name, true, manifest)}</div>`;
 }
 
-function swiper(list, name, gallery, extra = '') {
+/* The <a> is the Fancybox trigger: data-src gives it the largest variant. */
+function swiper(list, name, gallery, manifest, extra = '') {
   if (!nonEmpty(list).length) return '';
   const slides = nonEmpty(list).map((src) => `<a class="swiper-slide" href="${escAttr(src)}" `
-    + `data-fancybox="${gallery}">`
-    + `<img src="${escAttr(src)}" alt="${escAttr(name)}" loading="lazy" /></a>`);
+    + `data-fancybox="${gallery}" data-src="${escAttr(zoomSrc(src, manifest))}">`
+    + `${picture({ src, alt: name, slot: 'slide' }, manifest)}</a>`);
   return [
     `        <div class="swiper${extra}">`,
     `            <div class="swiper-wrapper">${slides.join('')}</div>`,
@@ -57,9 +63,10 @@ function swiper(list, name, gallery, extra = '') {
   ].join('\n');
 }
 
-function images(list, name, wrap) {
+function images(list, name, wrap, manifest) {
   return nonEmpty(list)
-    .map((src) => wrap(`<div class="currentProject-heroImg">${img(src, name, true)}</div>`))
+    .map((src) => img(src, name, false, manifest))
+    .map((h) => wrap(`<div class="currentProject-heroImg">${h}</div>`))
     .join('');
 }
 
@@ -74,17 +81,17 @@ function typeSet(list) {
   return items.join('');
 }
 
-function body(name, p) {
+function body(name, p, manifest) {
   const img2 = images(p.project_img2, name, (h) => (
-    `<div class="currentProject_container">${h}</div>`));
-  const last = images(p.project_last_img, name, (h) => h);
+    `<div class="currentProject_container">${h}</div>`), manifest);
+  const last = images(p.project_last_img, name, (h) => h, manifest);
   const text3 = nonEmpty(p.project_text_3).length;
   return [
-    swiper(p.project_slider1, name, 'gallery11'),
+    swiper(p.project_slider1, name, 'gallery11', manifest),
     texts(p.project_text_1, 'projText1'),
     img2 && `        <div class="curProjimg2">${img2}</div>`,
     texts(p.project_text_2, 'projText2'),
-    swiper(p.project_slider2, name, 'gallery22', text3 ? '' : ' curpadslide'),
+    swiper(p.project_slider2, name, 'gallery22', manifest, text3 ? '' : ' curpadslide'),
     texts(p.project_text_3, 'projText3'),
     last && `        <div class="currentProject_container projLastImg">${last}</div>`,
   ].filter(Boolean).join('\n');
@@ -139,7 +146,7 @@ function schema(entry, pageTitle, desc) {
   }).replace(/</g, '\\u003c');
 }
 
-function currentProject(entry) {
+function currentProject(entry, manifest) {
   const { name, p } = entry;
   return fill(loadPartial('current-project'), {
     OPEN_CLASS: ' project__openned',
@@ -151,8 +158,8 @@ function currentProject(entry) {
     NAME: escText(name),
     AREA: escText(p.project_rigth1),
     REGION: escText(p.project_rigth2),
-    HERO: hero(p.first_img_video, name),
-    CONTENT: body(name, p),
+    HERO: hero(p.first_img_video, name, manifest),
+    CONTENT: body(name, p, manifest),
     TYPE_SET: typeSet(p.project_type_set),
   });
 }
@@ -183,10 +190,15 @@ const SCROLL_TO_CURRENT = [
   '  </script>',
 ].join('\n');
 
-function projects(entry) {
-  const html = fill(loadPartial('index-projects'), {
+/* The grid in the narrow column: the thumb sizes (the hand-kept partial has the card sizes).
+   SHORTCUT: data/filters/*.html keep the card sizes, so a filter click in this column loads a
+   larger variant than needed. Upgrade: sizes="auto" when all browsers support it. */
+function projects(entry, manifest) {
+  const grid = loadPartial('index-projects')
+    .replaceAll(`sizes="${escAttr(SLOTS.card)}"`, `sizes="${escAttr(SLOTS.thumb)}"`);
+  const html = fill(grid, {
     CENTER_CLASS: ' centerMini',
-    CURRENT_PROJECT: currentProject(entry),
+    CURRENT_PROJECT: currentProject(entry, manifest),
   }).replace(GRID_ITEM, (m) => gridItem(m, entry.url));
   if (html.split(`href="${entry.url}" aria-current="page"`).length !== 2) {
     throw new Error(`${entry.name}: the Home grid must link ${entry.url} exactly once`);
@@ -195,7 +207,7 @@ function projects(entry) {
 }
 
 /* entry: one item of projectList(). */
-function render(entry, { site, newsHref }) {
+function render(entry, { site, newsHref, manifest = readManifest() }) {
   const { name, p } = entry;
   const pageTitle = title(name, p);
   const desc = description((p.project_text_1 || [])[0]);
@@ -222,7 +234,7 @@ function render(entry, { site, newsHref }) {
     fill(loadPartial('page-index'), {
       NEWS_HREF: escAttr(newsHref),
       AFFILIATIONS: affiliations(site.affiliations, '  '),
-      PROJECTS: projects(entry),
+      PROJECTS: projects(entry, manifest),
     }),
     footer(),
   ].join('\n');
